@@ -1,0 +1,109 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Sable.Application.Auth;
+
+public static class ValidationMessages
+{
+    public const string Required = "Поле обов’язкове";
+    public const string InvalidEmail = "Вкажіть коректну адресу пошти";
+    public const string EmailTooLong = "Адреса пошти має містити не більше 120 символів";
+    public const string NameLength = "Значення має містити від 1 до 60 символів";
+}
+
+public sealed record RegisterRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(60, MinimumLength = 1, ErrorMessage = ValidationMessages.NameLength)]
+    public string FirstName { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(60, MinimumLength = 1, ErrorMessage = ValidationMessages.NameLength)]
+    public string LastName { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    [EmailAddress(ErrorMessage = ValidationMessages.InvalidEmail)]
+    [StringLength(120, ErrorMessage = ValidationMessages.EmailTooLong)]
+    public string Email { get; init; } = string.Empty;
+
+    [Password]
+    public string Password { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string PlanCode { get; init; } = string.Empty;
+}
+
+public sealed record LoginRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string Email { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string Password { get; init; } = string.Empty;
+}
+
+public sealed record RefreshRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string RefreshToken { get; init; } = string.Empty;
+}
+
+public sealed record LogoutRequest
+{
+    public string? RefreshToken { get; init; }
+}
+
+public sealed record UpdateProfileRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(60, MinimumLength = 1, ErrorMessage = ValidationMessages.NameLength)]
+    public string FirstName { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(60, MinimumLength = 1, ErrorMessage = ValidationMessages.NameLength)]
+    public string LastName { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    [EmailAddress(ErrorMessage = ValidationMessages.InvalidEmail)]
+    [StringLength(120, ErrorMessage = ValidationMessages.EmailTooLong)]
+    public string Email { get; init; } = string.Empty;
+}
+
+public sealed record ChangePasswordRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string CurrentPassword { get; init; } = string.Empty;
+
+    [Password]
+    public string NewPassword { get; init; } = string.Empty;
+}
+
+public sealed record ChangePlanRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string PlanCode { get; init; } = string.Empty;
+}
+
+public sealed record DeleteAccountRequest
+{
+    [Required(ErrorMessage = ValidationMessages.Required)]
+    public string Password { get; init; } = string.Empty;
+}
+
+public sealed record UserDto
+{
+    public Guid Id { get; init; }
+    public string Email { get; init; } = string.Empty;
+    public string FirstName { get; init; } = string.Empty;
+    public string LastName { get; init; } = string.Empty;
+    public string[] Roles { get; init; } = [];
+    public string PlanCode { get; init; } = string.Empty;
+    public DateTime CreatedAt { get; init; }
+}
+
+public sealed record AuthResponse
+{
+    public string AccessToken { get; init; } = string.Empty;
+    public DateTime AccessTokenExpiresAt { get; init; }
+    public string RefreshToken { get; init; } = string.Empty;
+    public UserDto User { get; init; } = new();
+}
