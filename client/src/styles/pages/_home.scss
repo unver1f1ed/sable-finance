@@ -63,6 +63,9 @@
   }
 
   &__note {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     position: absolute;
     bottom: 24px;
     left: var(--space-page-mobile);
@@ -265,16 +268,44 @@
       line-height: 46px;
     }
   }
+}
 
-  &__steps {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
+.panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  @include desktop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    height: 810px;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     gap: 32px;
-    margin-top: 48px;
+    padding: 56px var(--space-page-mobile);
+    background: var(--color-surface);
 
     @include desktop {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 48px;
+      gap: 40px;
+      padding: 98px 101px;
+    }
+  }
+
+  &__tiles {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    height: 360px;
+    background: var(--color-light);
+    overflow: hidden;
+
+    @include desktop {
+      gap: 54px;
+      height: auto;
     }
   }
 }
@@ -283,10 +314,119 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  opacity: 0.3;
+
+  &--active {
+    opacity: 1;
+  }
+
+  &__title {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 500;
+
+    @include desktop {
+      font-size: 29px;
+      line-height: 37px;
+    }
+  }
+
+  &--active &__title {
+    @include desktop {
+      font-size: 31px;
+    }
+  }
 
   &__text {
-    color: var(--color-text-tertiary);
+    max-width: 486px;
   }
+}
+
+.tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @include desktop {
+    gap: 54px;
+  }
+
+  &--first {
+    margin-top: -40px;
+
+    @include desktop {
+      margin-top: -68px;
+    }
+  }
+
+  &--second {
+    margin-top: -12px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    background: var(--color-white);
+
+    @include desktop {
+      width: 216px;
+      height: 216px;
+      border-radius: 40px;
+    }
+  }
+
+  &__logo {
+    width: auto;
+    height: auto;
+    max-width: 72px;
+    max-height: 72px;
+
+    @include desktop {
+      max-width: 130px;
+      max-height: 130px;
+    }
+  }
+}
+
+.press {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px 40px;
+  padding: 48px var(--space-page-mobile);
+
+  @include desktop {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 270px;
+    height: 232px;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  &__item {
+    flex: none;
+  }
+
+  &__logo {
+    width: auto;
+    height: 32px;
+
+    @include desktop {
+      height: 46px;
+    }
+  }
+}
+
+.hero__fdic {
+  flex: none;
+  width: 56px;
+  height: 22px;
 }
 
 .reviews {

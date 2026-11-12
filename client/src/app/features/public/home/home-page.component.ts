@@ -12,6 +12,12 @@ interface Benefit {
   text: string;
 }
 
+interface Brand {
+  src: string;
+  alt: string;
+  width?: number;
+}
+
 interface Step {
   title: string;
   text: string;
@@ -52,6 +58,28 @@ export class HomePageComponent {
       title: 'Цілі з видимим прогресом.',
       text: 'Відкладайте на відпустку чи подушку безпеки й бачте, скільки лишилось до мети.',
     },
+  ];
+
+  protected readonly press: Brand[] = [
+    { src: '/images/brands/yahoo.svg', alt: 'Логотип Yahoo', width: 124 },
+    { src: '/images/brands/bloomberg.svg', alt: 'Логотип Bloomberg', width: 243 },
+    { src: '/images/brands/insider.svg', alt: 'Логотип Insider', width: 147 },
+    { src: '/images/brands/forbes.svg', alt: 'Логотип Forbes', width: 118 },
+    { src: '/images/brands/yahoo.svg', alt: 'Логотип Yahoo', width: 124 },
+  ];
+
+  protected readonly tilesFirst: Brand[] = [
+    { src: '/images/brands/wholefoods.svg', alt: 'Логотип Whole Foods' },
+    { src: '/images/brands/spotify.svg', alt: 'Логотип Spotify' },
+    { src: '/images/brands/amazon.svg', alt: 'Логотип Amazon' },
+    { src: '/images/brands/uber.svg', alt: 'Логотип Uber' },
+  ];
+
+  protected readonly tilesSecond: Brand[] = [
+    { src: '/images/brands/netflix.svg', alt: 'Логотип Netflix' },
+    { src: '/images/brands/ubereats.svg', alt: 'Логотип Uber Eats' },
+    { src: '/images/brands/uber.svg', alt: 'Логотип Uber' },
+    { src: '/images/brands/spotify.svg', alt: 'Логотип Spotify' },
   ];
 
   protected readonly steps: Step[] = [

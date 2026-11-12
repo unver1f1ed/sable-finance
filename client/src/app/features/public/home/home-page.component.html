@@ -11,7 +11,10 @@
     <h1 class="hero__title text-h1">Найшвидший і найзручніший шлях до <b>фінансової свободи</b></h1>
     <a class="hero__cta" sbButton size="lg" routerLink="/" fragment="features">Дізнатись</a>
   </div>
-  <p class="hero__note">Sable — навчальний проєкт сервісу фінансового планування. Не є банком і не надає платіжних послуг.</p>
+  <div class="hero__note">
+    <img class="hero__fdic" src="/images/brands/fdic.svg" alt="Логотип FDIC" width="56" height="22" />
+    <p>Sable — навчальний проєкт сервісу фінансового планування. Не є банком і не надає платіжних послуг.</p>
+  </div>
 </section>
 
 <section class="benefits" id="features" aria-labelledby="benefits-title">
@@ -42,6 +45,13 @@
       </ul>
     </div>
   </div>
+  <ul class="press" aria-label="Про Sable пишуть">
+    @for (logo of press; track $index) {
+      <li class="press__item">
+        <img class="press__logo" [src]="logo.src" [alt]="logo.alt" [attr.width]="logo.width" height="46" loading="lazy" />
+      </li>
+    }
+  </ul>
 </section>
 
 <section class="overview" aria-labelledby="overview-title">
@@ -80,12 +90,27 @@
         Перший бюджет і перша ціль — <span class="text-strong">за п’ять хвилин.</span>
       </h2>
     </div>
-    <ul class="showcase__steps">
-      @for (step of steps; track step.title) {
-        <li class="step">
-          <h3 class="step__title text-h4">{{ step.title }}</h3>
-          <p class="step__text text-lead">{{ step.text }}</p>
-        </li>
+  </div>
+</section>
+
+<section class="panels" aria-label="Можливості Sable">
+  <div class="panels__text">
+    @for (step of steps; track step.title; let i = $index) {
+      <article class="step" [class.step--active]="i === 0">
+        <h3 class="step__title">{{ step.title }}</h3>
+        <p class="step__text text-lead">{{ step.text }}</p>
+      </article>
+    }
+  </div>
+  <div class="panels__tiles">
+    <ul class="tiles tiles--first">
+      @for (tile of tilesFirst; track $index) {
+        <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="tile.alt" width="130" height="130" loading="lazy" /></li>
+      }
+    </ul>
+    <ul class="tiles tiles--second">
+      @for (tile of tilesSecond; track $index) {
+        <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="tile.alt" width="130" height="130" loading="lazy" /></li>
       }
     </ul>
   </div>
