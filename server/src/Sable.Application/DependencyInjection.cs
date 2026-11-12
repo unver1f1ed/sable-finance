@@ -5,6 +5,7 @@ using Sable.Application.Categories;
 using Sable.Application.Budgets;
 using Sable.Application.Common;
 using Sable.Application.Dashboard;
+using Sable.Application.Goals;
 using Sable.Application.Transactions;
 
 namespace Sable.Application;
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IBudgetService, BudgetService>();
+        services.AddScoped<IGoalService, GoalService>();
         return services;
     }
 }
