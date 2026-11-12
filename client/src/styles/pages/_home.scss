@@ -120,10 +120,10 @@
 
     @include desktop {
       position: absolute;
-      top: -206px;
+      top: -28.6%;
       left: 0;
-      max-width: none;
-      width: 1238px;
+      max-width: 1238px;
+      width: 100%;
     }
   }
 
@@ -214,9 +214,9 @@
     @include desktop {
       position: absolute;
       top: 96px;
-      left: 829px;
+      left: 67%;
       align-self: auto;
-      width: 330px;
+      width: 26.6%;
     }
   }
 }
@@ -253,8 +253,8 @@
     @include desktop {
       position: absolute;
       top: 0;
-      left: 129px;
-      width: 330px;
+      left: 10.4%;
+      width: 26.6%;
     }
   }
 
