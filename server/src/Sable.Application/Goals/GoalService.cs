@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Sable.Application.Abstractions;
 using Sable.Application.Categories;
@@ -34,8 +35,7 @@ public class GoalService(IFinanceDbContext db, ICurrentUser currentUser, TimePro
         CancellationToken cancellationToken = default)
     {
         var today = Today();
-        var rows = await Rows()
-            .Where(g => includeArchived || g.ArchivedAt == null)
+        var rows = await Rows(g => includeArchived || g.ArchivedAt == null)
             .ToListAsync(cancellationToken);
 
         return rows
@@ -121,7 +121,7 @@ public class GoalService(IFinanceDbContext db, ICurrentUser currentUser, TimePro
     {
         var userId = currentUser.RequireUserId();
 
-        var goal = await Rows().FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
+        var goal = await Rows(g => g.Id == id).FirstOrDefaultAsync(cancellationToken)
             ?? throw Errors.NotFound();
         if (goal.ArchivedAt is not null)
         {
@@ -207,7 +207,7 @@ public class GoalService(IFinanceDbContext db, ICurrentUser currentUser, TimePro
             g => g.ArchivedAt == null && (g.Transactions.Sum(t => (decimal?)t.Amount) ?? 0m) < g.TargetAmount,
             cancellationToken);
 
-    private IQueryable<GoalRow> Rows() => db.Goals.Select(g => new GoalRow(
+    private IQueryable<GoalRow> Rows(Expression<Func<Goal, bool>> predicate) => db.Goals.Where(predicate).Select(g => new GoalRow(
         g.Id,
         g.Name,
         g.TargetAmount,
@@ -220,7 +220,7 @@ public class GoalService(IFinanceDbContext db, ICurrentUser currentUser, TimePro
 
     private async Task<GoalDto> GetDtoAsync(Guid id, CancellationToken cancellationToken)
     {
-        var row = await Rows().SingleAsync(g => g.Id == id, cancellationToken);
+        var row = await Rows(g => g.Id == id).SingleAsync(cancellationToken);
         return ToDto(row, Today());
     }
 

@@ -3,7 +3,9 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Sable.Application.Accounts;
+using Sable.Application.Budgets;
 using Sable.Application.Categories;
+using Sable.Application.Goals;
 using Sable.Application.Dashboard;
 using Sable.Application.Transactions;
 
@@ -111,6 +113,63 @@ public static class FinanceClientExtensions
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         return await response.ReadAsync<TransactionList>();
     }
+
+    public static async Task<BudgetDto> CreateBudgetAsync(this HttpClient client, Guid categoryId, decimal limitAmount)
+    {
+        var response = await client.PostJsonAsync("/api/budgets", new { categoryId, limitAmount });
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        return await response.ReadAsync<BudgetDto>();
+    }
+
+    public static async Task<BudgetSummary> GetBudgetsAsync(this HttpClient client, string? month = null)
+    {
+        var response = await client.GetAsync(month is null ? "/api/budgets" : $"/api/budgets?month={month}");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        return await response.ReadAsync<BudgetSummary>();
+    }
+
+    public static object GoalBody(
+        string name = "Відпустка",
+        decimal targetAmount = 1000,
+        DateOnly? deadline = null) => new
+    {
+        name,
+        targetAmount,
+        deadline = deadline?.ToString("yyyy-MM-dd"),
+        icon = "target",
+        color = "#6FDBD4"
+    };
+
+    public static async Task<GoalDto> CreateGoalAsync(
+        this HttpClient client,
+        string name = "Відпустка",
+        decimal targetAmount = 1000,
+        DateOnly? deadline = null)
+    {
+        var response = await client.PostJsonAsync("/api/goals", GoalBody(name, targetAmount, deadline));
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        return await response.ReadAsync<GoalDto>();
+    }
+
+    public static async Task<IReadOnlyList<GoalDto>> GetGoalsAsync(this HttpClient client, bool includeArchived = false)
+    {
+        var response = await client.GetAsync($"/api/goals?includeArchived={includeArchived.ToString().ToLowerInvariant()}");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        return await response.ReadAsync<List<GoalDto>>();
+    }
+
+    public static Task<HttpResponseMessage> ContributeAsync(
+        this HttpClient client,
+        Guid goalId,
+        Guid accountId,
+        decimal amount,
+        DateOnly? date = null) =>
+        client.PostJsonAsync($"/api/goals/{goalId}/contributions", new
+        {
+            amount,
+            accountId,
+            occurredOn = (date ?? Today).ToString("yyyy-MM-dd")
+        });
 
     public static async Task<DashboardDto> GetDashboardAsync(this HttpClient client, string? month = null)
     {
