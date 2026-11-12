@@ -48,11 +48,6 @@
     left: 50%;
     margin: -76px 0 0 -120px;
     transform: rotate(-10deg);
-
-    @include desktop {
-      margin: -95px 0 0 -150px;
-      width: 300px;
-    }
   }
 
   &__title {
