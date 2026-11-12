@@ -1,0 +1,170 @@
+@use '../mixins' as *;
+
+.plans-hero {
+  padding: 24px 0 40px;
+
+  @include desktop {
+    padding: 40px 0 72px;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+
+    @include desktop {
+      gap: 24px;
+    }
+  }
+
+  &__title {
+    max-width: 900px;
+  }
+
+  &__lead {
+    max-width: 620px;
+  }
+}
+
+.plans-cards {
+  display: grid;
+  gap: 20px;
+
+  @include desktop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+}
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+
+  @include desktop {
+    gap: 32px;
+    padding: 40px;
+  }
+
+  &--plus {
+    order: -1;
+
+    @include desktop {
+      order: 0;
+    }
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__description {
+    max-width: 300px;
+  }
+
+  &__visual {
+    display: none;
+
+    @include desktop {
+      display: flex;
+    }
+  }
+
+  &__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+  }
+
+  &__amount {
+    font-size: 48px;
+    line-height: 56px;
+    font-weight: 500;
+
+    @include desktop {
+      font-size: 72px;
+      line-height: 80px;
+    }
+  }
+
+  &__features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  &__feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.plans-cta {
+  padding-top: 80px;
+
+  @include desktop {
+    padding-top: 150px;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 28px 24px;
+    background: var(--gradient-cta);
+
+    @include desktop {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 62px;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__title {
+    font-weight: 600;
+  }
+
+  &__lead {
+    max-width: 560px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    @include tablet {
+      flex-direction: row;
+      gap: 14px;
+    }
+  }
+}
