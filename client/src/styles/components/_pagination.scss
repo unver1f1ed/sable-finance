@@ -9,7 +9,9 @@
 
   &__pages {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    min-width: 0;
     gap: 6px;
   }
 
