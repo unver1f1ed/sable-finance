@@ -19,6 +19,8 @@ import { ButtonDirective } from '../../shared/ui/button/button.directive';
 import { IconButtonDirective } from '../../shared/ui/icon-button/icon-button.directive';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
+const SCROLL_THRESHOLD = 8;
+
 interface FooterIconLink {
   icon: string;
   label: string;
@@ -37,12 +39,13 @@ interface FooterIconLink {
 })
 export class PublicLayoutComponent {
   protected readonly menuOpen = signal(false);
+  protected readonly scrolled = signal(false);
   protected readonly socialLinks: FooterIconLink[] = [
     { icon: 'message', label: 'Довідка', route: '/help' },
     { icon: 'mail', label: 'Написати на пошту', href: 'mailto:help@sable.ua' },
     { icon: 'play', label: 'Застосунок', route: '/', fragment: 'app' },
-    { icon: 'phone', label: 'Контакти', route: '/about' },
-    { icon: 'pin', label: 'Адреса', route: '/about' },
+    { icon: 'phone', label: 'Контакти', route: '/about', fragment: 'contact' },
+    { icon: 'pin', label: 'Адреса', route: '/about', fragment: 'contact' },
   ];
 
   private readonly router = inject(Router);
@@ -82,7 +85,13 @@ export class PublicLayoutComponent {
         }
       };
       query.addEventListener('change', onChange);
-      destroyRef.onDestroy(() => query.removeEventListener('change', onChange));
+      const onScroll = (): void => this.scrolled.set(window.scrollY > SCROLL_THRESHOLD);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      destroyRef.onDestroy(() => {
+        query.removeEventListener('change', onChange);
+        window.removeEventListener('scroll', onScroll);
+      });
     });
 
     destroyRef.onDestroy(() => {
