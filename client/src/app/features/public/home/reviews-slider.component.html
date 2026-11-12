@@ -1,0 +1,61 @@
+<section class="slider" aria-roledescription="карусель" aria-label="Відгуки користувачів">
+  <div
+    class="slider__viewport"
+    tabindex="0"
+    (keydown)="onKeydown($event)"
+    (touchstart)="onTouchStart($event)"
+    (touchend)="onTouchEnd($event)"
+  >
+    <div class="slider__track" [style.--position]="current()">
+      @for (review of reviews(); track review.id) {
+        <article class="slider__card">
+          <img class="slider__quote" src="/images/quote.svg" alt="" width="39" height="31" loading="lazy" />
+          <div class="slider__content">
+            <blockquote class="slider__text">{{ review.text }}</blockquote>
+            <footer class="slider__author">
+              <span class="slider__line" aria-hidden="true"></span>
+              <cite class="slider__name">{{ review.author }}</cite>
+            </footer>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+
+  <div class="slider__controls">
+    <button
+      class="slider__arrow"
+      sbIconButton
+      type="button"
+      aria-label="Попередній відгук"
+      [disabled]="current() === 0"
+      (click)="previous()"
+    >
+      <sb-icon name="chev-left" [size]="20" />
+    </button>
+    <ul class="slider__dots">
+      @for (dot of dots(); track dot) {
+        <li>
+          <button
+            class="slider__dot"
+            [class.slider__dot--active]="dot === current()"
+            type="button"
+            [attr.aria-label]="'Відгук ' + (dot + 1)"
+            [attr.aria-current]="dot === current() ? 'true' : null"
+            (click)="goTo(dot)"
+          ></button>
+        </li>
+      }
+    </ul>
+    <button
+      class="slider__arrow slider__arrow--next"
+      sbIconButton
+      type="button"
+      aria-label="Наступний відгук"
+      [disabled]="current() === maxPosition()"
+      (click)="next()"
+    >
+      <sb-icon name="chev-right" [size]="20" />
+    </button>
+  </div>
+</section>

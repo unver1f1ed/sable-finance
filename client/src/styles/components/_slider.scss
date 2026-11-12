@@ -1,0 +1,157 @@
+@use '../mixins' as *;
+
+.slider {
+  --visible: 1;
+  --gap: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+
+  @include tablet {
+    --visible: 2;
+    --gap: 24px;
+  }
+
+  @include desktop {
+    --visible: 3;
+    --gap: 24px;
+  }
+
+  &__viewport {
+    overflow: hidden;
+    border-radius: var(--radius-card);
+  }
+
+  &__track {
+    display: flex;
+    gap: var(--gap);
+    transform: translateX(
+      calc(
+        var(--position) * -1 * ((100% - (var(--visible) - 1) * var(--gap)) / var(--visible) + var(--gap))
+      )
+    );
+    transition: transform 0.4s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__card {
+    display: flex;
+    flex: 0 0 calc((100% - (var(--visible) - 1) * var(--gap)) / var(--visible));
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+    padding: 28px 24px;
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+
+    @include desktop {
+      flex-direction: row;
+      gap: 28px;
+      min-height: 320px;
+      padding: 44px 36px;
+    }
+  }
+
+  &__quote {
+    flex: none;
+    width: 39px;
+    height: 31px;
+  }
+
+  &__content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  &__text {
+    font-size: 20px;
+    line-height: 28px;
+    overflow-wrap: anywhere;
+
+    @include desktop {
+      font-size: 22px;
+      line-height: 30px;
+    }
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__line {
+    flex: none;
+    width: 62px;
+    height: 4px;
+    border-radius: 3px;
+    background: var(--color-white);
+  }
+
+  &__name {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  &__arrow.icon-btn {
+    width: 52px;
+    height: 52px;
+  }
+
+  &__arrow--next:not(:disabled) {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__dot {
+    position: relative;
+    display: block;
+    width: 28px;
+    height: 28px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background: var(--color-border);
+      transition:
+        width 0.2s ease,
+        left 0.2s ease,
+        background-color 0.2s ease;
+    }
+
+    &--active::before {
+      left: 0;
+      width: 28px;
+      background: var(--color-accent);
+    }
+  }
+}
