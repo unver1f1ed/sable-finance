@@ -9,7 +9,6 @@ import { CategoryIconComponent } from '../../../shared/ui/category-icon/category
 import { ChipDirective } from '../../../shared/ui/chip/chip.directive';
 import { EmptyStateComponent } from '../../../shared/ui/empty-state/empty-state.component';
 import { FieldComponent } from '../../../shared/ui/field/field.component';
-import { IconButtonDirective } from '../../../shared/ui/icon-button/icon-button.directive';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { resultsLabel } from '../../../shared/util/plural';
 import { PublicContentService } from '../data/public-content.service';
@@ -33,7 +32,6 @@ interface PopularTopic {
     ChipDirective,
     EmptyStateComponent,
     FieldComponent,
-    IconButtonDirective,
     IconComponent,
   ],
   templateUrl: './help-page.component.html',
