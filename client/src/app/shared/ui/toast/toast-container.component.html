@@ -1,0 +1,16 @@
+<div class="toast-container">
+  @for (toast of service.toasts(); track toast.id) {
+    <div class="toast" [class.toast--error]="toast.kind === 'error'" [attr.role]="toast.kind === 'error' ? 'alert' : 'status'">
+      <sb-icon
+        class="toast__icon"
+        [class.toast__icon--error]="toast.kind === 'error'"
+        [name]="toast.kind === 'error' ? 'alert' : 'check'"
+        [size]="18"
+      />
+      <p class="toast__text">{{ toast.text }}</p>
+      <button class="toast__close" type="button" aria-label="Закрити сповіщення" (click)="service.dismiss(toast.id)">
+        <sb-icon name="x" [size]="16" />
+      </button>
+    </div>
+  }
+</div>
