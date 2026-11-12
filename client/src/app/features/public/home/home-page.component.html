@@ -1,0 +1,135 @@
+<section class="hero">
+  <img
+    class="hero__bg"
+    src="/images/hero-cards.webp"
+    alt=""
+    width="1500"
+    height="1500"
+    fetchpriority="high"
+  />
+  <div class="hero__inner">
+    <h1 class="hero__title text-h1">Найшвидший і найзручніший шлях до <b>фінансової свободи</b></h1>
+    <a class="hero__cta" sbButton size="lg" routerLink="/" fragment="features">Дізнатись</a>
+  </div>
+  <p class="hero__note">Sable — навчальний проєкт сервісу фінансового планування. Не є банком і не надає платіжних послуг.</p>
+</section>
+
+<section class="benefits" id="features" aria-labelledby="benefits-title">
+  <div class="container">
+    <div class="benefits__intro">
+      <p class="text-eyebrow">400 000 користувачів і більше</p>
+      <h2 class="benefits__title text-h2" id="benefits-title">
+        <b>Жодних прихованих платежів.</b> Жодних таблиць. Жодних перепон на шляху до ваших цілей.
+      </h2>
+    </div>
+    <div class="benefits__stage">
+      <img
+        class="benefits__phone"
+        src="/images/app-phone.webp"
+        alt="Застосунок Sable на екрані смартфона"
+        width="1600"
+        height="1027"
+        loading="lazy"
+      />
+      <ul class="benefits__list">
+        @for (benefit of benefits; track benefit.title; let i = $index) {
+          <li class="benefit" [class.benefit--right]="i > 1">
+            <sb-icon class="text-accent" [name]="benefit.icon" [size]="38" />
+            <h3 class="benefit__title text-h4">{{ benefit.title }}</h3>
+            <p class="text-body text-muted">{{ benefit.text }}</p>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="overview" aria-labelledby="overview-title">
+  <div class="container overview__inner">
+    <div class="overview__text">
+      <h2 class="overview__title text-h2" id="overview-title">
+        Повна картина доходів і витрат <span class="text-strong">в одному кабінеті.</span>
+      </h2>
+      <p class="text-lead text-muted">
+        Діаграми за категоріями, історія транзакцій із пошуком і фільтрами, порівняння місяців.
+      </p>
+    </div>
+    <img
+      class="overview__card"
+      src="/images/card-dark.webp"
+      alt=""
+      width="330"
+      height="518"
+      loading="lazy"
+    />
+  </div>
+</section>
+
+<section class="showcase" aria-labelledby="showcase-title">
+  <div class="container">
+    <div class="showcase__top">
+      <img
+        class="showcase__card"
+        src="/images/card-light.webp"
+        alt=""
+        width="330"
+        height="518"
+        loading="lazy"
+      />
+      <h2 class="showcase__title text-h2" id="showcase-title">
+        Перший бюджет і перша ціль — <span class="text-strong">за п’ять хвилин.</span>
+      </h2>
+    </div>
+    <ul class="showcase__steps">
+      @for (step of steps; track step.title) {
+        <li class="step">
+          <h3 class="step__title text-h4">{{ step.title }}</h3>
+          <p class="step__text text-lead">{{ step.text }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<sb-plans-compare [data]="plans()" [rows]="6" billing="yearly" visual="images" />
+
+<section class="reviews" aria-labelledby="reviews-title">
+  <div class="reviews__summary">
+    <h2 class="visually-hidden" id="reviews-title">Відгуки користувачів</h2>
+    <div class="reviews__stars" aria-hidden="true">
+      @for (star of stars; track star) {
+        <img src="/images/star.svg" alt="" width="22" height="22" loading="lazy" />
+      }
+    </div>
+    <p class="reviews__average">{{ reviews().average }}</p>
+    <p class="text-small text-muted">середня оцінка користувачів</p>
+  </div>
+  <div class="container reviews__slider">
+    <sb-reviews-slider [reviews]="reviews().items" />
+  </div>
+</section>
+
+<section class="download" id="app" aria-labelledby="download-title">
+  <div class="container">
+    <div class="download__card">
+      <img
+        class="download__bg"
+        src="/images/download-bg.webp"
+        alt=""
+        width="1238"
+        height="412"
+        loading="lazy"
+      />
+      <div class="download__text">
+        <h2 class="download__title" id="download-title">
+          Приєднуйтесь до <span class="download__count">400 000</span> користувачів
+        </h2>
+        <p class="download__lead">Завантажте Sable: просте планування фінансів, яке завжди під рукою.</p>
+      </div>
+      <div class="download__badges">
+        <img class="download__badge" src="/images/badge-google-play.webp" alt="Google Play" width="186" height="62" loading="lazy" />
+        <img class="download__badge" src="/images/badge-app-store.webp" alt="App Store" width="186" height="62" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>

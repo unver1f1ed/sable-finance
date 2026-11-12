@@ -1,0 +1,188 @@
+@use '../mixins' as *;
+
+.compare {
+  padding-top: 80px;
+
+  @include desktop {
+    padding-top: 150px;
+  }
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    padding: 0 var(--space-page-mobile);
+    overflow: hidden;
+
+    @include desktop {
+      padding: 0 0 0 101px;
+    }
+  }
+
+  &__banner-text {
+    @include desktop {
+      flex: none;
+      white-space: nowrap;
+    }
+
+    &--copy {
+      display: none;
+
+      @include desktop {
+        display: block;
+      }
+    }
+  }
+
+  &__banner-dot {
+    display: none;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-pill);
+    background: var(--color-white);
+
+    @include desktop {
+      display: block;
+    }
+  }
+
+  &__body {
+    margin-top: 40px;
+
+    @include desktop {
+      margin-top: 90px;
+    }
+  }
+
+  &__scroll {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  &__corner {
+    width: 34%;
+  }
+
+  &__plan {
+    padding: 0 0 20px;
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+
+    @include desktop {
+      padding-bottom: 36px;
+    }
+  }
+
+  &__image,
+  &__card {
+    display: none;
+
+    @include tablet {
+      display: block;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__image {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__plan-name {
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--color-accent-deep);
+
+    @include tablet {
+      font-size: 24px;
+      line-height: 30px;
+    }
+  }
+
+  &__row {
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__feature {
+    padding: 14px 8px 14px 0;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 400;
+    text-align: left;
+
+    @include tablet {
+      height: 63px;
+      padding: 0;
+      font-size: 15px;
+      line-height: 22px;
+    }
+  }
+
+  &__cell {
+    padding: 14px 4px 14px 0;
+    font-size: 13px;
+    line-height: 18px;
+
+    @include tablet {
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    &--muted {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &__yes {
+    color: var(--color-accent);
+  }
+
+  &__no {
+    color: var(--color-text-tertiary);
+  }
+
+  &__row--price &__feature {
+    @include tablet {
+      height: 74px;
+    }
+  }
+
+  &__price {
+    font-size: 22px;
+    line-height: 28px;
+
+    @include tablet {
+      font-size: 41px;
+      line-height: 56px;
+    }
+  }
+
+  &__foot {
+    display: none;
+
+    @include tablet {
+      display: table-footer-group;
+    }
+  }
+
+  &__action {
+    padding-top: 30px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+
+    @include tablet {
+      display: none;
+    }
+  }
+}
