@@ -14,6 +14,13 @@ public class TransactionsController(ITransactionService transactions, ICurrentUs
     public async Task<ActionResult<TransactionList>> List([FromQuery] TransactionQuery query, CancellationToken ct) =>
         await transactions.ListAsync(query, ct);
 
+    [HttpGet("export")]
+    public async Task<IActionResult> Export([FromQuery] TransactionQuery query, CancellationToken ct)
+    {
+        var export = await transactions.ExportAsync(query, ct);
+        return File(export.Content, "text/csv; charset=utf-8", export.FileName);
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<TransactionDto>> Get(Guid id, CancellationToken ct) =>
         await transactions.GetAsync(id, ct);
