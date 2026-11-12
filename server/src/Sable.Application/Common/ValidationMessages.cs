@@ -39,6 +39,21 @@ public static class ValidationMessages
     public const string MessageLength = "Повідомлення має містити від 10 до 1000 символів";
     public const string InvalidPlan = "Оберіть доступний тариф";
 
+    public const string MaxLength80 = "Не більше 80 символів";
+    public const string MaxLength160 = "Не більше 160 символів";
+    public const string PriceRange = "Ціна має бути від 0 до 100 000";
+    public const string YearlyAboveMonthly = "Річна ціна за місяць не може перевищувати місячну";
+    public const string UnknownPlanCode = "Невідомий код тарифу";
+    public const string FeatureTextRequired = "Вкажіть текст значення (до 40 символів)";
+    public const string FeatureOrderIncomplete = "Передайте всі характеристики в новому порядку";
+    public const string ReviewTextLength = "Текст має містити від 10 до 280 символів";
+    public const string RatingRange = "Оцінка має бути від 1 до 5";
+    public const string QuestionLength = "Питання має містити від 5 до 160 символів";
+    public const string AnswerLength = "Відповідь має містити від 10 до 600 символів";
+    public const string TopicNotFound = "Тему не знайдено";
+    public const string DuplicateTopic = "Тема з такою назвою вже існує";
+    public const string TopicHasItems = "У темі є питання. Спершу видаліть або перенесіть їх";
+
     public const string BudgetCategoryNotExpense = "Бюджет можна створити лише для категорії витрат";
     public const string ContributionExceedsRemaining = "Сума внеску перевищує залишок до цілі";
     public const string DeadlineInFuture = "Вкажіть дату в майбутньому";

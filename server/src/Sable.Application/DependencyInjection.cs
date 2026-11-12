@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sable.Application.Accounts;
 using Sable.Application.Categories;
+using Sable.Application.Admin.Plans;
+using Sable.Application.Admin.Reviews;
 using Sable.Application.Budgets;
 using Sable.Application.Common;
 using Sable.Application.Content;
@@ -24,6 +26,8 @@ public static class DependencyInjection
         services.AddScoped<IBudgetService, BudgetService>();
         services.AddScoped<IGoalService, GoalService>();
         services.AddScoped<IPublicContentService, PublicContentService>();
+        services.AddScoped<IAdminPlanService, AdminPlanService>();
+        services.AddScoped<IAdminReviewService, AdminReviewService>();
         return services;
     }
 }
