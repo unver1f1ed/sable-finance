@@ -1,4 +1,3 @@
-using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Sable.Application.Abstractions;
 using Sable.Application.Common;
@@ -17,7 +16,7 @@ public class DashboardService(IFinanceDbContext db, TimeProvider timeProvider) :
 
     public async Task<DashboardDto> GetAsync(string? month, CancellationToken cancellationToken = default)
     {
-        var first = ParseMonth(month);
+        var first = MonthParser.Parse(month, Today());
         var previousFirst = first.AddMonths(-1);
         var lastDay = first.AddMonths(1).AddDays(-1);
         var previousLastDay = first.AddDays(-1);
@@ -32,7 +31,7 @@ public class DashboardService(IFinanceDbContext db, TimeProvider timeProvider) :
         var monthly = Enumerable.Range(0, MonthsInSeries)
             .Select(i => seriesStart.AddMonths(i))
             .Select(d => new MonthlyPoint(
-                FormatMonth(d),
+                MonthParser.Format(d),
                 SumFor(d, TransactionType.Income),
                 SumFor(d, TransactionType.Expense)))
             .ToList();
@@ -83,7 +82,7 @@ public class DashboardService(IFinanceDbContext db, TimeProvider timeProvider) :
 
         return new DashboardDto
         {
-            Month = FormatMonth(first),
+            Month = MonthParser.Format(first),
             TotalBalance = initialBalance + Net(includeCurrentMonth: true),
             Income = current.Income,
             Expense = current.Expense,
@@ -99,24 +98,7 @@ public class DashboardService(IFinanceDbContext db, TimeProvider timeProvider) :
         };
     }
 
-    private DateOnly ParseMonth(string? month)
-    {
-        if (string.IsNullOrWhiteSpace(month))
-        {
-            var today = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
-            return new DateOnly(today.Year, today.Month, 1);
-        }
-
-        if (month.Length != 7
-            || !DateOnly.TryParseExact(month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
-        {
-            throw Errors.Validation("month", ValidationMessages.InvalidMonth);
-        }
-
-        return parsed;
-    }
-
-    private static string FormatMonth(DateOnly date) => date.ToString("yyyy-MM", CultureInfo.InvariantCulture);
+    private DateOnly Today() => DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
 
     private static int SavedPercent(decimal income, decimal expense) =>
         income == 0 ? 0 : (int)Math.Round((income - expense) / income * 100, MidpointRounding.AwayFromZero);
