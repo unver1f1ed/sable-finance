@@ -1,0 +1,140 @@
+<header class="public-header">
+  <a class="public-header__logo" routerLink="/">
+    <img src="/images/logo.svg" alt="Sable" width="99" height="24" />
+  </a>
+
+  <nav class="public-nav" aria-label="Основна навігація">
+    <ul class="public-nav__list">
+      <li><a class="public-nav__link" routerLink="/" fragment="features">Можливості</a></li>
+      <li>
+        <a class="public-nav__link" routerLink="/plans" routerLinkActive="public-nav__link--active" ariaCurrentWhenActive="page">Тарифи</a>
+      </li>
+      <li><a class="public-nav__link" routerLink="/" fragment="app">Застосунок</a></li>
+      <li>
+        <a class="public-nav__link" routerLink="/help" routerLinkActive="public-nav__link--active" ariaCurrentWhenActive="page">Довідка</a>
+      </li>
+      <li>
+        <a class="public-nav__link" routerLink="/about" routerLinkActive="public-nav__link--active" ariaCurrentWhenActive="page">Про Sable</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="public-header__actions">
+    <a class="public-header__desktop" sbButton variant="ghost" [routerLink]="[path()]" [queryParams]="{ auth: 'login' }">Увійти</a>
+    <a class="public-header__desktop" sbButton variant="white" [routerLink]="[path()]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
+    <a
+      class="public-header__mobile"
+      sbButton
+      variant="white"
+      size="sm"
+      aria-label="Увійти"
+      [routerLink]="[path()]"
+      [queryParams]="{ auth: 'login' }"
+    >
+      <sb-icon name="user" [size]="14" />
+    </a>
+    <button
+      #burger
+      class="public-header__mobile"
+      sbIconButton
+      type="button"
+      aria-controls="mobile-menu"
+      aria-label="Меню"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <sb-icon [name]="menuOpen() ? 'x' : 'menu'" [size]="18" />
+    </button>
+  </div>
+</header>
+
+@if (menuOpen()) {
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu__nav" aria-label="Мобільне меню">
+      <ul>
+        <li><a class="mobile-menu__link" routerLink="/" fragment="features" (click)="closeMenu()">Можливості</a></li>
+        <li>
+          <a class="mobile-menu__link" routerLink="/plans" routerLinkActive="mobile-menu__link--active" ariaCurrentWhenActive="page" (click)="closeMenu()">Тарифи</a>
+        </li>
+        <li><a class="mobile-menu__link" routerLink="/" fragment="app" (click)="closeMenu()">Застосунок</a></li>
+        <li>
+          <a class="mobile-menu__link" routerLink="/help" routerLinkActive="mobile-menu__link--active" ariaCurrentWhenActive="page" (click)="closeMenu()">Довідка</a>
+        </li>
+        <li>
+          <a class="mobile-menu__link" routerLink="/about" routerLinkActive="mobile-menu__link--active" ariaCurrentWhenActive="page" (click)="closeMenu()">Про Sable</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="mobile-menu__actions">
+      <a sbButton size="lg" block [routerLink]="[path()]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
+      <a sbButton variant="ghost" size="lg" block [routerLink]="[path()]" [queryParams]="{ auth: 'login' }">Увійти</a>
+    </div>
+  </div>
+}
+
+<main class="public-layout__main">
+  <router-outlet />
+</main>
+
+<footer class="public-footer">
+  <div class="container public-footer__inner">
+    <div class="public-footer__top">
+      <div class="public-footer__columns">
+        <nav class="public-footer__group" aria-labelledby="footer-product">
+          <p class="public-footer__title text-h3" id="footer-product">Продукт</p>
+          <ul class="public-footer__list">
+            <li><a class="public-footer__link" routerLink="/" fragment="features">Можливості</a></li>
+            <li><a class="public-footer__link" routerLink="/plans">Тарифи</a></li>
+            <li><a class="public-footer__link" routerLink="/" fragment="app">Застосунок</a></li>
+          </ul>
+        </nav>
+        <nav class="public-footer__group" aria-labelledby="footer-help">
+          <p class="public-footer__title text-h3" id="footer-help">Довідка</p>
+          <ul class="public-footer__list">
+            <li><a class="public-footer__link" routerLink="/help">Питання та відповіді</a></li>
+            <li><a class="public-footer__link" routerLink="/about">Про Sable</a></li>
+            <li class="public-footer__link">Блог <span class="text-accent">Скоро</span></li>
+          </ul>
+        </nav>
+        <address class="public-footer__group">
+          <p class="public-footer__title text-h3">Контакти</p>
+          <ul class="public-footer__list">
+            <li class="public-footer__link">Пошта: <a href="mailto:help@sable.ua">help@sable.ua</a></li>
+            <li class="public-footer__link">Адреса: Київ, вул. Січових Стрільців, 21</li>
+          </ul>
+        </address>
+      </div>
+      <a class="public-footer__logo" routerLink="/">
+        <img src="/images/logo.svg" alt="Sable" width="248" height="60" />
+      </a>
+    </div>
+
+    <div class="public-footer__middle">
+      <ul class="public-footer__social">
+        @for (link of socialLinks; track link.icon) {
+          <li>
+            @if (link.href) {
+              <a class="public-footer__social-link" [href]="link.href" [attr.aria-label]="link.label">
+                <sb-icon [name]="link.icon" [size]="28" />
+              </a>
+            } @else {
+              <a class="public-footer__social-link" [routerLink]="link.route" [fragment]="link.fragment" [attr.aria-label]="link.label">
+                <sb-icon [name]="link.icon" [size]="28" />
+              </a>
+            }
+          </li>
+        }
+      </ul>
+      <p class="text-small">© Sable Money, 2026. Усі права захищено.</p>
+    </div>
+
+    <div class="public-footer__legal">
+      <p class="text-tiny text-faint">Політика конфіденційності | Умови користування</p>
+      <p class="public-footer__disclaimer text-tiny text-faint">
+        Sable — навчальний проєкт сервісу персонального фінансового планування. Сервіс не є банком, не надає платіжних
+        послуг і не дає інвестиційних порад. Дані про тарифи, відгуки та партнерів наведено для демонстрації
+        функціональності.
+      </p>
+    </div>
+  </div>
+</footer>

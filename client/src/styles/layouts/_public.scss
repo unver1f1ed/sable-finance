@@ -1,0 +1,265 @@
+@use '../mixins' as *;
+
+.public-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__main {
+    flex: 1 0 auto;
+  }
+}
+
+.public-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+  padding: 0 var(--space-page-mobile);
+  background: var(--color-bg);
+
+  @include desktop {
+    position: relative;
+    align-items: flex-start;
+    height: 140px;
+    padding: 46px 50px 0;
+  }
+
+  &__logo {
+    display: block;
+    flex: none;
+
+    @include desktop {
+      width: 120px;
+    }
+
+    img {
+      @include desktop {
+        width: 120px;
+        height: 29px;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    @include desktop {
+      gap: 12px;
+    }
+  }
+
+  &__desktop {
+    display: none;
+
+    @include desktop {
+      display: inline-flex;
+    }
+  }
+
+  &__mobile {
+    @include desktop {
+      display: none;
+    }
+  }
+}
+
+.public-nav {
+  display: none;
+
+  @include desktop {
+    display: block;
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    height: 47px;
+  }
+
+  &__link {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    letter-spacing: 0.22px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.64);
+    transition: color 0.15s ease;
+
+    &:hover,
+    &--active {
+      color: #ffffff;
+    }
+  }
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 72px 0 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px var(--space-page-mobile) 32px;
+  background: var(--color-bg);
+  overflow-y: auto;
+
+  @include desktop {
+    display: none;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    height: 68px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 26px;
+    line-height: 32px;
+    font-weight: 500;
+
+    &--active {
+      color: var(--color-accent);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.public-footer {
+  padding: 60px 0 40px;
+
+  @include desktop {
+    padding: 110px 0 60px;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+
+    @include desktop {
+      gap: 72px;
+    }
+  }
+
+  &__top {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    @include desktop {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+  }
+
+  &__columns {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+
+    @include tablet {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 40px 64px;
+    }
+
+    @include desktop {
+      gap: 120px;
+    }
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-style: normal;
+  }
+
+  &__title {
+    letter-spacing: 0.39px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  &__link {
+    font-size: 16px;
+    line-height: 21px;
+    overflow-wrap: anywhere;
+  }
+
+  a.public-footer__link:hover,
+  &__link a:hover {
+    color: var(--color-accent);
+  }
+
+  &__logo {
+    display: block;
+    flex: none;
+    width: 124px;
+
+    @include desktop {
+      width: 248px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__middle {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @include tablet {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 38px;
+  }
+
+  &__social-link {
+    display: block;
+    color: var(--color-text);
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  &__legal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__disclaimer {
+    max-width: 1100px;
+  }
+}

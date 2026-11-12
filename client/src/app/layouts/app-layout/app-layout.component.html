@@ -1,0 +1,76 @@
+<aside class="sidebar">
+  <a class="sidebar__logo" routerLink="/app">
+    <img src="/images/logo.svg" alt="Sable" width="107" height="26" />
+  </a>
+
+  <nav class="sidebar__nav" aria-label="Кабінет">
+    <ul class="sidebar__list">
+      @for (item of navItems; track item.path) {
+        <li>
+          <a
+            class="sidebar__link"
+            [routerLink]="item.path"
+            routerLinkActive="sidebar__link--active"
+            [routerLinkActiveOptions]="{ exact: item.exact }"
+            ariaCurrentWhenActive="page"
+          >
+            <sb-icon [name]="item.icon" [size]="20" />
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <section class="card sidebar__plan" aria-label="Ваш тариф">
+    <div class="sidebar__plan-head">
+      <sb-badge tone="grey">Тариф {{ user.plan }}</sb-badge>
+      <sb-icon class="text-accent" name="star" [size]="18" />
+    </div>
+    <p class="text-small text-muted">Необмежені рахунки, цілі та експорт звітів — у тарифі Плюс.</p>
+    <a sbButton size="sm" block routerLink="/plans">Перейти на Плюс</a>
+  </section>
+
+  <div class="sidebar__user">
+    <sb-avatar [name]="user.name" />
+    <div class="sidebar__user-info">
+      <p class="text-small text-semibold sidebar__user-name">{{ user.name }}</p>
+      <p class="text-tiny text-muted sidebar__user-email">{{ user.email }}</p>
+    </div>
+    <button class="icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти">
+      <sb-icon name="logout" [size]="18" />
+    </button>
+  </div>
+</aside>
+
+<main class="shell__main">
+  <router-outlet />
+</main>
+
+<nav class="tab-bar" aria-label="Мобільна навігація">
+  <a
+    class="tab-bar__item"
+    routerLink="/app"
+    routerLinkActive="tab-bar__item--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    ariaCurrentWhenActive="page"
+  >
+    <sb-icon name="grid" [size]="22" />
+    Огляд
+  </a>
+  <a class="tab-bar__item" routerLink="/app/transactions" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
+    <sb-icon name="swap" [size]="22" />
+    Транзакції
+  </a>
+  <button class="tab-bar__add" type="button" aria-label="Додати транзакцію">
+    <sb-icon name="plus" [size]="24" />
+  </button>
+  <a class="tab-bar__item" routerLink="/app/planning" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
+    <sb-icon name="target" [size]="22" />
+    Планування
+  </a>
+  <a class="tab-bar__item" routerLink="/app/settings" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
+    <sb-icon name="sliders" [size]="22" />
+    Налаштування
+  </a>
+</nav>
