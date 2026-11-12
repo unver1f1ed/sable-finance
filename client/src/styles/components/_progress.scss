@@ -1,0 +1,19 @@
+.progress {
+  display: flex;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  overflow: hidden;
+
+  &__bar {
+    display: block;
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent);
+    transition: width 0.3s ease;
+  }
+
+  &--thick {
+    height: 12px;
+  }
+}

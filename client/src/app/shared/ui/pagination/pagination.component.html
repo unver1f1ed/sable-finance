@@ -1,0 +1,55 @@
+<nav class="pagination" aria-label="Пагінація">
+  <p class="pagination__summary text-small text-muted num">Показано {{ from() }}–{{ to() }} із {{ total() }}</p>
+  <ul class="pagination__pages">
+    <li>
+      <button
+        sbIconButton
+        size="sm"
+        type="button"
+        aria-label="Попередня сторінка"
+        [disabled]="page() <= 1"
+        (click)="go(page() - 1)"
+      >
+        <sb-icon name="chev-left" [size]="16" />
+      </button>
+    </li>
+    @for (item of items(); track $index) {
+      @if (item === null) {
+        <li class="pagination__ellipsis" aria-hidden="true">…</li>
+      } @else {
+        <li>
+          <button
+            class="pagination__page num"
+            [class.pagination__page--active]="item === page()"
+            type="button"
+            [attr.aria-current]="item === page() ? 'page' : null"
+            [attr.aria-label]="'Сторінка ' + item"
+            (click)="go(item)"
+          >
+            {{ item }}
+          </button>
+        </li>
+      }
+    }
+    <li>
+      <button
+        sbIconButton
+        size="sm"
+        type="button"
+        aria-label="Наступна сторінка"
+        [disabled]="page() >= pageCount()"
+        (click)="go(page() + 1)"
+      >
+        <sb-icon name="chev-right" [size]="16" />
+      </button>
+    </li>
+  </ul>
+  <div class="pagination__size">
+    <label class="text-small text-muted" [attr.for]="sizeSelectId">Рядків на сторінці</label>
+    <select class="pagination__select" [id]="sizeSelectId" (change)="changeSize($event)">
+      @for (size of sizes; track size) {
+        <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
+      }
+    </select>
+  </div>
+</nav>

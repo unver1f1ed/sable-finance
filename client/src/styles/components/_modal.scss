@@ -1,0 +1,89 @@
+@use '../mixins' as *;
+
+.modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-height: 92vh;
+  padding: 12px 20px 28px;
+  border-radius: var(--radius-card-lg) var(--radius-card-lg) 0 0;
+  background: var(--color-surface);
+  overflow-y: auto;
+  outline: none;
+
+  @include tablet {
+    gap: 28px;
+    max-width: var(--modal-width, 520px);
+    max-height: calc(100vh - 48px);
+    padding: 40px;
+    border-radius: var(--radius-card-lg);
+  }
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.72);
+    overflow-y: auto;
+
+    @include tablet {
+      align-items: center;
+      padding: 24px;
+    }
+  }
+
+  &__handle {
+    align-self: center;
+    flex: none;
+    width: 40px;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: #3a3a3c;
+
+    @include tablet {
+      display: none;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    @include tablet {
+      align-items: flex-start;
+    }
+  }
+
+  &__title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__footer:empty {
+    display: none;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    @include tablet {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+}

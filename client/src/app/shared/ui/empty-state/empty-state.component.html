@@ -1,0 +1,6 @@
+<sb-category-icon [icon]="icon()" />
+<p class="empty-state__title text-h5">{{ title() }}</p>
+@if (text()) {
+  <p class="empty-state__text text-small text-muted">{{ text() }}</p>
+}
+<div class="empty-state__action"><ng-content /></div>
