@@ -14,27 +14,27 @@
   white-space: nowrap;
 
   &--teal {
-    background: rgba(111, 219, 212, 0.14);
+    background: var(--color-accent-soft);
     color: var(--color-accent);
   }
 
   &--grey {
-    background: rgba(160, 161, 168, 0.16);
+    background: var(--color-neutral-soft);
     color: var(--color-text-secondary);
   }
 
   &--red {
-    background: rgba(255, 107, 107, 0.14);
+    background: var(--color-danger-soft);
     color: var(--color-danger);
   }
 
   &--amber {
-    background: rgba(255, 180, 84, 0.14);
+    background: var(--color-warning-soft);
     color: var(--color-warning);
   }
 
   &--purple {
-    background: rgba(167, 139, 250, 0.16);
+    background: var(--color-violet-soft);
     color: var(--color-purple);
   }
 }

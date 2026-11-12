@@ -34,14 +34,14 @@
       color 0.15s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--color-white-hover);
       color: var(--color-text);
     }
 
     &--active,
     &--active:hover {
       background: var(--color-accent);
-      color: #000000;
+      color: var(--color-on-accent);
       font-weight: 600;
     }
   }
