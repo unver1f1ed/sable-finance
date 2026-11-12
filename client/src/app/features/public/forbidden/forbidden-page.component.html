@@ -1,0 +1,15 @@
+<section class="container not-found">
+  <div class="not-found__visual" aria-hidden="true">
+    <span class="not-found__code">403</span>
+    <sb-sable-card class="not-found__card" variant="dark" label="Закрито" [width]="240" />
+  </div>
+  <p class="text-eyebrow">Помилка 403</p>
+  <h1 class="not-found__title text-h2"><b>Немає доступу.</b></h1>
+  <p class="text-lead text-muted">У вас недостатньо прав для перегляду цієї сторінки.</p>
+  <div class="not-found__actions">
+    <a sbButton size="lg" routerLink="/">На головну</a>
+    @if (auth.isSignedIn()) {
+      <a sbButton variant="ghost" size="lg" routerLink="/app">До кабінету</a>
+    }
+  </div>
+</section>

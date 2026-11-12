@@ -20,19 +20,29 @@
   </nav>
 
   <div class="public-header__actions">
-    <a class="public-header__desktop" sbButton variant="ghost" [routerLink]="[path()]" [queryParams]="{ auth: 'login' }">Увійти</a>
-    <a class="public-header__desktop" sbButton variant="white" [routerLink]="[path()]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
-    <a
-      class="public-header__mobile"
-      sbButton
-      variant="white"
-      size="sm"
-      aria-label="Увійти"
-      [routerLink]="[path()]"
-      [queryParams]="{ auth: 'login' }"
-    >
-      <sb-icon name="user" [size]="14" />
-    </a>
+    @if (auth.isSignedIn()) {
+      <a class="public-header__desktop" sbButton variant="white" routerLink="/app">
+        Кабінет
+        <sb-icon name="arrow-right" [size]="16" />
+      </a>
+      <a class="public-header__mobile" sbButton variant="white" size="sm" aria-label="Кабінет" routerLink="/app">
+        <sb-icon name="user" [size]="14" />
+      </a>
+    } @else {
+      <a class="public-header__desktop" sbButton variant="ghost" [routerLink]="[path()]" [queryParams]="{ auth: 'login' }">Увійти</a>
+      <a class="public-header__desktop" sbButton variant="white" [routerLink]="[path()]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
+      <a
+        class="public-header__mobile"
+        sbButton
+        variant="white"
+        size="sm"
+        aria-label="Увійти"
+        [routerLink]="[path()]"
+        [queryParams]="{ auth: 'login' }"
+      >
+        <sb-icon name="user" [size]="14" />
+      </a>
+    }
     <button
       #burger
       class="public-header__mobile"
@@ -66,11 +76,17 @@
       </ul>
     </nav>
     <div class="mobile-menu__actions">
-      <a sbButton size="lg" block [routerLink]="[path()]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
-      <a sbButton variant="ghost" size="lg" block [routerLink]="[path()]" [queryParams]="{ auth: 'login' }">Увійти</a>
+      @if (auth.isSignedIn()) {
+        <a sbButton size="lg" block routerLink="/app" (click)="closeMenu()">Кабінет</a>
+      } @else {
+        <a sbButton size="lg" block [routerLink]="[path()]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
+        <a sbButton variant="ghost" size="lg" block [routerLink]="[path()]" [queryParams]="{ auth: 'login' }">Увійти</a>
+      }
     </div>
   </div>
 }
+
+<sb-auth-modals />
 
 <main class="public-layout__main">
   <router-outlet />

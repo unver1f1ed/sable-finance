@@ -4,7 +4,7 @@
       <sb-icon
         class="toast__icon"
         [class.toast__icon--error]="toast.kind === 'error'"
-        [name]="toast.kind === 'error' ? 'alert' : 'check'"
+        [name]="toast.kind === 'error' ? 'alert' : toast.kind === 'info' ? 'info' : 'check'"
         [size]="18"
       />
       <p class="toast__text">{{ toast.text }}</p>

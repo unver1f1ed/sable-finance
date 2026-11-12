@@ -1,0 +1,119 @@
+<sb-modal
+  [open]="open()"
+  [title]="createdName() !== null ? 'Акаунт створено' : 'Відкрийте акаунт'"
+  [width]="560"
+  (closed)="closed.emit()"
+>
+  @if (createdName() !== null) {
+    <div class="auth-success">
+      <span class="auth-success__icon" aria-hidden="true"><sb-icon name="check" [size]="34" /></span>
+      <p class="text-body text-muted auth-success__text">
+        Ласкаво просимо, {{ createdName() }}! Додайте перший рахунок, щоб почати планувати бюджет.
+      </p>
+      <button sbButton size="lg" block type="button" (click)="finished.emit()">
+        Перейти в кабінет
+        <sb-icon name="arrow-right" [size]="16" />
+      </button>
+    </div>
+  } @else {
+    <form class="auth-form" novalidate [formGroup]="form" (ngSubmit)="submit()">
+      <p class="text-body text-muted">Це безкоштовно й займе менше хвилини.</p>
+
+      <div class="auth-form__pair">
+        <sb-field label="Ім’я" onSurface [error]="error('firstName')">
+          <input type="text" autocomplete="given-name" formControlName="firstName" />
+        </sb-field>
+        <sb-field label="Прізвище" onSurface [error]="error('lastName')">
+          <input type="text" autocomplete="family-name" formControlName="lastName" />
+        </sb-field>
+      </div>
+
+      <sb-field label="Електронна пошта" onSurface [error]="error('email')">
+        <sb-icon fieldLeading name="mail" [size]="18" />
+        <input type="email" autocomplete="email" placeholder="name@example.com" formControlName="email" />
+      </sb-field>
+
+      <div class="auth-form__password">
+        <sb-field label="Пароль" onSurface [error]="error('password')" [hint]="passwordHint">
+          <sb-icon fieldLeading name="lock" [size]="18" />
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            autocomplete="new-password"
+            formControlName="password"
+          />
+          <button
+            fieldTrailing
+            class="auth-form__toggle"
+            type="button"
+            [attr.aria-label]="showPassword() ? 'Приховати пароль' : 'Показати пароль'"
+            [attr.aria-pressed]="showPassword()"
+            (click)="togglePassword()"
+          >
+            <sb-icon name="eye" [size]="18" />
+          </button>
+        </sb-field>
+        <div class="strength" aria-hidden="true">
+          @for (bar of strengthBars; track bar) {
+            <span class="strength__bar" [class.strength__bar--on]="bar < strength()"></span>
+          }
+        </div>
+      </div>
+
+      <sb-field label="Повторіть пароль" onSurface [error]="error('repeatPassword')">
+        <sb-icon fieldLeading name="lock" [size]="18" />
+        <input
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="new-password"
+          placeholder="Введіть пароль ще раз"
+          formControlName="repeatPassword"
+        />
+      </sb-field>
+
+      <fieldset class="plan-picker">
+        <legend class="plan-picker__legend">Тариф</legend>
+        <div class="plan-picker__options">
+          <label class="plan-option" [class.plan-option--selected]="form.controls['plan'].value === 'start'">
+            <input class="plan-option__input visually-hidden" type="radio" value="start" formControlName="plan" />
+            <span class="plan-option__head">
+              <span class="text-body text-semibold">Старт</span>
+              <span class="plan-option__radio" aria-hidden="true"></span>
+            </span>
+            <span class="text-h4">0&nbsp;₴</span>
+            <span class="text-tiny text-muted">назавжди</span>
+          </label>
+          <label class="plan-option" [class.plan-option--selected]="form.controls['plan'].value === 'plus'">
+            <input class="plan-option__input visually-hidden" type="radio" value="plus" formControlName="plan" />
+            <span class="plan-option__head">
+              <span class="text-body text-semibold">Плюс</span>
+              <span class="plan-option__radio" aria-hidden="true"></span>
+            </span>
+            <span class="text-h4">{{ plusPrice() }} / міс</span>
+            <span class="text-tiny text-muted">при оплаті за рік</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="auth-form__terms">
+        <sb-checkbox
+          formControlName="terms"
+          [invalid]="!!error('terms')"
+          [describedBy]="error('terms') ? 'register-terms-error' : undefined"
+        >
+          Я приймаю Умови користування та Політику конфіденційності
+        </sb-checkbox>
+        @if (error('terms')) {
+          <p class="field__message field__message--error" id="register-terms-error">{{ error('terms') }}</p>
+        }
+      </div>
+
+      <button sbButton size="lg" block type="submit" [disabled]="sending()">
+        {{ sending() ? 'Створюємо…' : 'Створити акаунт' }}
+      </button>
+
+      <p class="auth-form__footer text-body text-muted">
+        Вже маєте акаунт?
+        <button class="link auth-form__link auth-form__link--lg" type="button" (click)="switchToLogin.emit()">Увійти</button>
+      </p>
+    </form>
+  }
+</sb-modal>
