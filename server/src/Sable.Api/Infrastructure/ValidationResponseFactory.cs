@@ -19,8 +19,9 @@ public static class ValidationResponseFactory
                 continue;
             }
 
+            var generic = key.Length == 0 || key.StartsWith('$');
             var messages = entry.Errors
-                .Select(e => key.Length > 0 && e.Exception is null && !string.IsNullOrWhiteSpace(e.ErrorMessage)
+                .Select(e => !generic && e.Exception is null && !string.IsNullOrWhiteSpace(e.ErrorMessage)
                     ? e.ErrorMessage
                     : InvalidValueMessage)
                 .Distinct()

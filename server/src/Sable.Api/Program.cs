@@ -28,6 +28,7 @@ builder.Services
         messages.SetMissingBindRequiredValueAccessor(_ => ValidationMessages.Required);
         messages.SetMissingKeyOrValueAccessor(() => ValidationMessages.Required);
         messages.SetMissingRequestBodyRequiredValueAccessor(() => ValidationMessages.InvalidValue);
+        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     })
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
     .ConfigureApiBehaviorOptions(options =>
