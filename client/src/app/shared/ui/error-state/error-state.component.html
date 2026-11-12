@@ -1,0 +1,7 @@
+<sb-icon class="error-state__icon" name="alert" [size]="28" />
+<p class="error-state__title text-h5">{{ title() }}</p>
+<p class="error-state__text text-small text-muted">{{ text() }}</p>
+<button sbButton variant="ghost" size="sm" type="button" (click)="retry.emit()">
+  <sb-icon name="refresh" [size]="14" />
+  Повторити
+</button>
