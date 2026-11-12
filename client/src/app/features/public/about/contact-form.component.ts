@@ -1,8 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map } from 'rxjs';
+import { applyServerErrors, serverError } from '../../../core/forms/form-errors';
 import { ButtonDirective } from '../../../shared/ui/button/button.directive';
 import { CheckboxComponent } from '../../../shared/ui/checkbox/checkbox.component';
 import { FieldComponent } from '../../../shared/ui/field/field.component';
@@ -26,7 +26,6 @@ const MESSAGE_MAX = 1000;
 export class ContactFormComponent {
   protected readonly messageMax = MESSAGE_MAX;
   protected readonly sending = signal(false);
-  protected readonly serverErrors = signal<Partial<Record<FieldName, string>>>({});
 
   protected readonly form = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(60)] }),
@@ -52,11 +51,11 @@ export class ContactFormComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected error(name: FieldName): string | undefined {
-    const server = this.serverErrors()[name];
+    const control = this.form.controls[name];
+    const server = serverError(control);
     if (server) {
       return server;
     }
-    const control = this.form.controls[name];
     if (!control.errors || !(control.touched || this.submitted())) {
       return undefined;
     }
@@ -65,7 +64,6 @@ export class ContactFormComponent {
 
   protected submit(): void {
     this.submitted.set(true);
-    this.serverErrors.set({});
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.focusFirstInvalid();
@@ -82,7 +80,7 @@ export class ContactFormComponent {
       },
       error: (response: unknown) => {
         this.finishSending();
-        if (response instanceof HttpErrorResponse && response.status === 400 && this.applyServerErrors(response)) {
+        if (applyServerErrors(this.form, response)) {
           this.focusFirstInvalid();
           return;
         }
@@ -91,34 +89,9 @@ export class ContactFormComponent {
     });
   }
 
-  protected clearServerError(name: FieldName): void {
-    if (this.serverErrors()[name]) {
-      this.serverErrors.update((errors) => ({ ...errors, [name]: undefined }));
-    }
-  }
-
   private finishSending(): void {
     this.sending.set(false);
     this.form.controls.consent.enable({ emitEvent: false });
-  }
-
-  private applyServerErrors(response: HttpErrorResponse): boolean {
-    const raw = (response.error as { errors?: Record<string, string[]> } | null)?.errors;
-    if (!raw) {
-      return false;
-    }
-    const mapped: Partial<Record<FieldName, string>> = {};
-    for (const [key, messages] of Object.entries(raw)) {
-      const name = (key.charAt(0).toLowerCase() + key.slice(1)) as FieldName;
-      if (FIELD_ORDER.includes(name) && messages.length > 0) {
-        mapped[name] = messages[0];
-      }
-    }
-    if (Object.keys(mapped).length === 0) {
-      return false;
-    }
-    this.serverErrors.set(mapped);
-    return true;
   }
 
   private message(name: FieldName, control: AbstractControl): string {

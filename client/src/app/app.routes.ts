@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { environment } from '../environments/environment';
+import { adminGuard, authGuard } from './core/auth/auth.guard';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
@@ -22,6 +23,8 @@ export const routes: Routes = [
   {
     path: 'app',
     component: AppLayoutComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       {
         path: '',
@@ -58,6 +61,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [adminGuard],
+    canActivateChild: [adminGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'users' },
       {

@@ -8,7 +8,6 @@
         autocomplete="name"
         formControlName="name"
         [readOnly]="sending()"
-        (input)="clearServerError('name')"
       />
     </sb-field>
     <sb-field label="Електронна пошта" onSurface [error]="error('email')">
@@ -17,7 +16,6 @@
         autocomplete="email"
         formControlName="email"
         [readOnly]="sending()"
-        (input)="clearServerError('email')"
       />
     </sb-field>
   </div>
@@ -28,7 +26,6 @@
       placeholder="Питання про тарифи"
       formControlName="topic"
       [readOnly]="sending()"
-      (input)="clearServerError('topic')"
     />
   </sb-field>
 
@@ -39,7 +36,6 @@
         placeholder="Опишіть, із чим вам допомогти"
         formControlName="message"
         [readOnly]="sending()"
-        (input)="clearServerError('message')"
       ></textarea>
     </sb-field>
     <p class="contact-form__counter num" [class.contact-form__counter--over]="messageLength() > messageMax">

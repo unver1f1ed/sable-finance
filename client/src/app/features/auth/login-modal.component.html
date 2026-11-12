@@ -1,0 +1,55 @@
+<sb-modal [open]="open()" [title]="'Вхід до Sable'" (closed)="closed.emit()">
+  <form class="auth-form" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    <p class="text-body text-muted">Раді бачити знову. Введіть дані свого акаунта.</p>
+
+    @if (banner()) {
+      <div class="auth-banner" role="alert">
+        <sb-icon name="alert" [size]="18" />
+        <p class="text-small">{{ banner() }}</p>
+      </div>
+    }
+
+    <sb-field label="Електронна пошта" onSurface [error]="error('email')">
+      <sb-icon fieldLeading name="mail" [size]="18" />
+      <input type="email" autocomplete="username" placeholder="name@example.com" formControlName="email" />
+    </sb-field>
+
+    <sb-field label="Пароль" onSurface [error]="error('password')">
+      <sb-icon fieldLeading name="lock" [size]="18" />
+      <input
+        [type]="showPassword() ? 'text' : 'password'"
+        autocomplete="current-password"
+        formControlName="password"
+      />
+      <button
+        fieldTrailing
+        class="auth-form__toggle"
+        type="button"
+        [attr.aria-label]="showPassword() ? 'Приховати пароль' : 'Показати пароль'"
+        [attr.aria-pressed]="showPassword()"
+        [disabled]="sending()"
+        (click)="togglePassword()"
+      >
+        <sb-icon name="eye" [size]="18" />
+      </button>
+    </sb-field>
+
+    <div class="auth-form__row">
+      <sb-checkbox formControlName="remember">Запам’ятати мене</sb-checkbox>
+      <button class="link auth-form__link" type="button" (click)="forgotPassword()">Забули пароль?</button>
+    </div>
+
+    <button sbButton size="lg" block type="submit" [disabled]="sending()">
+      {{ sending() ? 'Входимо…' : 'Увійти' }}
+    </button>
+
+    <hr class="divider" />
+
+    <p class="auth-form__footer text-body text-muted">
+      Ще немає акаунта?
+      <button class="link auth-form__link auth-form__link--lg" type="button" (click)="switchToRegister.emit()">
+        Зареєструватися
+      </button>
+    </p>
+  </form>
+</sb-modal>
