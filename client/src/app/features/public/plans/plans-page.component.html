@@ -1,0 +1,98 @@
+<section class="plans-hero">
+  <div class="container plans-hero__inner">
+    <p class="text-eyebrow">Тарифи</p>
+    <h1 class="plans-hero__title text-h1">Почніть безкоштовно. <b>Переходьте на Плюс</b>, коли будете готові.</h1>
+    <p class="plans-hero__lead text-lead text-muted">
+      Жодних прихованих платежів і прив’язки картки. Тариф можна змінити будь-коли в налаштуваннях кабінету.
+    </p>
+    <sb-segmented [options]="billingOptions" [formControl]="billingControl" ariaLabel="Період оплати" />
+  </div>
+</section>
+
+<section class="container plans-cards" aria-label="Тарифи">
+  <article class="plan-card card card--lg plan-card--start">
+    <div class="plan-card__head">
+      <div class="plan-card__intro">
+        <h2 class="plan-card__name text-h3">{{ start()?.name }}</h2>
+        <p class="plan-card__description text-body text-muted">{{ start()?.description }}</p>
+      </div>
+      <sb-sable-card class="plan-card__visual" variant="light" label="Старт" [width]="200" />
+    </div>
+    <p class="plan-card__price">
+      <span class="plan-card__amount num">{{ startPrice() }}</span>
+      <span class="text-body text-muted">/ назавжди</span>
+    </p>
+    <hr class="divider" />
+    <ul class="plan-card__features">
+      @for (bullet of startBullets; track bullet.text) {
+        <li class="plan-card__feature">
+          @if (bullet.included) {
+            <sb-icon class="text-accent" name="check" [size]="18" />
+            <span class="text-body">{{ bullet.text }}</span>
+          } @else {
+            <sb-icon class="text-faint" name="x" [size]="18" />
+            <span class="text-body text-muted">{{ bullet.text }}</span>
+            <span class="visually-hidden">(недоступно)</span>
+          }
+        </li>
+      }
+    </ul>
+    <a sbButton variant="ghost" size="lg" block [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'start' }">
+      Почати безкоштовно
+    </a>
+  </article>
+
+  <article class="plan-card card card--lg card--accent plan-card--plus">
+    <div class="plan-card__head">
+      <div class="plan-card__intro">
+        <div class="plan-card__title">
+          <h2 class="plan-card__name text-h3">{{ plus()?.name }}</h2>
+          @if (plus()?.isPopular) {
+            <sb-badge>Популярний</sb-badge>
+          }
+        </div>
+        <p class="plan-card__description text-body text-muted">{{ plus()?.description }}</p>
+      </div>
+      <sb-sable-card class="plan-card__visual" variant="dark" label="Плюс" [width]="200" />
+    </div>
+    <p class="plan-card__price">
+      <span class="plan-card__amount num">{{ plusPrice() }}</span>
+      @if (yearly()) {
+        <span class="text-body text-muted">/ місяць, при оплаті за рік</span>
+        <span class="plan-card__old text-body text-faint num">
+          <span class="visually-hidden">Стара ціна:</span>
+          <s>{{ plusOldPrice() }}</s>
+        </span>
+      } @else {
+        <span class="text-body text-muted">/ місяць</span>
+      }
+    </p>
+    <hr class="divider" />
+    <ul class="plan-card__features">
+      @for (bullet of plusBullets; track bullet.text) {
+        <li class="plan-card__feature">
+          <sb-icon class="text-accent" name="check" [size]="18" />
+          <span class="text-body">{{ bullet.text }}</span>
+        </li>
+      }
+    </ul>
+    <a sbButton size="lg" block [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'plus' }">Обрати Плюс</a>
+  </article>
+</section>
+
+<sb-plans-compare [data]="data()" [billing]="billing()" visual="cards" />
+
+<section class="container plans-cta" aria-labelledby="plans-cta-title">
+  <div class="plans-cta__card card card--lg">
+    <div class="plans-cta__text">
+      <h2 class="text-h2 plans-cta__title" id="plans-cta-title">Не впевнені, який тариф обрати?</h2>
+      <p class="text-lead text-muted plans-cta__lead">
+        Почніть зі Старту: усі дані збережуться, коли вирішите перейти на Плюс.
+      </p>
+    </div>
+    <div class="plans-cta__actions">
+      <a sbButton variant="ghost" size="lg" routerLink="/help">Питання та відповіді</a>
+      <a sbButton size="lg" [routerLink]="[]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
+    </div>
+  </div>
+</section>
