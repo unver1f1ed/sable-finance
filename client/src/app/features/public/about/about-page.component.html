@@ -1,0 +1,75 @@
+<section class="about-hero">
+  <div class="container about-hero__inner">
+    <div class="about-hero__text">
+      <p class="text-eyebrow">Про Sable</p>
+      <h1 class="text-h1">Гроші мають працювати на <b>ваші плани</b>, а не навпаки.</h1>
+      <p class="about-hero__lead text-lead text-muted">
+        Sable — сервіс персонального фінансового планування. Ми допомагаємо бачити повну картину доходів і витрат,
+        тримати бюджет і крок за кроком іти до цілей.
+      </p>
+      <div class="about-hero__actions">
+        <a sbButton size="lg" [routerLink]="[]" [queryParams]="{ auth: 'register' }">Відкрити акаунт</a>
+        <a sbButton variant="ghost" size="lg" routerLink="/plans">Переглянути тарифи</a>
+      </div>
+    </div>
+    <div class="about-hero__visual" aria-hidden="true">
+      <sb-sable-card class="about-hero__card about-hero__card--dark" variant="dark" label="Плюс" [width]="340" />
+      <sb-sable-card class="about-hero__card about-hero__card--light" variant="light" label="Старт" [width]="340" />
+    </div>
+  </div>
+</section>
+
+<section class="container about-stats" aria-label="Sable у цифрах">
+  <ul class="about-stats__list">
+    @for (stat of stats; track stat.value) {
+      <li class="about-stats__item">
+        <p class="about-stats__value num">{{ stat.value }}</p>
+        <p class="text-lead text-muted">{{ stat.text }}</p>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="container about-principles" aria-labelledby="principles-title">
+  <h2 class="about-principles__title text-h2" id="principles-title"><b>Три принципи,</b> на яких ми будуємо продукт</h2>
+  <ul class="about-principles__list">
+    @for (principle of principles; track principle.title) {
+      <li class="principle card">
+        <sb-icon class="text-accent" [name]="principle.icon" [size]="38" />
+        <h3 class="text-h4">{{ principle.title }}</h3>
+        <p class="text-body text-muted">{{ principle.text }}</p>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="container about-contact" id="contact" aria-labelledby="contact-title">
+  <div class="about-contact__info">
+    <p class="text-eyebrow">Контакти</p>
+    <h2 class="text-h2" id="contact-title"><b>Напишіть нам</b> — допоможемо розібратися</h2>
+    <ul class="about-contact__list">
+      <li class="about-contact__item">
+        <sb-category-icon icon="mail" />
+        <div class="about-contact__body">
+          <p class="text-small text-muted">Електронна пошта</p>
+          <a class="text-lead about-contact__value about-contact__link" href="mailto:help@sable.ua">help@sable.ua</a>
+        </div>
+      </li>
+      <li class="about-contact__item">
+        <sb-category-icon icon="pin" />
+        <div class="about-contact__body">
+          <p class="text-small text-muted">Адреса</p>
+          <address class="text-lead about-contact__value">Київ, вул. Січових Стрільців, 21</address>
+        </div>
+      </li>
+      <li class="about-contact__item">
+        <sb-category-icon icon="clock" />
+        <div class="about-contact__body">
+          <p class="text-small text-muted">Години роботи</p>
+          <p class="text-lead about-contact__value">Пн–Пт, 9:00–18:00</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <sb-contact-form />
+</section>
