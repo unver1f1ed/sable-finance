@@ -5,18 +5,21 @@ namespace Sable.Api.Infrastructure;
 
 public static class StatusCodeResponses
 {
+    private const string RouteNotFound = "Ресурс не знайдено";
+
     public static Task WriteAsync(StatusCodeContext context)
     {
-        var error = context.HttpContext.Response.StatusCode switch
-        {
-            StatusCodes.Status401Unauthorized => Errors.Unauthorized(),
-            StatusCodes.Status403Forbidden => Errors.Forbidden(),
-            StatusCodes.Status404NotFound => Errors.NotFound("Ресурс не знайдено"),
-            _ => null
-        };
+        var http = context.HttpContext;
 
-        return error is null
-            ? Task.CompletedTask
-            : ProblemDetailsWriter.WriteAsync(context.HttpContext, error.Status, error.Code, error.Message);
+        return http.Response.StatusCode switch
+        {
+            StatusCodes.Status401Unauthorized =>
+                ProblemDetailsWriter.WriteAsync(http, StatusCodes.Status401Unauthorized, "unauthorized", ErrorDetails.Unauthorized),
+            StatusCodes.Status403Forbidden =>
+                ProblemDetailsWriter.WriteAsync(http, StatusCodes.Status403Forbidden, "forbidden", ErrorDetails.Forbidden),
+            StatusCodes.Status404NotFound =>
+                ProblemDetailsWriter.WriteAsync(http, StatusCodes.Status404NotFound, "not_found", RouteNotFound),
+            _ => Task.CompletedTask
+        };
     }
 }

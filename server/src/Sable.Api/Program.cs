@@ -1,8 +1,14 @@
+using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Sable.Api.Infrastructure;
 using Sable.Application;
 using Sable.Application.Abstractions;
+using Sable.Application.Common;
 using Sable.Infrastructure;
+using Sable.Infrastructure.Identity;
 
 const string CorsPolicy = "Client";
 
@@ -19,6 +25,42 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+    .Configure<IOptions<JwtOptions>>((bearer, jwtOptions) =>
+    {
+        var jwt = jwtOptions.Value;
+
+        bearer.MapInboundClaims = false;
+        bearer.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwt.Audience,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            ValidAlgorithms = [SecurityAlgorithms.HmacSha256],
+            ClockSkew = TimeSpan.FromSeconds(30),
+            NameClaimType = "sub",
+            RoleClaimType = "role"
+        };
+
+        bearer.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                return ProblemDetailsWriter.WriteAsync(
+                    context.HttpContext, StatusCodes.Status401Unauthorized, "unauthorized", ErrorDetails.Unauthorized);
+            },
+            OnForbidden = context => ProblemDetailsWriter.WriteAsync(
+                context.HttpContext, StatusCodes.Status403Forbidden, "forbidden", ErrorDetails.Forbidden)
+        };
+    });
+builder.Services.AddAuthorization();
 
 var corsOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
 builder.Services.AddCors(options => options.AddPolicy(CorsPolicy, policy => policy
@@ -51,6 +93,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(CorsPolicy);
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/health", HealthEndpoint.HandleAsync);

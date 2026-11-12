@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sable.Application.Abstractions;
+using Sable.Application.Auth;
 using Sable.Infrastructure.Finance;
 using Sable.Infrastructure.Identity;
 
@@ -24,6 +26,32 @@ public static class DependencyInjection
 
         services.AddScoped<IFinanceDbContext>(sp => sp.GetRequiredService<FinanceDbContext>());
         services.AddScoped<DatabaseInitializer>();
+
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .Validate(
+                o => o.Key.Length >= JwtOptions.MinKeyLength,
+                $"Configuration value 'Jwt:Key' is missing or shorter than {JwtOptions.MinKeyLength} characters.")
+            .Validate(
+                o => !string.IsNullOrWhiteSpace(o.Issuer) && !string.IsNullOrWhiteSpace(o.Audience),
+                "Configuration values 'Jwt:Issuer' and 'Jwt:Audience' are required.")
+            .ValidateOnStart();
+
+        services.AddIdentityCore<AppUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = PasswordAttribute.MinLength;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Lockout.AllowedForNewUsers = true;
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<IdentityDbContext>();
+
+        services.AddScoped<TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
