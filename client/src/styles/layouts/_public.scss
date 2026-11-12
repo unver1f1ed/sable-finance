@@ -7,12 +7,13 @@
 
   &__main {
     flex: 1 0 auto;
+    padding-top: var(--header-height);
   }
 }
 
 .public-header {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  inset: 0 0 auto;
   z-index: 60;
   display: flex;
   align-items: center;
@@ -21,15 +22,24 @@
   height: var(--header-height);
   padding: 0 var(--space-page-mobile);
   background: transparent;
-  transition: background-color 0.2s ease;
+  transition:
+    height 0.2s ease,
+    padding 0.2s ease,
+    background-color 0.2s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   @include desktop {
-    top: -46px;
     align-items: flex-start;
     padding: 46px clamp(20px, 3.5vw, 50px) 0;
   }
 
   &--solid {
+    align-items: center;
+    height: var(--header-height-stuck);
+    padding-top: 0;
     background: var(--color-bg);
   }
 
@@ -106,7 +116,7 @@
 
 .mobile-menu {
   position: fixed;
-  inset: 72px 0 0;
+  inset: var(--header-height-stuck) 0 0;
   z-index: 50;
   display: flex;
   flex-direction: column;

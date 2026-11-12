@@ -63,12 +63,14 @@
   --content-width: 1238px;
   --sidebar-width: 272px;
   --header-height: 72px;
-  --header-offset: 72px;
+  --header-height-stuck: 64px;
+  --header-offset: 64px;
 }
 
 @include desktop {
   :root {
     --header-height: 140px;
-    --header-offset: 94px;
+    --header-height-stuck: 76px;
+    --header-offset: 76px;
   }
 }

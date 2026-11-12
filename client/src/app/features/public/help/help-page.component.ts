@@ -44,7 +44,7 @@ export class HelpPageComponent {
   protected readonly popular: PopularTopic[] = [
     { title: 'Як поставити фінансову ціль', query: 'ціль' },
     { title: 'Імпорт та експорт транзакцій', query: 'експорт' },
-    { title: 'Зміна пароля та вихід з усіх пристроїв', query: 'парол' },
+    { title: 'Зміна пароля та вихід з усіх пристроїв', query: 'змінити пароль' },
     { title: 'Видалення акаунта й даних', query: 'видалення' },
   ];
 

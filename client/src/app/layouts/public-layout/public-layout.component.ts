@@ -20,6 +20,7 @@ import { IconButtonDirective } from '../../shared/ui/icon-button/icon-button.dir
 import { IconComponent } from '../../shared/ui/icon/icon.component';
 
 const SCROLL_THRESHOLD = 8;
+const SCROLL_SYNC_INTERVAL_MS = 200;
 
 interface FooterIconLink {
   icon: string;
@@ -69,7 +70,12 @@ export class PublicLayoutComponent {
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.menuOpen.set(false));
+      .subscribe(() => {
+        this.menuOpen.set(false);
+        if (this.isBrowser) {
+          setTimeout(() => this.syncScrolled());
+        }
+      });
 
     effect(() => {
       if (this.isBrowser) {
@@ -85,12 +91,18 @@ export class PublicLayoutComponent {
         }
       };
       query.addEventListener('change', onChange);
-      const onScroll = (): void => this.scrolled.set(window.scrollY > SCROLL_THRESHOLD);
+      const onScroll = (): void => this.syncScrolled();
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('scrollend', onScroll);
+      window.addEventListener('pageshow', onScroll);
+      const timer = window.setInterval(onScroll, SCROLL_SYNC_INTERVAL_MS);
       destroyRef.onDestroy(() => {
         query.removeEventListener('change', onChange);
         window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('scrollend', onScroll);
+        window.removeEventListener('pageshow', onScroll);
+        window.clearInterval(timer);
       });
     });
 
@@ -114,6 +126,10 @@ export class PublicLayoutComponent {
       this.menuOpen.set(false);
       this.burger()?.nativeElement.focus();
     }
+  }
+
+  private syncScrolled(): void {
+    this.scrolled.set(window.scrollY > SCROLL_THRESHOLD);
   }
 
   private pathOf(url: string): string {
