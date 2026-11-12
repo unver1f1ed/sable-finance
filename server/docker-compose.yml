@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: sable-postgres
+    environment:
+      POSTGRES_USER: sable
+      POSTGRES_PASSWORD: sable_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - sable-pgdata:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  sable-pgdata:
