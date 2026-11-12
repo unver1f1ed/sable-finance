@@ -1,0 +1,75 @@
+<header class="admin-topbar">
+  <a class="admin-topbar__logo" routerLink="/admin/users">
+    <img src="/images/logo.svg" alt="Sable" width="99" height="24" />
+  </a>
+  <sb-badge tone="purple">Адмін</sb-badge>
+  <button class="admin-topbar__logout icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти">
+    <sb-icon name="logout" [size]="18" />
+  </button>
+</header>
+
+<nav class="admin-tabs" aria-label="Розділи адміністрування">
+  <ul class="admin-tabs__list">
+    @for (item of navItems; track item.path) {
+      <li>
+        <a class="admin-tabs__link" [routerLink]="item.path" routerLinkActive="admin-tabs__link--active" ariaCurrentWhenActive="page">
+          <sb-icon [name]="item.icon" [size]="18" />
+          {{ item.label }}
+        </a>
+      </li>
+    }
+    <li>
+      <a class="admin-tabs__link" routerLink="/app">
+        <sb-icon name="grid" [size]="18" />
+        Кабінет користувача
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<aside class="sidebar">
+  <div class="sidebar__brand">
+    <a class="sidebar__logo" routerLink="/admin/users">
+      <img src="/images/logo.svg" alt="Sable" width="107" height="26" />
+    </a>
+    <sb-badge tone="purple">Адмін</sb-badge>
+  </div>
+
+  <nav class="sidebar__nav" aria-label="Адміністрування">
+    <p class="sidebar__caption" id="admin-manage">Керування</p>
+    <ul class="sidebar__list" aria-labelledby="admin-manage">
+      @for (item of navItems; track item.path) {
+        <li>
+          <a class="sidebar__link" [routerLink]="item.path" routerLinkActive="sidebar__link--active" ariaCurrentWhenActive="page">
+            <sb-icon [name]="item.icon" [size]="20" />
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
+    <p class="sidebar__caption" id="admin-goto">Перейти</p>
+    <ul class="sidebar__list" aria-labelledby="admin-goto">
+      <li>
+        <a class="sidebar__link" routerLink="/app">
+          <sb-icon name="grid" [size]="20" />
+          Кабінет користувача
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar__user">
+    <sb-avatar [name]="user.name" />
+    <div class="sidebar__user-info">
+      <p class="text-small text-semibold sidebar__user-name">{{ user.name }}</p>
+      <p class="text-tiny text-muted sidebar__user-email">{{ user.email }}</p>
+    </div>
+    <button class="icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти">
+      <sb-icon name="logout" [size]="18" />
+    </button>
+  </div>
+</aside>
+
+<main class="shell__main">
+  <router-outlet />
+</main>
