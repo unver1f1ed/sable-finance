@@ -35,6 +35,10 @@ public static class ValidationMessages
     public const string PageSizeAllowed = "Розмір сторінки має бути 10, 20 або 50";
     public const string InvalidMonth = "Вкажіть місяць у форматі РРРР-ММ";
 
+    public const string ConsentRequired = "Потрібна згода на обробку даних";
+    public const string MessageLength = "Повідомлення має містити від 10 до 1000 символів";
+    public const string InvalidPlan = "Оберіть доступний тариф";
+
     public const string BudgetCategoryNotExpense = "Бюджет можна створити лише для категорії витрат";
     public const string ContributionExceedsRemaining = "Сума внеску перевищує залишок до цілі";
     public const string DeadlineInFuture = "Вкажіть дату в майбутньому";
