@@ -1,14 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using Sable.Application.Common;
 
 namespace Sable.Application.Auth;
-
-public static class ValidationMessages
-{
-    public const string Required = "Поле обов’язкове";
-    public const string InvalidEmail = "Вкажіть коректну адресу пошти";
-    public const string EmailTooLong = "Адреса пошти має містити не більше 120 символів";
-    public const string NameLength = "Значення має містити від 1 до 60 символів";
-}
 
 public sealed record RegisterRequest
 {
