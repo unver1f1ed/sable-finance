@@ -1,0 +1,12 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.csr.html",
+    "exclude": ["/icons/*", "/images/*", "/*.{css,js,svg,png,webp,avif,ico,woff2}"]
+  },
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404/index.html",
+      "statusCode": 404
+    }
+  }
+}
