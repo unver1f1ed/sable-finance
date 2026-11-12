@@ -34,4 +34,8 @@ public static class ValidationMessages
     public const string PageMin = "Номер сторінки має бути не меншим за 1";
     public const string PageSizeAllowed = "Розмір сторінки має бути 10, 20 або 50";
     public const string InvalidMonth = "Вкажіть місяць у форматі РРРР-ММ";
+
+    public const string BudgetCategoryNotExpense = "Бюджет можна створити лише для категорії витрат";
+    public const string ContributionExceedsRemaining = "Сума внеску перевищує залишок до цілі";
+    public const string DeadlineInFuture = "Вкажіть дату в майбутньому";
 }

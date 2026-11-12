@@ -11,8 +11,6 @@ public class TransactionService(IFinanceDbContext db, ICurrentUser currentUser, 
 {
     private const string ExportPlanLimitMessage = "Експорт у CSV доступний на тарифі Плюс";
 
-    private static readonly DateOnly EarliestDate = new(2000, 1, 1);
-
     public async Task<TransactionList> ListAsync(TransactionQuery query, CancellationToken cancellationToken = default)
     {
         var sort = ValidateQuery(query);
@@ -203,7 +201,7 @@ public class TransactionService(IFinanceDbContext db, ICurrentUser currentUser, 
         var errors = new Dictionary<string, string[]>();
 
         var today = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
-        if (input.OccurredOn < EarliestDate || input.OccurredOn > today.AddDays(1))
+        if (!TransactionRules.IsDateAllowed(input.OccurredOn, today))
         {
             errors["occurredOn"] = [ValidationMessages.InvalidDate];
         }
