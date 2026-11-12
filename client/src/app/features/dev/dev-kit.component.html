@@ -1,0 +1,280 @@
+<div class="kit">
+  <header class="kit__header">
+    <img src="/images/logo.svg" alt="Sable" width="165" height="40" />
+    <h1 class="text-h3 text-muted">UI-кіт · основа дизайну</h1>
+  </header>
+
+  <section class="kit__section" aria-labelledby="kit-colors">
+    <h2 class="text-eyebrow" id="kit-colors">Кольори</h2>
+    <ul class="kit__swatches">
+      @for (swatch of swatches; track swatch.token) {
+        <li class="kit__swatch">
+          <span class="kit__swatch-color" [style.background]="'var(' + swatch.token + ')'"></span>
+          <span class="text-small text-semibold">{{ swatch.name }}</span>
+          <span class="text-tiny text-muted">{{ swatch.hex }}{{ swatch.note ? ' · ' + swatch.note : '' }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-type">
+    <h2 class="text-eyebrow" id="kit-type">Типографіка · Inter</h2>
+    <div class="kit__types">
+      @for (sample of typeSamples; track sample.className) {
+        <div class="kit__type-row">
+          <div class="kit__type-meta">
+            <span class="text-small text-semibold">{{ sample.name }}</span>
+            <span class="text-tiny text-muted">{{ sample.spec }}</span>
+          </div>
+          @if (sample.className === 'text-h1') {
+            <p [class]="sample.className">Шлях до <b>фінансової свободи</b></p>
+          } @else {
+            <p [class]="sample.className">{{ sample.sample }}</p>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-buttons">
+    <h2 class="text-eyebrow" id="kit-buttons">Кнопки</h2>
+    <div class="kit__row">
+      <button sbButton type="button"><sb-icon name="plus" [size]="16" />Додати транзакцію</button>
+      <span class="kit-force-hover"><button sbButton type="button">Наведення</button></span>
+      <button sbButton variant="white" type="button">Відкрити акаунт</button>
+      <button sbButton variant="ghost" type="button">Увійти</button>
+      <span class="kit-force-hover"><button sbButton variant="ghost" type="button">Наведення</button></span>
+      <button sbButton variant="danger" type="button"><sb-icon name="trash" [size]="16" />Видалити</button>
+      <button sbButton variant="danger-solid" type="button">Видалити остаточно</button>
+      <button sbButton type="button" disabled>Недоступно</button>
+    </div>
+    <div class="kit__row">
+      <button sbButton size="lg" type="button">Дізнатись більше</button>
+      <button sbButton size="sm" type="button">Мала кнопка</button>
+      <button sbButton variant="ghost" size="sm" type="button">Скасувати</button>
+      <a sbButton variant="ghost" href="/plans">Посилання-кнопка</a>
+      <button sbIconButton type="button" aria-label="Редагувати"><sb-icon name="pencil" [size]="16" /></button>
+      <button sbIconButton type="button" aria-label="Видалити"><sb-icon class="text-danger" name="trash" [size]="16" /></button>
+      <button sbIconButton size="sm" type="button" aria-label="Більше дій"><sb-icon name="more" [size]="16" /></button>
+      <button sbIconButton type="button" aria-label="Недоступно" disabled><sb-icon name="download" [size]="16" /></button>
+      <a class="link" href="/about">Текстове посилання</a>
+    </div>
+    <div class="kit__row kit__row--block">
+      <button sbButton block type="button">Кнопка на всю ширину</button>
+    </div>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-fields">
+    <h2 class="text-eyebrow" id="kit-fields">Поля форм</h2>
+    <div class="kit__fields">
+      <sb-field label="Електронна пошта">
+        <sb-icon fieldLeading name="mail" [size]="18" />
+        <input type="email" placeholder="name@example.com" />
+      </sb-field>
+      <div class="kit-force-focus">
+        <sb-field label="У фокусі">
+          <sb-icon fieldLeading name="mail" [size]="18" />
+          <input type="email" value="bohdan@example.com" />
+        </sb-field>
+      </div>
+      <sb-field label="З помилкою" error="Вкажіть коректну адресу пошти">
+        <sb-icon fieldLeading name="mail" [size]="18" />
+        <input type="email" value="bohdan@" />
+      </sb-field>
+      <sb-field label="Вимкнене">
+        <input type="text" value="Недоступно" disabled />
+      </sb-field>
+      <sb-field label="Сума">
+        <input type="number" inputmode="decimal" value="1250" />
+        <span fieldTrailing>₴</span>
+      </sb-field>
+      <sb-field label="Категорія">
+        <select>
+          <option>Продукти</option>
+          <option>Транспорт</option>
+          <option>Кафе й ресторани</option>
+        </select>
+        <sb-icon fieldTrailing name="chev-down" [size]="18" />
+      </sb-field>
+      <sb-field label="Дата">
+        <input type="date" value="2026-11-11" />
+      </sb-field>
+      <sb-field label="Пароль" hint="Щонайменше 8 символів, літери й цифри">
+        <sb-icon fieldLeading name="lock" [size]="18" />
+        <input type="password" value="password123" />
+        <sb-icon fieldTrailing name="eye" [size]="18" />
+      </sb-field>
+      <sb-field label="Поле на темній поверхні" onSurface>
+        <input type="text" placeholder="Опис" />
+      </sb-field>
+      <sb-field label="Коментар" hint="До 300 символів" class="kit__fields-wide">
+        <textarea placeholder="Додайте нотатку"></textarea>
+      </sb-field>
+    </div>
+
+    <div class="kit__row">
+      <sb-segmented [options]="typeOptions" [formControl]="segmented" ariaLabel="Тип транзакції" />
+      <div class="kit__row">
+        <button sbChip type="button" [active]="chipActive() === 'all'" (click)="setChip('all')">Усі</button>
+        <button sbChip type="button" [active]="chipActive() === 'income'" (click)="setChip('income')">Доходи</button>
+        <button sbChip type="button" [active]="chipActive() === 'expense'" (click)="setChip('expense')">Витрати</button>
+        <button sbChip type="button"><sb-icon name="filter" [size]="14" />Фільтри</button>
+      </div>
+    </div>
+    <div class="kit__row kit__row--block">
+      <sb-segmented [options]="periodOptions" [formControl]="segmentedBlock" block ariaLabel="Період оплати" />
+    </div>
+    <div class="kit__row">
+      <sb-checkbox [formControl]="checkboxOn">Запам’ятати мене</sb-checkbox>
+      <sb-checkbox [formControl]="checkboxOff">Без позначки</sb-checkbox>
+      <sb-checkbox [formControl]="checkboxDisabled">Вимкнений</sb-checkbox>
+      <sb-toggle [formControl]="toggleOn" label="Сповіщення увімкнено" />
+      <sb-toggle [formControl]="toggleOff" label="Сповіщення вимкнено" />
+      <sb-toggle [formControl]="toggleDisabled" label="Недоступно" />
+    </div>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-badges">
+    <h2 class="text-eyebrow" id="kit-badges">Позначки, прогрес, категорії</h2>
+    <div class="kit__row">
+      @for (item of badgeTones; track item.tone) {
+        <sb-badge [tone]="item.tone">{{ item.label }}</sb-badge>
+      }
+      <sb-avatar name="Богдан Паславський" />
+      <sb-avatar name="Олена Коваль" size="sm" />
+      <sb-avatar name="Тарас" size="lg" />
+      @for (item of categories; track item.icon) {
+        <sb-category-icon [icon]="item.icon" [color]="item.color" />
+      }
+      <sb-category-icon icon="cart" color="#6FDBD4" size="sm" />
+      <sb-category-icon icon="coffee" color="#FFB454" size="sm" />
+    </div>
+    <div class="grid grid--3">
+      <div class="kit__progress">
+        <p class="text-small text-muted">У межах бюджету · 62%</p>
+        <sb-progress [value]="62" label="Бюджет: 62%" />
+      </div>
+      <div class="kit__progress">
+        <p class="text-small text-muted">Наближається до ліміту · 88%</p>
+        <sb-progress [value]="88" tone="warning" label="Бюджет: 88%" />
+      </div>
+      <div class="kit__progress">
+        <p class="text-small text-muted">Перевищено · 112%</p>
+        <sb-progress [value]="112" tone="danger" label="Бюджет: 112%" />
+      </div>
+      <div class="kit__progress">
+        <p class="text-small text-muted">Товстий · 60%</p>
+        <sb-progress [value]="60" thick label="Ціль: 60%" />
+      </div>
+      <div class="kit__progress">
+        <p class="text-small text-muted">Власний колір · 40%</p>
+        <sb-progress [value]="40" tone="#A78BFA" label="Ціль: 40%" />
+      </div>
+      <div class="kit__progress">
+        <p class="text-small text-muted">Порожній · 0%</p>
+        <sb-progress [value]="0" label="Ціль: 0%" />
+      </div>
+    </div>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-states">
+    <h2 class="text-eyebrow" id="kit-states">Стани: сповіщення, порожній список, помилка, завантаження</h2>
+    <div class="grid grid--3 kit__states">
+      <div class="kit__stack">
+        <div class="kit__row">
+          <button sbButton size="sm" type="button" (click)="toast.success('Транзакцію збережено')">Показати успіх</button>
+          <button sbButton variant="danger" size="sm" type="button" (click)="toast.error('Не вдалося зберегти. Спробуйте ще раз')">
+            Показати помилку
+          </button>
+        </div>
+        <p class="text-small text-muted">Сповіщення з’являються внизу праворуч (на телефоні — на всю ширину) і зникають за 5 секунд.</p>
+      </div>
+      <sb-empty-state
+        icon="swap"
+        [title]="'Транзакцій ще немає'"
+        [text]="'Додайте першу витрату чи дохід, і тут з’явиться історія.'"
+      >
+        <button sbButton size="sm" type="button"><sb-icon name="plus" [size]="14" />Додати транзакцію</button>
+      </sb-empty-state>
+      <div class="kit__stack">
+        <sb-error-state (retry)="toast.success('Повторюємо спробу')" />
+        <div class="card kit__skeletons">
+          <sb-skeleton width="60%" />
+          <sb-skeleton width="90%" />
+          <sb-skeleton width="40%" />
+          <p class="text-tiny text-muted">скелетон завантаження</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-modal">
+    <h2 class="text-eyebrow" id="kit-modal">Модальне вікно</h2>
+    <div class="kit__row">
+      <button sbButton type="button" (click)="openModal()">Відкрити модалку</button>
+      <p class="text-small text-muted">Закривається кнопкою, кліком по фону та клавішею Escape. На екранах вужче за 768 px стає нижнім листом.</p>
+    </div>
+    <sb-modal [(open)]="modalOpen" [title]="'Нова транзакція'">
+      <sb-segmented [options]="typeOptions" [formControl]="segmented" block onSurface ariaLabel="Тип транзакції" />
+      <sb-field label="Опис" onSurface>
+        <input type="text" placeholder="Наприклад, Сільпо" />
+      </sb-field>
+      <div class="kit__fields kit__fields--pair">
+        <sb-field label="Сума" onSurface>
+          <input type="number" inputmode="decimal" placeholder="0,00" />
+          <span fieldTrailing>₴</span>
+        </sb-field>
+        <sb-field label="Дата" onSurface>
+          <input type="date" value="2026-11-11" />
+        </sb-field>
+      </div>
+      <button modalFooter sbButton variant="ghost" type="button" (click)="modalOpen.set(false)">Скасувати</button>
+      <button modalFooter sbButton type="button" (click)="saveModal()">Додати транзакцію</button>
+    </sb-modal>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-lists">
+    <h2 class="text-eyebrow" id="kit-lists">Картки, таблиця, пагінація</h2>
+    <div class="grid grid--3">
+      <div class="card"><p class="text-h5">Картка</p><p class="text-small text-muted">Радіус 20, відступ 28</p></div>
+      <div class="card card--outline"><p class="text-h5">Картка з рамкою</p><p class="text-small text-muted">Без заливки</p></div>
+      <div class="card card--accent"><p class="text-h5">Акцентна картка</p><p class="text-small text-muted">Рамка 50% акценту</p></div>
+    </div>
+    <div class="card card--lg"><p class="text-h4">Велика картка</p><p class="text-small text-muted">Радіус 28, відступ 40</p></div>
+    <div class="card kit__table">
+      <div class="table" role="table" aria-label="Приклад таблиці транзакцій">
+        <div class="table__head" role="row">
+          <span class="table__cell table__cell--grow" role="columnheader">Опис</span>
+          <span class="table__cell kit__table-category" role="columnheader">Категорія</span>
+          <span class="table__cell kit__table-amount" role="columnheader">Сума</span>
+        </div>
+        @for (row of tableRows; track row.name) {
+          <div class="table__row" role="row">
+            <span class="table__cell table__cell--grow kit__truncate" role="cell">{{ row.name }}</span>
+            <span class="table__cell kit__table-category text-muted" role="cell">{{ row.category }}</span>
+            <span class="table__cell kit__table-amount num" [class.text-accent]="row.income" role="cell">{{ row.amount }}</span>
+          </div>
+        }
+      </div>
+      <sb-pagination
+        [page]="page()"
+        [pageSize]="pageSize()"
+        [total]="142"
+        (pageChange)="page.set($event)"
+        (pageSizeChange)="changePageSize($event)"
+      />
+    </div>
+  </section>
+
+  <section class="kit__section" aria-labelledby="kit-icons">
+    <h2 class="text-eyebrow" id="kit-icons">Іконки · {{ iconNames.length }}</h2>
+    <ul class="kit__icons">
+      @for (name of iconNames; track name) {
+        <li class="kit__icon">
+          <sb-icon [name]="name" [size]="24" />
+          <span class="text-tiny text-muted">{{ name }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+</div>
