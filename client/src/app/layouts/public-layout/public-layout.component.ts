@@ -15,6 +15,8 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { AuthModalsComponent } from '../../features/auth/auth-modals.component';
+import { AuthService } from '../../core/auth/auth.service';
 import { ButtonDirective } from '../../shared/ui/button/button.directive';
 import { IconButtonDirective } from '../../shared/ui/icon-button/icon-button.directive';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
@@ -31,7 +33,15 @@ interface FooterIconLink {
 
 @Component({
   selector: 'sb-public-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ButtonDirective, IconButtonDirective, IconComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    AuthModalsComponent,
+    ButtonDirective,
+    IconButtonDirective,
+    IconComponent,
+  ],
   templateUrl: './public-layout.component.html',
   host: { '(document:keydown.escape)': 'onEscape()', class: 'public-layout' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +58,7 @@ export class PublicLayoutComponent {
     { icon: 'pin', label: 'Адреса', route: '/about', fragment: 'contact' },
   ];
 
+  protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));

@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 
-export type ToastKind = 'success' | 'error';
+export type ToastKind = 'success' | 'error' | 'info';
 
 export interface Toast {
   id: number;
@@ -25,6 +25,10 @@ export class ToastService {
 
   error(text: string): void {
     this.push('error', text);
+  }
+
+  info(text: string): void {
+    this.push('info', text);
   }
 
   dismiss(id: number): void {
