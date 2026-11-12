@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService, REFRESH_TOKEN_KEY } from '../auth/auth.service';
-import { TestPageComponent, authResponse } from '../auth/auth.service.spec';
+import { TestPageComponent, authResponse } from '../auth/auth-testing';
 import { apiUrl } from './api-url';
 import { authInterceptor } from './auth.interceptor';
 
