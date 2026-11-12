@@ -1,31 +1,10 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { apiUrl } from '../api/api-url';
-import { AuthResponse } from '../models/auth';
+import { TestPageComponent, authResponse } from './auth-testing';
 import { AuthService, REFRESH_TOKEN_KEY } from './auth.service';
-
-@Component({ selector: 'sb-test-page', template: '' })
-export class TestPageComponent {}
-
-export function authResponse(token: string, refresh: string): AuthResponse {
-  return {
-    accessToken: token,
-    accessTokenExpiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
-    refreshToken: refresh,
-    user: {
-      id: '1',
-      email: 'user@example.com',
-      firstName: 'Тест',
-      lastName: 'Користувач',
-      roles: ['User'],
-      planCode: 'start',
-      createdAt: '2026-11-11T00:00:00Z',
-    },
-  };
-}
 
 describe('AuthService.refresh', () => {
   let auth: AuthService;
