@@ -79,6 +79,10 @@
       resize: none;
     }
 
+    input[type='search']::-webkit-search-cancel-button {
+      appearance: none;
+    }
+
     &:focus-within .field__leading {
       color: var(--color-accent);
     }
@@ -94,6 +98,13 @@
 
   &--error &__control {
     border-color: var(--color-danger);
+  }
+
+  &--search &__control {
+    height: 68px;
+    padding: 0 28px;
+    border-radius: var(--radius-pill);
+    font-size: 17px;
   }
 
   &__leading,
