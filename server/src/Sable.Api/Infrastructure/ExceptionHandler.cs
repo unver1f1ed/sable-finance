@@ -20,8 +20,8 @@ public class ExceptionHandler(ILogger<ExceptionHandler> logger) : IExceptionHand
         logger.LogError(exception, "Unhandled exception while processing {Method} {Path}",
             httpContext.Request.Method, httpContext.Request.Path);
 
-        var fallback = Errors.Server();
-        await ProblemDetailsWriter.WriteAsync(httpContext, fallback.Status, fallback.Code, fallback.Message);
+        await ProblemDetailsWriter.WriteAsync(
+            httpContext, StatusCodes.Status500InternalServerError, "server_error", ErrorDetails.ServerError);
         return true;
     }
 }

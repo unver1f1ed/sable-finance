@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Sable.Application.Common;
 using Sable.Infrastructure.Finance;
 using Sable.Infrastructure.Identity;
@@ -19,15 +20,12 @@ public static class HealthEndpoint
             return Results.Ok(new { status = "ok" });
         }
 
-        var error = Errors.Server("Сервіс тимчасово недоступний. Спробуйте пізніше");
-        await ProblemDetailsWriter.WriteAsync(context, StatusCodes.Status503ServiceUnavailable, error.Code, error.Message);
+        await ProblemDetailsWriter.WriteAsync(
+            context, StatusCodes.Status503ServiceUnavailable, "server_error", ErrorDetails.ServiceUnavailable);
         return Results.Empty;
     }
 
-    private static async Task<bool> CanConnectAsync(
-        Microsoft.EntityFrameworkCore.DbContext db,
-        ILogger logger,
-        CancellationToken ct)
+    private static async Task<bool> CanConnectAsync(DbContext db, ILogger logger, CancellationToken ct)
     {
         try
         {

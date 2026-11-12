@@ -20,7 +20,7 @@ public static class ValidationResponseFactory
             }
 
             var messages = entry.Errors
-                .Select(e => e.Exception is null && !string.IsNullOrWhiteSpace(e.ErrorMessage)
+                .Select(e => key.Length > 0 && e.Exception is null && !string.IsNullOrWhiteSpace(e.ErrorMessage)
                     ? e.ErrorMessage
                     : InvalidValueMessage)
                 .Distinct()
