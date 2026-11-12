@@ -1,0 +1,68 @@
+@use '../mixins' as *;
+
+.shell--admin {
+  .shell__main {
+    padding-bottom: 48px;
+  }
+
+  .sidebar__user {
+    margin-top: auto;
+  }
+}
+
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  padding: 0 var(--space-page-mobile);
+
+  @include desktop {
+    display: none;
+  }
+
+  &__logout {
+    margin-left: auto;
+  }
+}
+
+.admin-tabs {
+  padding: 0 0 12px;
+
+  @include desktop {
+    display: none;
+  }
+
+  &__list {
+    display: flex;
+    gap: 8px;
+    padding: 0 var(--space-page-mobile);
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    gap: 8px;
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+
+    &--active {
+      border-color: var(--color-accent);
+      background: rgba(111, 219, 212, 0.12);
+      color: var(--color-accent);
+    }
+  }
+}
