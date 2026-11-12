@@ -62,3 +62,5 @@ public sealed record TransactionList : Paged<TransactionDto>
     public decimal TotalIncome { get; init; }
     public decimal TotalExpense { get; init; }
 }
+
+public sealed record TransactionExport(string FileName, byte[] Content);

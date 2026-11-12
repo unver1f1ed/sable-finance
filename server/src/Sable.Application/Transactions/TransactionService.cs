@@ -9,6 +9,8 @@ namespace Sable.Application.Transactions;
 public class TransactionService(IFinanceDbContext db, ICurrentUser currentUser, TimeProvider timeProvider)
     : ITransactionService
 {
+    private const string ExportPlanLimitMessage = "Експорт у CSV доступний на тарифі Плюс";
+
     private static readonly DateOnly EarliestDate = new(2000, 1, 1);
 
     public async Task<TransactionList> ListAsync(TransactionQuery query, CancellationToken cancellationToken = default)
@@ -38,6 +40,25 @@ public class TransactionService(IFinanceDbContext db, ICurrentUser currentUser, 
             TotalIncome = sums.Where(s => s.Type == TransactionType.Income).Sum(s => s.Sum),
             TotalExpense = sums.Where(s => s.Type == TransactionType.Expense).Sum(s => s.Sum)
         };
+    }
+
+    public async Task<TransactionExport> ExportAsync(TransactionQuery query, CancellationToken cancellationToken = default)
+    {
+        if (!currentUser.HasUnlimitedPlan())
+        {
+            throw Errors.PlanLimit(ExportPlanLimitMessage);
+        }
+
+        var sort = ValidateQuery(query, paged: false);
+
+        var rows = await ApplySort(ApplyFilters(db.Transactions.AsQueryable(), query), sort)
+            .Select(TransactionProjections.ToDto)
+            .ToListAsync(cancellationToken);
+
+        var today = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime);
+        return new TransactionExport(
+            $"sable-transactions-{today:yyyy-MM-dd}.csv",
+            TransactionCsvWriter.Write(rows));
     }
 
     public async Task<TransactionDto> GetAsync(Guid id, CancellationToken cancellationToken = default) =>
