@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sable.Application.Common;
 
@@ -13,6 +14,10 @@ public class ErrorProbeController : ControllerBase
 
     [HttpGet("conflict")]
     public IActionResult ThrowConflict() => throw Errors.Conflict("Запис уже існує");
+
+    [HttpGet("admin-only")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminOnly() => Ok();
 
     [HttpPost("validate")]
     public IActionResult Validate(ProbeInput input) => Ok(input);
