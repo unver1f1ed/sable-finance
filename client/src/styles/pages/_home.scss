@@ -1,0 +1,430 @@
+@use '../mixins' as *;
+
+.text-strong {
+  color: var(--color-accent-strong);
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 640px;
+  margin-top: calc(-1 * var(--header-height));
+  padding-top: var(--header-height);
+  overflow: hidden;
+  text-align: center;
+
+  @include desktop {
+    height: 810px;
+  }
+
+  &__bg {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    z-index: 0;
+    width: 820px;
+    max-width: none;
+    height: auto;
+    transform: translateX(-50%);
+
+    @include desktop {
+      top: -207px;
+      width: 1224px;
+    }
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 56px var(--space-page-mobile) 0;
+
+    @include desktop {
+      padding-top: 102px;
+    }
+  }
+
+  &__title {
+    max-width: 900px;
+  }
+
+  &__cta {
+    @include desktop {
+      height: 80px;
+      padding: 0 48px;
+    }
+  }
+
+  &__note {
+    position: absolute;
+    bottom: 24px;
+    left: var(--space-page-mobile);
+    z-index: 1;
+    max-width: 330px;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--color-text-secondary);
+
+    @include desktop {
+      bottom: 54px;
+      left: 50px;
+    }
+  }
+}
+
+.benefits {
+  padding-top: 64px;
+  background: var(--color-surface);
+  scroll-margin-top: var(--header-offset);
+
+  @include desktop {
+    padding-top: 124px;
+  }
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+
+  &__title {
+    max-width: 700px;
+  }
+
+  &__stage {
+    position: relative;
+    margin-top: 32px;
+
+    @include desktop {
+      height: 720px;
+      margin-top: 76px;
+    }
+  }
+
+  &__phone {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    margin: 0 auto;
+
+    @include desktop {
+      position: absolute;
+      top: -206px;
+      left: 0;
+      max-width: none;
+      width: 1238px;
+    }
+  }
+
+  &__list {
+    position: relative;
+    display: grid;
+    gap: 32px;
+    padding-bottom: 64px;
+
+    @include tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include desktop {
+      grid-template-columns: repeat(2, 261px);
+      grid-template-rows: auto auto;
+      grid-auto-flow: column;
+      gap: 92px 0;
+      justify-content: space-between;
+      padding-bottom: 0;
+    }
+  }
+}
+
+.benefit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__title {
+    padding-top: 12px;
+  }
+
+  &--right {
+    @include desktop {
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+}
+
+.overview {
+  padding: 64px 0;
+  background: var(--color-bg);
+  overflow: hidden;
+
+  @include desktop {
+    height: 708px;
+    padding: 0;
+  }
+
+  &__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    @include desktop {
+      flex-direction: row;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @include desktop {
+      width: 560px;
+    }
+  }
+
+  &__title {
+    @include desktop {
+      font-size: 39px;
+    }
+  }
+
+  &__card {
+    align-self: center;
+    width: 200px;
+    height: auto;
+    transform: rotate(18deg);
+
+    @include desktop {
+      position: absolute;
+      top: 96px;
+      left: 829px;
+      align-self: auto;
+      width: 330px;
+    }
+  }
+}
+
+.showcase {
+  padding: 64px 0;
+  background: var(--color-white);
+  color: var(--color-on-accent);
+  overflow: hidden;
+
+  @include desktop {
+    padding: 96px 0;
+  }
+
+  &__top {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 40px;
+
+    @include desktop {
+      flex-direction: row;
+      justify-content: flex-end;
+      min-height: 560px;
+    }
+  }
+
+  &__card {
+    width: 200px;
+    height: auto;
+    transform: rotate(-14deg);
+
+    @include desktop {
+      position: absolute;
+      top: 0;
+      left: 129px;
+      width: 330px;
+    }
+  }
+
+  &__title {
+    @include desktop {
+      width: 542px;
+      font-size: 39px;
+      line-height: 46px;
+    }
+  }
+
+  &__steps {
+    display: grid;
+    gap: 32px;
+    margin-top: 48px;
+
+    @include desktop {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 48px;
+    }
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__text {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 80px 0 0;
+  overflow: hidden;
+
+  @include desktop {
+    gap: 62px;
+    padding-top: 150px;
+  }
+
+  &__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  &__stars {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__average {
+    font-size: 56px;
+    line-height: 64px;
+    font-weight: 500;
+
+    @include desktop {
+      font-size: 69px;
+      line-height: 77px;
+    }
+  }
+
+  &__slider {
+    width: 100%;
+  }
+}
+
+.download {
+  padding: 80px 0 0;
+  scroll-margin-top: var(--header-offset);
+
+  @include desktop {
+    padding-top: 150px;
+  }
+
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 28px;
+    min-height: 440px;
+    padding: 28px;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: var(--color-scrim);
+    }
+
+    @include desktop {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 412px;
+      min-height: 0;
+      padding: 62px;
+    }
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__text,
+  &__badges {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__title {
+    font-size: 28px;
+    line-height: 40px;
+    font-weight: 600;
+
+    @include desktop {
+      font-size: 36px;
+      line-height: 74px;
+    }
+  }
+
+  &__count {
+    font-size: 40px;
+
+    @include desktop {
+      font-size: 56px;
+    }
+  }
+
+  &__lead {
+    max-width: 475px;
+    font-size: 17px;
+    line-height: 24px;
+
+    @include desktop {
+      font-size: 21px;
+      line-height: 26px;
+    }
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  &__badge {
+    width: auto;
+    height: 52px;
+
+    @include desktop {
+      height: 61px;
+    }
+  }
+}

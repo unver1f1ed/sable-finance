@@ -1,0 +1,88 @@
+<section class="compare" aria-labelledby="compare-title">
+  <div class="compare__banner">
+    <h2 class="compare__banner-text text-display" id="compare-title">Порівняйте тарифи</h2>
+    <span class="compare__banner-dot" aria-hidden="true"></span>
+    <p class="compare__banner-text compare__banner-text--copy text-display" aria-hidden="true">Порівняйте тарифи</p>
+  </div>
+
+  <div class="container compare__body">
+    <div class="compare__scroll" role="region" aria-label="Порівняння тарифів" tabindex="0">
+      <table class="compare__table">
+        <caption class="visually-hidden">
+          Порівняння тарифів Sable Плюс і Sable Старт
+        </caption>
+        <thead>
+          <tr>
+            <td class="compare__corner"></td>
+            <th class="compare__plan" scope="col">
+              @if (visual() === 'images') {
+                <img class="compare__image" src="/images/compare-plus.webp" alt="" width="266" height="124" loading="lazy" />
+              } @else {
+                <sb-sable-card class="compare__card" variant="dark" label="Плюс" [width]="180" />
+              }
+              <span class="compare__plan-name">{{ plus()?.name }}</span>
+            </th>
+            <th class="compare__plan" scope="col">
+              @if (visual() === 'images') {
+                <img class="compare__image" src="/images/compare-start.webp" alt="" width="197" height="124" loading="lazy" />
+              } @else {
+                <sb-sable-card class="compare__card" variant="light" label="Старт" [width]="180" />
+              }
+              <span class="compare__plan-name">{{ start()?.name }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (feature of features(); track feature.id) {
+            <tr class="compare__row">
+              <th class="compare__feature" scope="row">{{ feature.name }}</th>
+              @for (code of codes; track code) {
+                <td class="compare__cell" [class.compare__cell--muted]="code === 'start'">
+                  @switch (value(feature.values, code)?.kind) {
+                    @case ('Included') {
+                      <sb-icon class="compare__yes" name="check" [size]="20" />
+                      <span class="visually-hidden">Є</span>
+                    }
+                    @case ('NotIncluded') {
+                      <sb-icon class="compare__no" name="x" [size]="18" />
+                      <span class="visually-hidden">Немає</span>
+                    }
+                    @default {
+                      {{ value(feature.values, code)?.text }}
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+          <tr class="compare__row compare__row--price">
+            <th class="compare__feature" scope="row">Вартість за місяць</th>
+            <td class="compare__cell">
+              <span class="compare__price num">{{ price(plus()) }}</span>
+              <span class="compare__per text-tiny text-muted">/міс</span>
+            </td>
+            <td class="compare__cell">
+              <span class="compare__price num">{{ price(start()) }}</span>
+              <span class="compare__per text-tiny text-muted">/міс</span>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot class="compare__foot">
+          <tr>
+            <td class="compare__action"></td>
+            <td class="compare__action">
+              <a sbButton [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'plus' }">Обрати Плюс</a>
+            </td>
+            <td class="compare__action">
+              <a sbButton [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'start' }">Обрати Старт</a>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="compare__actions">
+      <a sbButton block [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'plus' }">Обрати Плюс</a>
+      <a sbButton variant="ghost" block [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'start' }">Обрати Старт</a>
+    </div>
+  </div>
+</section>
