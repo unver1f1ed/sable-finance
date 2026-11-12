@@ -34,7 +34,7 @@
     }
 
     &:has(:disabled) {
-      background: #141415;
+      background: var(--color-surface-input);
       color: var(--color-text-tertiary);
     }
 
@@ -88,7 +88,7 @@
     background: var(--color-bg);
 
     &:has(:disabled) {
-      background: #141415;
+      background: var(--color-surface-input);
     }
   }
 

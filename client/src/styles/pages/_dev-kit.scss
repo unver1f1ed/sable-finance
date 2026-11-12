@@ -190,6 +190,6 @@
 }
 
 .kit-force-hover .btn--ghost {
-  border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--color-white);
+  background: var(--color-white-hover);
 }

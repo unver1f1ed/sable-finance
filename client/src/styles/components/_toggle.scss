@@ -28,7 +28,7 @@
     background: var(--color-accent);
 
     &::after {
-      background: #000000;
+      background: var(--color-on-accent);
       transform: translateX(18px);
     }
   }
