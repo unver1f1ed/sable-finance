@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sable.Application.Accounts;
 using Sable.Application.Categories;
+using Sable.Application.Budgets;
 using Sable.Application.Common;
 using Sable.Application.Dashboard;
 using Sable.Application.Transactions;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IBudgetService, BudgetService>();
         return services;
     }
 }
