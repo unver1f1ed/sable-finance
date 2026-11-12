@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, forwardRef, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
 })
 export class CheckboxComponent implements ControlValueAccessor {
+  readonly invalid = input(false);
+  readonly describedBy = input<string>();
+
   protected readonly checked = signal(false);
   protected readonly disabled = signal(false);
 
