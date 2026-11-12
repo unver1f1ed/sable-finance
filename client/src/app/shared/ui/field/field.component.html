@@ -1,0 +1,16 @@
+<div class="field" [class.field--error]="error()" [class.field--on-surface]="onSurface()">
+  <label class="field__label" [attr.for]="controlId()">{{ label() }}</label>
+  <div class="field__control">
+    <span class="field__leading"><ng-content select="[fieldLeading]" /></span>
+    <ng-content />
+    <span class="field__trailing"><ng-content select="[fieldTrailing]" /></span>
+  </div>
+  @if (error()) {
+    <p class="field__message field__message--error" [id]="messageId">
+      <sb-icon name="alert" [size]="14" />
+      <span>{{ error() }}</span>
+    </p>
+  } @else if (hint()) {
+    <p class="field__message" [id]="messageId">{{ hint() }}</p>
+  }
+</div>

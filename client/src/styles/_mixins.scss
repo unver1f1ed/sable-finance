@@ -15,3 +15,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@mixin field-focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(111, 219, 212, 0.18);
+}
