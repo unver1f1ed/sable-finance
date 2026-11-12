@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Sable.Api/Sable.Api.csproj" />
+    <Project Path="src/Sable.Application/Sable.Application.csproj" />
+    <Project Path="src/Sable.Domain/Sable.Domain.csproj" />
+    <Project Path="src/Sable.Infrastructure/Sable.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Sable.Tests/Sable.Tests.csproj" />
+  </Folder>
+</Solution>
