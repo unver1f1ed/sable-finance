@@ -1,10 +1,16 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Sable.Application.Abstractions;
 using Sable.Application.Auth;
 using Sable.Application.Common;
 
 namespace Sable.Infrastructure.Identity;
 
-internal sealed class AuthService(UserManager<AppUser> users, TokenService tokens, IUserDataEraser eraser)
+internal sealed class AuthService(
+    UserManager<AppUser> users,
+    TokenService tokens,
+    IUserDataEraser eraser,
+    IFinanceDbContext db)
     : IAuthService
 {
     private const string InvalidPlanMessage = "Оберіть доступний тариф";
@@ -14,7 +20,7 @@ internal sealed class AuthService(UserManager<AppUser> users, TokenService token
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
     {
-        if (!PlanCodes.IsValid(request.PlanCode))
+        if (!await IsPublishedPlanAsync(request.PlanCode))
         {
             throw Errors.Validation("planCode", InvalidPlanMessage);
         }
@@ -167,7 +173,7 @@ internal sealed class AuthService(UserManager<AppUser> users, TokenService token
         ChangePlanRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (!PlanCodes.IsValid(request.PlanCode))
+        if (!await IsPublishedPlanAsync(request.PlanCode))
         {
             throw Errors.Validation("planCode", InvalidPlanMessage);
         }
@@ -204,6 +210,9 @@ internal sealed class AuthService(UserManager<AppUser> users, TokenService token
             throw Errors.Server();
         }
     }
+
+    private Task<bool> IsPublishedPlanAsync(string code) =>
+        db.Plans.AnyAsync(p => p.Code == code && p.IsPublished);
 
     private static string NormalizeEmail(string email) => email.Trim().ToLowerInvariant();
 
