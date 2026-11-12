@@ -4,6 +4,8 @@
     type="checkbox"
     [checked]="checked()"
     [disabled]="disabled()"
+    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-describedby]="describedBy() ?? null"
     (change)="toggle($event)"
     (blur)="touch()"
   />

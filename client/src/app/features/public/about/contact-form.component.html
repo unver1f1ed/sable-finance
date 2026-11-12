@@ -1,0 +1,66 @@
+<form class="contact-form card card--lg" novalidate [formGroup]="form" (ngSubmit)="submit()">
+  <h3 class="text-h4">Форма звернення</h3>
+
+  <div class="contact-form__pair">
+    <sb-field label="Ім’я" onSurface [error]="error('name')">
+      <input
+        type="text"
+        autocomplete="name"
+        formControlName="name"
+        [readOnly]="sending()"
+        (input)="clearServerError('name')"
+      />
+    </sb-field>
+    <sb-field label="Електронна пошта" onSurface [error]="error('email')">
+      <input
+        type="email"
+        autocomplete="email"
+        formControlName="email"
+        [readOnly]="sending()"
+        (input)="clearServerError('email')"
+      />
+    </sb-field>
+  </div>
+
+  <sb-field label="Тема" onSurface [error]="error('topic')">
+    <input
+      type="text"
+      placeholder="Питання про тарифи"
+      formControlName="topic"
+      [readOnly]="sending()"
+      (input)="clearServerError('topic')"
+    />
+  </sb-field>
+
+  <div class="contact-form__message">
+    <sb-field label="Повідомлення" onSurface [error]="error('message')">
+      <textarea
+        rows="5"
+        placeholder="Опишіть, із чим вам допомогти"
+        formControlName="message"
+        [readOnly]="sending()"
+        (input)="clearServerError('message')"
+      ></textarea>
+    </sb-field>
+    <p class="contact-form__counter num" [class.contact-form__counter--over]="messageLength() > messageMax">
+      {{ messageLength() }} / {{ messageMax }} символів
+    </p>
+  </div>
+
+  <div class="contact-form__consent">
+    <sb-checkbox
+      formControlName="consent"
+      [invalid]="!!error('consent')"
+      [describedBy]="error('consent') ? 'contact-consent-error' : undefined"
+    >
+      Погоджуюсь на обробку персональних даних
+    </sb-checkbox>
+    @if (error('consent')) {
+      <p class="field__message field__message--error" id="contact-consent-error">{{ error('consent') }}</p>
+    }
+  </div>
+
+  <button sbButton size="lg" block type="submit" [disabled]="sending()">
+    {{ sending() ? 'Надсилаємо…' : 'Надіслати звернення' }}
+  </button>
+</form>

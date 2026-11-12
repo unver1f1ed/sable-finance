@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ButtonDirective } from '../../../shared/ui/button/button.directive';
+import { SableCardComponent } from '../../../shared/ui/sable-card/sable-card.component';
 
 @Component({
   selector: 'sb-not-found-page',
-  template: '<h1 class="text-h3">Сторінку не знайдено</h1>',
+  imports: [RouterLink, ButtonDirective, SableCardComponent],
+  templateUrl: './not-found-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

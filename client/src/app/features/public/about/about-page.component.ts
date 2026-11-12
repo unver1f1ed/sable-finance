@@ -1,9 +1,51 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ButtonDirective } from '../../../shared/ui/button/button.directive';
+import { CategoryIconComponent } from '../../../shared/ui/category-icon/category-icon.component';
+import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { SableCardComponent } from '../../../shared/ui/sable-card/sable-card.component';
+import { ContactFormComponent } from './contact-form.component';
+
+interface Stat {
+  value: string;
+  text: string;
+}
+
+interface Principle {
+  icon: string;
+  title: string;
+  text: string;
+}
 
 @Component({
   selector: 'sb-about-page',
-  template: '<h1 class="text-h3">Про Sable</h1>',
+  imports: [RouterLink, ButtonDirective, CategoryIconComponent, IconComponent, SableCardComponent, ContactFormComponent],
+  templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class AboutPageComponent {}
+export class AboutPageComponent {
+  protected readonly stats: Stat[] = [
+    { value: '400 000+', text: 'користувачів планують бюджет із Sable' },
+    { value: '12 млн', text: 'транзакцій записано за останній рік' },
+    { value: '4.8', text: 'середня оцінка в магазинах застосунків' },
+  ];
+
+  protected readonly principles: Principle[] = [
+    {
+      icon: 'eye',
+      title: 'Прозорість',
+      text: 'Жодних прихованих платежів і дрібного шрифту. Ви завжди бачите, що і чому відбувається з вашими даними.',
+    },
+    {
+      icon: 'target',
+      title: 'Фокус на цілях',
+      text: 'Облік — лише початок. Кожен екран підказує, наскільки ви близькі до того, заради чого відкладаєте.',
+    },
+    {
+      icon: 'shield',
+      title: 'Безпека даних',
+      text: 'Паролі зберігаються лише у хешованому вигляді, а доступ до кабінету захищено на рівні сервера.',
+    },
+  ];
+}
