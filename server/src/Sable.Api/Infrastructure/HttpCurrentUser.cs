@@ -14,4 +14,6 @@ public class HttpCurrentUser(IHttpContextAccessor accessor) : ICurrentUser
             return Guid.TryParse(value, out var id) ? id : null;
         }
     }
+
+    public string? PlanCode => accessor.HttpContext?.User.FindFirstValue("plan");
 }
