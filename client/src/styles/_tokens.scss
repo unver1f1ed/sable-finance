@@ -1,3 +1,5 @@
+@use 'mixins' as *;
+
 :root {
   --color-bg: #000000;
   --color-surface: #1c1c1e;
@@ -41,6 +43,14 @@
   --color-warning-soft: rgba(255, 180, 84, 0.14);
   --color-violet-soft: rgba(167, 139, 250, 0.16);
   --color-neutral-soft: rgba(160, 161, 168, 0.16);
+  --color-scrim: rgba(0, 0, 0, 0.28);
+  --color-accent-darkest: #0b5c56;
+  --color-black-soft: rgba(0, 0, 0, 0.18);
+  --color-card-dark-border: rgba(111, 219, 212, 0.35);
+  --color-card-light-border: rgba(255, 255, 255, 0.6);
+  --gradient-card-dark: linear-gradient(135deg, #0d1f1e 0%, #10332f 45%, #1fc6bb 130%);
+  --gradient-card-light: linear-gradient(135deg, #ffffff 0%, #d9f5f2 40%, #6fdbd4 100%);
+  --gradient-cta: linear-gradient(120deg, #1c1c1e 0%, #12302e 100%);
 
   --font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
 
@@ -52,4 +62,13 @@
   --space-page-mobile: 20px;
   --content-width: 1238px;
   --sidebar-width: 272px;
+  --header-height: 72px;
+  --header-offset: 72px;
+}
+
+@include desktop {
+  :root {
+    --header-height: 140px;
+    --header-offset: 94px;
+  }
 }
