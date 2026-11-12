@@ -10,6 +10,10 @@ namespace Sable.Api.Controllers;
 public class TransactionsController(ITransactionService transactions, ICurrentUser currentUser)
     : ApiControllerBase(currentUser)
 {
+    [HttpGet]
+    public async Task<ActionResult<TransactionList>> List([FromQuery] TransactionQuery query, CancellationToken ct) =>
+        await transactions.ListAsync(query, ct);
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<TransactionDto>> Get(Guid id, CancellationToken ct) =>
         await transactions.GetAsync(id, ct);

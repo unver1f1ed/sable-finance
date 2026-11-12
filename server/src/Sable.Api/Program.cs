@@ -15,7 +15,20 @@ const string CorsPolicy = "Client";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddControllers()
+    .AddControllers(options =>
+    {
+        var messages = options.ModelBindingMessageProvider;
+        messages.SetValueIsInvalidAccessor(_ => ValidationMessages.InvalidValue);
+        messages.SetAttemptedValueIsInvalidAccessor((_, _) => ValidationMessages.InvalidValue);
+        messages.SetUnknownValueIsInvalidAccessor(_ => ValidationMessages.InvalidValue);
+        messages.SetValueMustBeANumberAccessor(_ => ValidationMessages.InvalidValue);
+        messages.SetNonPropertyAttemptedValueIsInvalidAccessor(_ => ValidationMessages.InvalidValue);
+        messages.SetNonPropertyUnknownValueIsInvalidAccessor(() => ValidationMessages.InvalidValue);
+        messages.SetNonPropertyValueMustBeANumberAccessor(() => ValidationMessages.InvalidValue);
+        messages.SetMissingBindRequiredValueAccessor(_ => ValidationMessages.Required);
+        messages.SetMissingKeyOrValueAccessor(() => ValidationMessages.Required);
+        messages.SetMissingRequestBodyRequiredValueAccessor(() => ValidationMessages.InvalidValue);
+    })
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
     .ConfigureApiBehaviorOptions(options =>
         options.InvalidModelStateResponseFactory = ValidationResponseFactory.Create);

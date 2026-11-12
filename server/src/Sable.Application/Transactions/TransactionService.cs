@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Sable.Application.Abstractions;
 using Sable.Application.Common;
 using Sable.Domain.Entities;
+using Sable.Domain.Enums;
 
 namespace Sable.Application.Transactions;
 
@@ -9,6 +10,35 @@ public class TransactionService(IFinanceDbContext db, ICurrentUser currentUser, 
     : ITransactionService
 {
     private static readonly DateOnly EarliestDate = new(2000, 1, 1);
+
+    public async Task<TransactionList> ListAsync(TransactionQuery query, CancellationToken cancellationToken = default)
+    {
+        var sort = ValidateQuery(query);
+
+        var filtered = ApplyFilters(db.Transactions.AsQueryable(), query);
+
+        var sums = await filtered
+            .GroupBy(t => t.Type)
+            .Select(g => new { Type = g.Key, Count = g.Count(), Sum = g.Sum(t => t.Amount) })
+            .ToListAsync(cancellationToken);
+
+        var page = new PageRequest(query.Page, query.PageSize);
+        var items = await ApplySort(filtered, sort)
+            .Skip(page.Skip)
+            .Take(page.PageSize)
+            .Select(TransactionProjections.ToDto)
+            .ToListAsync(cancellationToken);
+
+        return new TransactionList
+        {
+            Items = items,
+            Total = sums.Sum(s => s.Count),
+            Page = page.Page,
+            PageSize = page.PageSize,
+            TotalIncome = sums.Where(s => s.Type == TransactionType.Income).Sum(s => s.Sum),
+            TotalExpense = sums.Where(s => s.Type == TransactionType.Expense).Sum(s => s.Sum)
+        };
+    }
 
     public async Task<TransactionDto> GetAsync(Guid id, CancellationToken cancellationToken = default) =>
         await db.Transactions
@@ -57,6 +87,82 @@ public class TransactionService(IFinanceDbContext db, ICurrentUser currentUser, 
 
         db.Transactions.Remove(transaction);
         await db.SaveChangesAsync(cancellationToken);
+    }
+
+    internal static IQueryable<Transaction> ApplyFilters(IQueryable<Transaction> source, TransactionQuery query)
+    {
+        var search = query.Search?.Trim();
+        if (!string.IsNullOrEmpty(search))
+        {
+            var lowered = search.ToLower();
+            source = source.Where(t => t.Description.ToLower().Contains(lowered));
+        }
+
+        if (query.Type is { } type)
+        {
+            source = source.Where(t => t.Type == type);
+        }
+
+        if (query.AccountId is { } accountId)
+        {
+            source = source.Where(t => t.AccountId == accountId);
+        }
+
+        if (query.CategoryId is { } categoryId)
+        {
+            source = source.Where(t => t.CategoryId == categoryId);
+        }
+
+        if (query.From is { } from)
+        {
+            source = source.Where(t => t.OccurredOn >= from);
+        }
+
+        if (query.To is { } to)
+        {
+            source = source.Where(t => t.OccurredOn <= to);
+        }
+
+        return source;
+    }
+
+    internal static IOrderedQueryable<Transaction> ApplySort(IQueryable<Transaction> source, string sort) => sort switch
+    {
+        "date_asc" => source.OrderBy(t => t.OccurredOn).ThenBy(t => t.CreatedAt).ThenBy(t => t.Id),
+        "amount_desc" => source.OrderByDescending(t => t.Amount).ThenByDescending(t => t.OccurredOn).ThenBy(t => t.Id),
+        "amount_asc" => source.OrderBy(t => t.Amount).ThenByDescending(t => t.OccurredOn).ThenBy(t => t.Id),
+        _ => source.OrderByDescending(t => t.OccurredOn).ThenByDescending(t => t.CreatedAt).ThenByDescending(t => t.Id)
+    };
+
+    private static readonly string[] SortValues = ["date_desc", "date_asc", "amount_desc", "amount_asc"];
+
+    /// <summary>Validates filter, sort and paging values and returns the normalized sort key.</summary>
+    private static string ValidateQuery(TransactionQuery query, bool paged = true)
+    {
+        var errors = new Dictionary<string, string[]>();
+
+        if (query.From is { } from && query.To is { } to && from > to)
+        {
+            errors["to"] = [ValidationMessages.ToBeforeFrom];
+        }
+
+        var sort = string.IsNullOrWhiteSpace(query.Sort) ? "date_desc" : query.Sort.Trim().ToLowerInvariant();
+        if (!SortValues.Contains(sort))
+        {
+            errors["sort"] = [ValidationMessages.UnknownSort];
+        }
+
+        if (paged)
+        {
+            PageRequest.Validate(query.Page, query.PageSize, errors);
+        }
+
+        if (errors.Count > 0)
+        {
+            throw Errors.Validation(errors);
+        }
+
+        return sort;
     }
 
     private static void Apply(Transaction transaction, TransactionInput input)
