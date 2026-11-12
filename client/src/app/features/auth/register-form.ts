@@ -61,11 +61,8 @@ export function registerFieldError(form: FormGroup, name: RegisterField): string
   if (!errors) {
     return undefined;
   }
-  if (errors['requiredTrue']) {
-    return TERMS_MESSAGE;
-  }
   if (errors['required']) {
-    return REQUIRED_MESSAGE;
+    return name === 'terms' ? TERMS_MESSAGE : REQUIRED_MESSAGE;
   }
   if (errors['pattern']) {
     return EMAIL_MESSAGE;

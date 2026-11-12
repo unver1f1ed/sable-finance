@@ -20,28 +20,53 @@
         </li>
       }
     </ul>
+    @if (auth.isAdmin()) {
+      <ul class="sidebar__list sidebar__list--extra">
+        <li>
+          <a class="sidebar__link" routerLink="/admin/users">
+            <sb-icon name="shield" [size]="20" />
+            Адміністрування
+          </a>
+        </li>
+      </ul>
+    }
   </nav>
 
   <section class="card sidebar__plan" aria-label="Ваш тариф">
     <div class="sidebar__plan-head">
-      <sb-badge tone="grey">Тариф {{ user.plan }}</sb-badge>
+      <sb-badge [tone]="isPlus() ? 'purple' : 'grey'">Тариф {{ planLabel() }}</sb-badge>
       <sb-icon class="text-accent" name="star" [size]="18" />
     </div>
-    <p class="text-small text-muted">Необмежені рахунки, цілі та експорт звітів — у тарифі Плюс.</p>
-    <a sbButton size="sm" block routerLink="/plans">Перейти на Плюс</a>
+    @if (isPlus()) {
+      <p class="text-small text-muted">Необмежені рахунки, цілі та експорт звітів уже доступні.</p>
+    } @else {
+      <p class="text-small text-muted">Необмежені рахунки, цілі та експорт звітів — у тарифі Плюс.</p>
+      <a sbButton size="sm" block routerLink="/app/settings" fragment="plan">Перейти на Плюс</a>
+    }
   </section>
 
   <div class="sidebar__user">
-    <sb-avatar [name]="user.name" />
+    <sb-avatar [name]="fullName()" />
     <div class="sidebar__user-info">
-      <p class="text-small text-semibold sidebar__user-name">{{ user.name }}</p>
-      <p class="text-tiny text-muted sidebar__user-email">{{ user.email }}</p>
+      <p class="text-small text-semibold sidebar__user-name">{{ fullName() }}</p>
+      <p class="text-tiny text-muted sidebar__user-email">{{ auth.user()?.email }}</p>
     </div>
-    <button class="icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти">
+    <button class="icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти" (click)="auth.logout()">
       <sb-icon name="logout" [size]="18" />
     </button>
   </div>
 </aside>
+
+<header class="app-topbar">
+  <sb-avatar [name]="fullName()" />
+  <div class="app-topbar__text">
+    <p class="text-tiny text-muted">Добрий день,</p>
+    <p class="text-body text-semibold">{{ auth.user()?.firstName }}</p>
+  </div>
+  <button sbIconButton type="button" aria-label="Вийти" (click)="auth.logout()">
+    <sb-icon name="logout" [size]="18" />
+  </button>
+</header>
 
 <main class="shell__main">
   <router-outlet />
