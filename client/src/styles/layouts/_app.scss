@@ -187,3 +187,23 @@
     color: var(--color-on-accent);
   }
 }
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px var(--space-page-mobile) 0;
+
+  @include desktop {
+    display: none;
+  }
+
+  &__text {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+.sidebar__list--extra {
+  margin-top: 4px;
+}

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
 import { AvatarComponent } from '../../shared/ui/avatar/avatar.component';
 import { BadgeComponent } from '../../shared/ui/badge/badge.component';
 import { ButtonDirective } from '../../shared/ui/button/button.directive';
@@ -38,5 +39,11 @@ export class AppLayoutComponent {
     { path: '/app/settings', label: 'Налаштування', icon: 'sliders', exact: false },
   ];
 
-  protected readonly user = { name: 'Богдан Паславський', email: 'bohdan@example.com', plan: 'Старт' };
+  protected readonly auth = inject(AuthService);
+  protected readonly fullName = computed(() => {
+    const user = this.auth.user();
+    return user ? `${user.firstName} ${user.lastName}`.trim() : '';
+  });
+  protected readonly isPlus = computed(() => this.auth.planCode() === 'plus');
+  protected readonly planLabel = computed(() => (this.isPlus() ? 'Плюс' : 'Старт'));
 }

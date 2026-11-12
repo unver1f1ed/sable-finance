@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
 import { AvatarComponent } from '../../shared/ui/avatar/avatar.component';
 import { BadgeComponent } from '../../shared/ui/badge/badge.component';
 import { IconButtonDirective } from '../../shared/ui/icon-button/icon-button.directive';
@@ -27,5 +28,9 @@ export class AdminLayoutComponent {
     { path: '/admin/faq', label: 'Довідка (FAQ)', icon: 'help' },
   ];
 
-  protected readonly user = { name: 'Олена Коваль', email: 'admin@sable.ua' };
+  protected readonly auth = inject(AuthService);
+  protected readonly fullName = computed(() => {
+    const user = this.auth.user();
+    return user ? `${user.firstName} ${user.lastName}`.trim() : '';
+  });
 }
