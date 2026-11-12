@@ -24,7 +24,7 @@
   &--active,
   &--active:hover {
     border-color: var(--color-accent);
-    background: rgba(111, 219, 212, 0.12);
+    background: var(--color-accent-faint);
     color: var(--color-accent);
   }
 }
