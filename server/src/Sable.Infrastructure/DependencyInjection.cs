@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sable.Application.Abstractions;
+using Sable.Application.Admin.Users;
 using Sable.Application.Auth;
 using Sable.Infrastructure.Finance;
 using Sable.Infrastructure.Identity;
@@ -52,6 +53,7 @@ public static class DependencyInjection
 
         services.AddScoped<TokenService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserAdminService, UserAdminService>();
 
         return services;
     }
