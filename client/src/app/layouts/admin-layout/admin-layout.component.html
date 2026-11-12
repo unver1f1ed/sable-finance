@@ -3,7 +3,7 @@
     <img src="/images/logo.svg" alt="Sable" width="99" height="24" />
   </a>
   <sb-badge tone="purple">Адмін</sb-badge>
-  <button class="admin-topbar__logout icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти">
+  <button class="admin-topbar__logout icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти" (click)="auth.logout()">
     <sb-icon name="logout" [size]="18" />
   </button>
 </header>
@@ -21,7 +21,7 @@
     <li>
       <a class="admin-tabs__link" routerLink="/app">
         <sb-icon name="grid" [size]="18" />
-        Кабінет користувача
+        До кабінету
       </a>
     </li>
   </ul>
@@ -52,19 +52,19 @@
       <li>
         <a class="sidebar__link" routerLink="/app">
           <sb-icon name="grid" [size]="20" />
-          Кабінет користувача
+          До кабінету
         </a>
       </li>
     </ul>
   </nav>
 
   <div class="sidebar__user">
-    <sb-avatar [name]="user.name" />
+    <sb-avatar [name]="fullName()" />
     <div class="sidebar__user-info">
-      <p class="text-small text-semibold sidebar__user-name">{{ user.name }}</p>
-      <p class="text-tiny text-muted sidebar__user-email">{{ user.email }}</p>
+      <p class="text-small text-semibold sidebar__user-name">{{ fullName() }}</p>
+      <p class="text-tiny text-muted sidebar__user-email">{{ auth.user()?.email }}</p>
     </div>
-    <button class="icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти">
+    <button class="icon-btn--plain" sbIconButton size="sm" type="button" aria-label="Вийти" (click)="auth.logout()">
       <sb-icon name="logout" [size]="18" />
     </button>
   </div>
