@@ -1,5 +1,10 @@
-<div class="field" [class.field--error]="error()" [class.field--on-surface]="onSurface()">
-  <label class="field__label" [attr.for]="controlId()">{{ label() }}</label>
+<div
+  class="field"
+  [class.field--error]="error()"
+  [class.field--on-surface]="onSurface()"
+  [class.field--search]="variant() === 'search'"
+>
+  <label class="field__label" [class.visually-hidden]="hideLabel()" [attr.for]="controlId()">{{ label() }}</label>
   <div class="field__control">
     <span class="field__leading"><ng-content select="[fieldLeading]" /></span>
     <ng-content />
