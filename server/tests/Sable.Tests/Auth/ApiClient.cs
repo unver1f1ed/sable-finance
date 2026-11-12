@@ -49,6 +49,18 @@ public sealed class ApiClient(ApiFactory factory)
     public Task<HttpResponseMessage> LoginAsync(string email, string password) =>
         Anonymous().PostAsJsonAsync("/api/auth/login", new { email, password });
 
+    /// <summary>Logs in as the admin seeded by <see cref="ApiFactory"/> and returns a client with its token.</summary>
+    public Task<RegisteredUser> LoginAsAdminAsync() => LoginUserAsync(ApiFactory.AdminEmail, ApiFactory.AdminPassword);
+
+    /// <summary>Logs in with valid credentials and returns the tokens together with an authorized client.</summary>
+    public async Task<RegisteredUser> LoginUserAsync(string email, string password)
+    {
+        var response = await LoginAsync(email, password);
+        response.EnsureSuccessStatusCode();
+        var auth = (await response.Content.ReadFromJsonAsync<AuthResponse>())!;
+        return new RegisteredUser(auth, Authorized(auth.AccessToken), email, password);
+    }
+
     public Task<HttpResponseMessage> RefreshAsync(string refreshToken) =>
         Anonymous().PostAsJsonAsync("/api/auth/refresh", new { refreshToken });
 

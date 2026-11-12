@@ -21,7 +21,7 @@ public class PublicContentController(IPublicContentService content, ICurrentUser
         await content.GetReviewsAsync(ct);
 
     [HttpGet("faq")]
-    [ResponseCache(Duration = 60, VaryByQueryKeys = ["search"])]
+    [ResponseCache(Duration = 60)]
     public async Task<ActionResult<IReadOnlyList<FaqTopicDto>>> Faq([FromQuery] string? search, CancellationToken ct) =>
         Ok(await content.GetFaqAsync(search, ct));
 
