@@ -28,6 +28,7 @@ public class DatabaseInitializer(
         await SeedRolesAsync();
         await SeedAdminAsync();
         await SeedSystemCategoriesAsync();
+        await SeedContentAsync();
     }
 
     private async Task SeedRolesAsync()
@@ -97,6 +98,107 @@ public class DatabaseInitializer(
         }
 
         await financeDb.SaveChangesAsync();
+    }
+
+    /// <summary>Inserts public content only where it is missing, so edits made by an admin survive restarts.</summary>
+    private async Task SeedContentAsync()
+    {
+        foreach (var item in PlanSeed.Plans)
+        {
+            if (await financeDb.Plans.AnyAsync(p => p.Code == item.Code))
+            {
+                continue;
+            }
+
+            financeDb.Plans.Add(new Plan
+            {
+                Id = Guid.CreateVersion7(),
+                Code = item.Code,
+                Name = item.Name,
+                Description = item.Description,
+                PriceMonthly = item.PriceMonthly,
+                PriceYearlyPerMonth = item.PriceYearlyPerMonth,
+                IsPopular = item.IsPopular,
+                IsPublished = true,
+                SortOrder = item.SortOrder
+            });
+        }
+
+        await financeDb.SaveChangesAsync();
+
+        if (!await financeDb.PlanFeatures.AnyAsync())
+        {
+            var planIds = await financeDb.Plans.ToDictionaryAsync(p => p.Code, p => p.Id);
+            var order = 1;
+            foreach (var definition in PlanSeed.Features)
+            {
+                var feature = new PlanFeature { Id = Guid.CreateVersion7(), Name = definition.Name, SortOrder = order++ };
+                AddFeatureValue(feature, planIds, "start", definition.Start);
+                AddFeatureValue(feature, planIds, "plus", definition.Plus);
+                financeDb.PlanFeatures.Add(feature);
+            }
+
+            await financeDb.SaveChangesAsync();
+        }
+
+        if (!await financeDb.Reviews.AnyAsync())
+        {
+            var now = DateTimeOffset.UtcNow;
+            for (var i = 0; i < ReviewSeed.Reviews.Length; i++)
+            {
+                var review = ReviewSeed.Reviews[i];
+                financeDb.Reviews.Add(new Review
+                {
+                    Id = Guid.CreateVersion7(),
+                    Author = review.Author,
+                    Text = review.Text,
+                    Rating = review.Rating,
+                    IsPublished = true,
+                    CreatedAt = now.AddDays(-i)
+                });
+            }
+
+            await financeDb.SaveChangesAsync();
+        }
+
+        if (!await financeDb.FaqTopics.AnyAsync())
+        {
+            var now = DateTimeOffset.UtcNow;
+            var topicOrder = 1;
+            foreach (var topicDefinition in FaqSeed.Topics)
+            {
+                var topic = new FaqTopic { Id = Guid.CreateVersion7(), Name = topicDefinition.Name, SortOrder = topicOrder++ };
+                var itemOrder = 1;
+                foreach (var itemDefinition in topicDefinition.Items)
+                {
+                    topic.Items.Add(new FaqItem
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Question = itemDefinition.Question,
+                        Answer = itemDefinition.Answer,
+                        IsPublished = true,
+                        SortOrder = itemOrder++,
+                        UpdatedAt = now
+                    });
+                }
+
+                financeDb.FaqTopics.Add(topic);
+            }
+
+            await financeDb.SaveChangesAsync();
+        }
+    }
+
+    private static void AddFeatureValue(
+        PlanFeature feature,
+        Dictionary<string, Guid> planIds,
+        string planCode,
+        PlanSeed.FeatureValue value)
+    {
+        if (planIds.TryGetValue(planCode, out var planId))
+        {
+            feature.Values.Add(new PlanFeatureValue { PlanId = planId, Kind = value.Kind, Text = value.Text });
+        }
     }
 
     private static void EnsureSucceeded(IdentityResult result, string action)
