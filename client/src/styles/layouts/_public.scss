@@ -18,15 +18,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  height: 72px;
+  height: var(--header-height);
   padding: 0 var(--space-page-mobile);
-  background: var(--color-bg);
+  background: transparent;
+  transition: background-color 0.2s ease;
 
   @include desktop {
-    position: relative;
+    top: -46px;
     align-items: flex-start;
-    height: 140px;
     padding: 46px 50px 0;
+  }
+
+  &--solid {
+    background: var(--color-bg);
   }
 
   &__logo {

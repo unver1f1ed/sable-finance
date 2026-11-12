@@ -1,4 +1,4 @@
-<header class="public-header">
+<header class="public-header" [class.public-header--solid]="scrolled() || menuOpen()">
   <a class="public-header__logo" routerLink="/">
     <img src="/images/logo.svg" alt="Sable" width="99" height="24" />
   </a>
@@ -97,7 +97,9 @@
           </ul>
         </nav>
         <address class="public-footer__group">
-          <p class="public-footer__title text-h3">Контакти</p>
+          <p class="public-footer__title text-h3">
+            <a routerLink="/about" fragment="contact">Контакти</a>
+          </p>
           <ul class="public-footer__list">
             <li class="public-footer__link">Пошта: <a href="mailto:help@sable.ua">help@sable.ua</a></li>
             <li class="public-footer__link">Адреса: Київ, вул. Січових Стрільців, 21</li>
