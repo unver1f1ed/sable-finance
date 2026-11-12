@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Sable.Application.Abstractions;
 using Sable.Application.Common;
@@ -10,7 +9,7 @@ public class AdminReviewService(IFinanceDbContext db, TimeProvider timeProvider)
 {
     private static readonly string[] StatusValues = ["published", "hidden"];
 
-    private static readonly Expression<Func<Review, AdminReviewDto>> ToDto = r => new AdminReviewDto
+    private static AdminReviewDto ToDto(Review r) => new()
     {
         Id = r.Id,
         Author = r.Author,
@@ -71,10 +70,9 @@ public class AdminReviewService(IFinanceDbContext db, TimeProvider timeProvider)
             .ThenByDescending(r => r.Id)
             .Skip(page.Skip)
             .Take(page.PageSize)
-            .Select(ToDto)
             .ToListAsync(cancellationToken);
 
-        return new Paged<AdminReviewDto> { Items = items, Total = total, Page = page.Page, PageSize = page.PageSize };
+        return new Paged<AdminReviewDto> { Items = items.Select(ToDto).ToList(), Total = total, Page = page.Page, PageSize = page.PageSize };
     }
 
     public async Task<AdminReviewDto> CreateAsync(AdminReviewInput input, CancellationToken cancellationToken = default)
@@ -118,6 +116,6 @@ public class AdminReviewService(IFinanceDbContext db, TimeProvider timeProvider)
         review.IsPublished = input.IsPublished;
     }
 
-    private Task<AdminReviewDto> GetDtoAsync(Guid id, CancellationToken cancellationToken) =>
-        db.Reviews.Where(r => r.Id == id).Select(ToDto).SingleAsync(cancellationToken);
+    private async Task<AdminReviewDto> GetDtoAsync(Guid id, CancellationToken cancellationToken) =>
+        ToDto(await db.Reviews.SingleAsync(r => r.Id == id, cancellationToken));
 }

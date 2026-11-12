@@ -90,7 +90,9 @@ public class PublicContentService(IFinanceDbContext db, TimeProvider timeProvide
             {
                 i.TopicId,
                 TopicName = i.Topic.Name,
-                Item = new FaqItemDto(i.Id, i.Question, i.Answer)
+                i.Id,
+                i.Question,
+                i.Answer
             })
             .ToListAsync(cancellationToken);
 
@@ -100,7 +102,7 @@ public class PublicContentService(IFinanceDbContext db, TimeProvider timeProvide
             {
                 Id = g.Key.TopicId,
                 Name = g.Key.TopicName,
-                Items = g.Select(r => r.Item).ToList()
+                Items = g.Select(r => new FaqItemDto(r.Id, r.Question, r.Answer)).ToList()
             })
             .ToList();
     }

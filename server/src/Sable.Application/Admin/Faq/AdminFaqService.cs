@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Sable.Application.Abstractions;
 using Sable.Application.Common;
@@ -8,7 +7,7 @@ namespace Sable.Application.Admin.Faq;
 
 public class AdminFaqService(IFinanceDbContext db, TimeProvider timeProvider) : IAdminFaqService
 {
-    private static readonly Expression<Func<FaqItem, AdminFaqItemDto>> ToItemDto = i => new AdminFaqItemDto
+    private static AdminFaqItemDto ToItemDto(FaqItem i) => new()
     {
         Id = i.Id,
         TopicId = i.TopicId,
@@ -78,13 +77,15 @@ public class AdminFaqService(IFinanceDbContext db, TimeProvider timeProvider) : 
             filtered = filtered.Where(i => i.TopicId == topicId);
         }
 
-        return await filtered
+        var items = await filtered
+            .Include(i => i.Topic)
             .OrderBy(i => i.Topic.SortOrder)
             .ThenBy(i => i.Topic.Id)
             .ThenBy(i => i.SortOrder)
             .ThenBy(i => i.Id)
-            .Select(ToItemDto)
             .ToListAsync(cancellationToken);
+
+        return items.Select(ToItemDto).ToList();
     }
 
     public async Task<AdminFaqItemDto> CreateItemAsync(
@@ -151,6 +152,6 @@ public class AdminFaqService(IFinanceDbContext db, TimeProvider timeProvider) : 
     private async Task<int> NextSortOrderAsync(Guid topicId, CancellationToken cancellationToken) =>
         (await db.FaqItems.Where(i => i.TopicId == topicId).MaxAsync(i => (int?)i.SortOrder, cancellationToken) ?? 0) + 1;
 
-    private Task<AdminFaqItemDto> GetItemDtoAsync(Guid id, CancellationToken cancellationToken) =>
-        db.FaqItems.Where(i => i.Id == id).Select(ToItemDto).SingleAsync(cancellationToken);
+    private async Task<AdminFaqItemDto> GetItemDtoAsync(Guid id, CancellationToken cancellationToken) =>
+        ToItemDto(await db.FaqItems.Include(i => i.Topic).SingleAsync(i => i.Id == id, cancellationToken));
 }
