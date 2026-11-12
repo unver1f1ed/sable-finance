@@ -1,13 +1,15 @@
-import { Directive, computed, input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 
 export type IconButtonSize = 'sm' | 'md';
 
 @Directive({
   selector: 'button[sbIconButton], a[sbIconButton]',
-  host: { '[class]': 'classes()' },
+  host: {
+    class: 'icon-btn',
+    '[class.icon-btn--sm]': "size() === 'sm'",
+    '[class.icon-btn--md]': "size() === 'md'",
+  },
 })
 export class IconButtonDirective {
-  readonly size = input<IconButtonSize>('md');
-
-  protected readonly classes = computed(() => `icon-btn icon-btn--${this.size()}`);
+  readonly size = input<'sm' | 'md'>('md');
 }

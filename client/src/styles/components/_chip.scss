@@ -12,11 +12,11 @@
   color: var(--color-text-secondary);
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
-    transition:
-      border-color 0.15s ease,
-      color 0.15s ease;
     border-color: var(--color-text-tertiary);
     color: var(--color-text);
   }
