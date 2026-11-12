@@ -29,7 +29,6 @@ import {
   RegisterField,
   createRegisterForm,
   passwordStrength,
-  PASSWORD_RULE_MESSAGE,
   registerFieldError,
 } from './register-form';
 
@@ -54,7 +53,7 @@ export class RegisterModalComponent {
   protected readonly sending = signal(false);
   protected readonly createdName = signal<string | null>(null);
   protected readonly showPassword = signal(false);
-  protected readonly passwordHint = PASSWORD_RULE_MESSAGE;
+  protected readonly passwordHint = 'Надійний пароль · щонайменше 8 символів, літери й цифри';
   protected readonly strengthBars = [0, 1, 2, 3];
   protected readonly plusPrice = computed(() => {
     const plus = this.plans().plans.find((plan) => plan.code === 'plus');
