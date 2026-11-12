@@ -18,10 +18,7 @@ public class BudgetService(IFinanceDbContext db, ICurrentUser currentUser, TimeP
         var today = Today();
         var first = MonthParser.Parse(month, today);
 
-        var items = await Query(first)
-            .OrderBy(b => b.Category.Name)
-            .ThenBy(b => b.Id)
-            .ToListAsync(cancellationToken);
+        var items = await Query(first).ToListAsync(cancellationToken);
 
         var totalLimit = items.Sum(i => i.LimitAmount);
         var totalSpent = items.Sum(i => i.Spent);
@@ -127,7 +124,10 @@ public class BudgetService(IFinanceDbContext db, ICurrentUser currentUser, TimeP
         var last = firstOfMonth.AddMonths(1).AddDays(-1);
         var month = MonthParser.Format(firstOfMonth);
 
-        return db.Budgets.Select(b => new BudgetDto
+        return db.Budgets
+            .OrderBy(b => b.Category.Name)
+            .ThenBy(b => b.Id)
+            .Select(b => new BudgetDto
         {
             Id = b.Id,
             Category = new CategoryRef(b.CategoryId, b.Category.Name, b.Category.Icon, b.Category.Color),
