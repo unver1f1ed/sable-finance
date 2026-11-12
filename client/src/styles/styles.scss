@@ -20,3 +20,7 @@
 @use 'components/pagination';
 @use 'components/modal';
 @use 'components/toast';
+@use 'layouts/public';
+@use 'layouts/app';
+@use 'layouts/admin';
+@use 'pages/dev-kit';
