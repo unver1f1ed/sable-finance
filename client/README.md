@@ -1,59 +1,41 @@
-# Client
+# Sable — клієнтська частина
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.6.
+Angular-застосунок сервісу персонального фінансового планування. Публічні сторінки
+пререндеряться в статичні файли, кабінет і адміністративна частина працюють на клієнті.
 
-## Development server
+## Вимоги
 
-To start a local development server, run:
+- Node.js 20.19+ або 22+
+- npm 10+
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Команди
 
 ```bash
-ng generate component component-name
+npm install     # встановити залежності
+npm start       # dev-сервер на http://localhost:4200
+npm run lint    # перевірка ESLint
+npm run build   # production-збірка в dist/client/browser
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Адреса API задається в `src/environments/environment.ts` (розробка) і
+`src/environments/environment.production.ts` (production-збірка).
 
-```bash
-ng generate --help
+## Структура
+
+```
+public/                 статичні файли: іконки (sprite.svg), логотип, favicon, конфігурація хостингу
+src/
+  app/
+    core/               сервіси застосунку (SEO, надалі API, авторизація)
+    features/           сторінки за розділами: public, cabinet, admin
+    layouts/            публічний макет, макет кабінету, макет адміністратора
+    shared/ui/          перевикористовувані UI-компоненти
+  environments/         налаштування середовищ
+  styles/               глобальні стилі SCSS (токени, база, компоненти, макети, сторінки)
 ```
 
-## Building
+## Стилі
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Усі стилі зібрані в `src/styles/` і підключаються через `styles.scss`. Компоненти не мають
+власних стилів (`ViewEncapsulation.None`), класи названо за методологією BEM.
+Верстка Mobile First: базові стилі для телефонів, `min-width` медіазапити для 768 px і 1024 px.
