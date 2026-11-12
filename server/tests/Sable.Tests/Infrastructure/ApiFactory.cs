@@ -11,6 +11,9 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private const string IdentityDatabase = "sable_identity";
     private const string FinanceDatabase = "sable_finance";
 
+    public const string AdminEmail = "admin@test.ua";
+    public const string AdminPassword = "Admin-Test-1234";
+
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:16")
         .WithDatabase(IdentityDatabase)
         .Build();
@@ -46,6 +49,8 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Jwt:Issuer", "sable-api");
         builder.UseSetting("Jwt:Audience", "sable-client");
         builder.UseSetting("Cors:Origins:0", "http://localhost:4200");
+        builder.UseSetting("Seed:AdminEmail", AdminEmail);
+        builder.UseSetting("Seed:AdminPassword", AdminPassword);
 
         builder.ConfigureServices(services => services
             .AddControllers()
