@@ -1,0 +1,127 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 10px;
+  height: 47px;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 1.35px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
+  &--primary {
+    background: var(--color-accent);
+    color: #000000;
+
+    &:hover {
+      background: var(--color-accent-hover);
+    }
+  }
+
+  &--white {
+    background: #ffffff;
+    color: #000000;
+
+    &:hover {
+      background: var(--color-light);
+    }
+  }
+
+  &--ghost {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: var(--color-text);
+
+    &:hover {
+      border-color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  &--danger {
+    border-color: rgba(255, 107, 107, 0.5);
+    color: var(--color-danger);
+
+    &:hover {
+      border-color: var(--color-danger);
+      background: rgba(255, 107, 107, 0.08);
+    }
+  }
+
+  &--danger-solid {
+    background: var(--color-danger);
+    color: #000000;
+
+    &:hover {
+      background: #ff8585;
+    }
+  }
+
+  &--lg {
+    height: 60px;
+    padding: 0 36px;
+    font-size: 13.5px;
+  }
+
+  &--sm {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 11px;
+    letter-spacing: 1.1px;
+  }
+
+  &--block {
+    display: flex;
+    width: 100%;
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    background: var(--color-surface-2);
+    border-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-text-tertiary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &--sm {
+    width: 32px;
+    height: 32px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
