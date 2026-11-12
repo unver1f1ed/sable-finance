@@ -1,0 +1,99 @@
+<section class="help-hero">
+  <div class="container help-hero__inner">
+    <p class="text-eyebrow">Довідка</p>
+    <h1 class="text-h1">Чим можемо <b>допомогти?</b></h1>
+    <div class="help-hero__search">
+      <sb-field label="Пошук у довідці" hideLabel variant="search">
+        <sb-icon fieldLeading name="search" [size]="22" />
+        <input type="search" placeholder="Пошук у довідці" autocomplete="off" [formControl]="searchControl" />
+        @if (resultText()) {
+          <span fieldTrailing class="text-small text-muted help-hero__count" role="status">{{ resultText() }}</span>
+        }
+        @if (searchControl.value) {
+          <button fieldTrailing class="help-hero__clear" type="button" aria-label="Очистити пошук" (click)="clearSearch()">
+            <sb-icon name="x" [size]="18" />
+          </button>
+        }
+      </sb-field>
+    </div>
+    <div class="help-hero__chips" role="group" aria-label="Теми довідки">
+      <button sbChip type="button" [active]="topic() === allTopics" (click)="selectTopic(allTopics)">Усі теми</button>
+      @for (group of topics(); track group.id) {
+        <button sbChip type="button" [active]="topic() === group.id" (click)="selectTopic(group.id)">
+          {{ group.name }}
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<div class="container help-layout">
+  <div class="help-layout__main" id="results">
+    @for (group of visibleTopics(); track group.id) {
+      <section class="faq" [attr.aria-labelledby]="'faq-topic-' + group.id">
+        <h2 class="faq__topic text-label" [id]="'faq-topic-' + group.id">{{ group.name }}</h2>
+        @for (item of group.items; track item.id) {
+          <article class="faq__item">
+            <h3 class="faq__heading">
+              <button
+                class="faq__trigger"
+                type="button"
+                [id]="'faq-trigger-' + item.id"
+                [attr.aria-expanded]="openItems().has(item.id)"
+                [attr.aria-controls]="'faq-panel-' + item.id"
+                (click)="toggle(item.id)"
+              >
+                <span class="faq__question text-h4">{{ item.question }}</span>
+                <span class="faq__icon" [class.faq__icon--open]="openItems().has(item.id)" aria-hidden="true">
+                  <sb-icon [name]="openItems().has(item.id) ? 'chev-up' : 'chev-down'" [size]="18" />
+                </span>
+              </button>
+            </h3>
+            <div
+              class="faq__panel"
+              [class.faq__panel--open]="openItems().has(item.id)"
+              role="region"
+              [id]="'faq-panel-' + item.id"
+              [attr.aria-labelledby]="'faq-trigger-' + item.id"
+              [attr.inert]="openItems().has(item.id) ? null : ''"
+            >
+              <div class="faq__panel-inner">
+                <p class="faq__answer text-lead text-muted">{{ item.answer }}</p>
+              </div>
+            </div>
+          </article>
+        }
+      </section>
+    } @empty {
+      <sb-empty-state
+        icon="search"
+        [title]="'Результатів немає'"
+        [text]="'Нічого не знайдено. Спробуйте інший запит або напишіть нам.'"
+      >
+        <button sbButton size="sm" type="button" (click)="clearSearch(); selectTopic(allTopics)">Очистити пошук</button>
+      </sb-empty-state>
+    }
+  </div>
+
+  <aside class="help-layout__aside" aria-label="Додатково">
+    <section class="help-card card">
+      <sb-category-icon icon="message" />
+      <h2 class="text-h4">Не знайшли відповідь?</h2>
+      <p class="text-body text-muted">Напишіть нам — відповідаємо в робочі дні протягом кількох годин.</p>
+      <a sbButton block routerLink="/about" fragment="contact">Написати в підтримку</a>
+    </section>
+    <section class="help-card card card--outline">
+      <h2 class="text-label">Популярні теми</h2>
+      <ul class="help-popular">
+        @for (item of popular; track item.query) {
+          <li>
+            <a class="help-popular__link" routerLink="/help" [queryParams]="{ q: item.query }" fragment="results">
+              <span class="text-body">{{ item.title }}</span>
+              <sb-icon class="text-accent" name="arrow-up-right" [size]="16" />
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  </aside>
+</div>
