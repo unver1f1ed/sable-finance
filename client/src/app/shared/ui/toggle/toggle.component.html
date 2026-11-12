@@ -1,0 +1,13 @@
+<label class="toggle" [class.toggle--disabled]="disabled()">
+  <input
+    class="toggle__input visually-hidden"
+    type="checkbox"
+    role="switch"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="toggle($event)"
+    (blur)="touch()"
+  />
+  <span class="toggle__track" aria-hidden="true"></span>
+  <span class="visually-hidden">{{ label() }}</span>
+</label>

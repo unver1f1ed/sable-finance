@@ -1,0 +1,45 @@
+.toggle {
+  display: inline-flex;
+  cursor: pointer;
+
+  &__track {
+    display: flex;
+    flex: none;
+    width: 44px;
+    height: 26px;
+    padding: 3px;
+    border-radius: var(--radius-pill);
+    background: var(--color-border);
+    transition: background-color 0.15s ease;
+
+    &::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-pill);
+      background: var(--color-text-secondary);
+      transition:
+        transform 0.15s ease,
+        background-color 0.15s ease;
+    }
+  }
+
+  &__input:checked + &__track {
+    background: var(--color-accent);
+
+    &::after {
+      background: #000000;
+      transform: translateX(18px);
+    }
+  }
+
+  &__input:focus-visible + &__track {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
