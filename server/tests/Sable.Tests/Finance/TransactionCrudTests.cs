@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using Sable.Application.Transactions;
 using Sable.Domain.Enums;
 using Sable.Tests.Auth;
@@ -168,6 +169,33 @@ public class TransactionCrudTests(ApiFactory factory)
             FinanceClientExtensions.TransactionBody(account.Id, category.Id, amount: 0));
 
         await response.AssertProblemAsync(HttpStatusCode.BadRequest, "validation_failed", "amount");
+    }
+
+    [Fact]
+    public async Task Malformed_json_returns_generic_ukrainian_messages_without_internal_details()
+    {
+        var user = await _api.RegisterAsync();
+
+        var badGuid = await user.Client.PostAsync("/api/transactions", new StringContent(
+            "{\"type\":\"Expense\",\"amount\":5,\"occurredOn\":\"2026-05-05\",\"description\":\"x\",\"accountId\":\"not-a-guid\",\"categoryId\":\"also-bad\"}",
+            Encoding.UTF8,
+            "application/json"));
+        var garbage = await user.Client.PostAsync("/api/transactions", new StringContent("garbage", Encoding.UTF8, "application/json"));
+        var empty = await user.Client.PostAsync("/api/transactions", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
+
+        await badGuid.AssertProblemAsync(HttpStatusCode.BadRequest, "validation_failed", "accountId");
+        var text = await badGuid.Content.ReadAsStringAsync();
+        Assert.DoesNotContain("System.", text);
+        Assert.DoesNotContain("JSON", text);
+        Assert.Contains("Некоректне значення", text);
+
+        foreach (var response in new[] { garbage, empty })
+        {
+            await response.AssertProblemAsync(HttpStatusCode.BadRequest, "validation_failed");
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.DoesNotContain("JSON", body);
+            Assert.DoesNotContain("request", body);
+        }
     }
 
     [Fact]
