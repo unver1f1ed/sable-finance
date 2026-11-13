@@ -1,0 +1,194 @@
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">{{ greeting() }}</h1>
+    @if (store.hasAccounts()) {
+      <p class="text-body text-muted">{{ subtitle() }}</p>
+    }
+  </div>
+  @if (store.hasAccounts()) {
+    <div class="page-head__actions">
+      <sb-month-switcher [month]="month()" (monthChange)="changeMonth($event)" />
+      <a sbButton [routerLink]="[]" [queryParams]="{ new: 'transaction' }" queryParamsHandling="merge">
+        <sb-icon name="plus" [size]="16" />
+        Транзакція
+      </a>
+    </div>
+  }
+</header>
+
+@if (store.status() === 'error') {
+  <sb-error-state (retry)="store.reload()" />
+} @else if (!store.loaded()) {
+  <div class="dash-cards" aria-busy="true">
+    @for (item of skeletons; track item) {
+      <div class="card dash-card"><sb-skeleton width="50%" height="12" /><sb-skeleton width="70%" height="28" /><sb-skeleton width="40%" height="12" /></div>
+    }
+  </div>
+} @else if (!store.hasAccounts()) {
+  <sb-onboarding-card />
+} @else {
+  @switch (dashboard().status) {
+    @case ('loading') {
+      <div class="dash-cards" aria-busy="true">
+        @for (item of skeletons; track item) {
+          <div class="card dash-card"><sb-skeleton width="50%" height="12" /><sb-skeleton width="70%" height="28" /><sb-skeleton width="40%" height="12" /></div>
+        }
+      </div>
+      <div class="dash-row">
+        <div class="card dash-panel"><sb-skeleton height="220" /></div>
+        <div class="card dash-panel"><sb-skeleton height="220" /></div>
+      </div>
+    }
+    @case ('error') {
+      <sb-error-state (retry)="retry()" />
+    }
+    @default {
+      @if (dashboard().data; as data) {
+        <section class="dash-cards" aria-label="Підсумки за місяць">
+          @for (stat of stats(); track stat.key) {
+            <article class="card dash-card" [class.dash-card--big]="stat.big" [class.dash-card--saved]="stat.key === 'saved'" [class.dash-card--balance]="stat.key === 'balance'">
+              <p class="text-label">{{ stat.label }}</p>
+              <p class="dash-card__value num">{{ stat.value }}</p>
+              <div class="dash-card__delta">
+                <sb-badge [tone]="stat.tone">{{ stat.delta }}</sb-badge>
+                <span class="text-tiny text-muted">{{ stat.suffix }}</span>
+              </div>
+            </article>
+          }
+        </section>
+
+        <div class="dash-row">
+          <section class="card dash-panel" aria-labelledby="dash-chart-title">
+            <div class="dash-panel__head">
+              <div>
+                <h2 class="text-h4" id="dash-chart-title">Доходи та витрати</h2>
+                <ul class="dash-legend">
+                  <li class="dash-legend__item"><i class="dash-legend__dot dash-legend__dot--income"></i><span class="text-small text-muted">Доходи</span></li>
+                  <li class="dash-legend__item"><i class="dash-legend__dot dash-legend__dot--expense"></i><span class="text-small text-muted">Витрати</span></li>
+                </ul>
+              </div>
+              <span class="text-small text-muted">6 місяців</span>
+            </div>
+            <sb-bar-chart [data]="bars()" />
+          </section>
+
+          <section class="card dash-panel" aria-labelledby="dash-donut-title">
+            <div class="dash-panel__head">
+              <h2 class="text-h4" id="dash-donut-title">Витрати за категоріями</h2>
+              <a class="link" routerLink="/app/transactions" [queryParams]="{ type: 'Expense', month: month() }">Детальніше</a>
+            </div>
+            <sb-donut-chart [segments]="segments()" (selected)="openCategory($event)" />
+          </section>
+        </div>
+
+        <div class="dash-row dash-row--bottom">
+          <section class="card dash-panel" aria-labelledby="dash-recent-title">
+            <div class="dash-panel__head">
+              <h2 class="text-h4" id="dash-recent-title">Останні транзакції</h2>
+              <a class="link dash-link" routerLink="/app/transactions">
+                Усі транзакції
+                <sb-icon name="arrow-right" [size]="14" />
+              </a>
+            </div>
+            @if (data.recent.length === 0) {
+              <p class="chart-empty text-small text-muted">Поки немає транзакцій</p>
+            } @else {
+              <ul class="recent">
+                @for (transaction of data.recent; track transaction.id) {
+                  <li class="recent__item">
+                    <sb-category-icon size="sm" [icon]="transaction.category.icon" [color]="transaction.category.color" />
+                    <div class="recent__text">
+                      <button class="recent__link" type="button" [title]="transaction.description" (click)="edit(transaction)">
+                        {{ transaction.description }}
+                      </button>
+                      <p class="text-tiny text-muted recent__meta">{{ transaction.category.name }} · {{ transaction.account.name }}</p>
+                    </div>
+                    <span class="num text-semibold recent__amount" [class.text-accent]="transaction.type === 'Income'">{{ amountText(transaction) }}</span>
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+
+          <div class="dash-side">
+            <section class="card dash-panel" aria-labelledby="dash-goals-title">
+              <div class="dash-panel__head">
+                <h2 class="text-h4" id="dash-goals-title">Цілі</h2>
+                <a class="link" routerLink="/app/planning">Усі цілі</a>
+              </div>
+              @switch (goals().status) {
+                @case ('loading') {
+                  <sb-skeleton height="48" />
+                }
+                @case ('error') {
+                  <sb-error-state title="Не вдалося завантажити цілі" text="Спробуйте ще раз." (retry)="retry()" />
+                }
+                @default {
+                  @if (activeGoals().length === 0) {
+                    <p class="text-small text-muted">Цілей ще немає. <a class="link" routerLink="/app/planning">Створити ціль</a></p>
+                  } @else {
+                    <ul class="mini-list">
+                      @for (goal of activeGoals(); track goal.id) {
+                        <li class="mini">
+                          <div class="mini__head">
+                            <span class="text-body text-medium mini__name">{{ goal.name }}</span>
+                            <span class="text-small num text-semibold">{{ percent(goal.currentAmount, goal.targetAmount) }}%</span>
+                          </div>
+                          <sb-progress [value]="percent(goal.currentAmount, goal.targetAmount)" [tone]="goal.color" [label]="'Ціль: ' + goal.name" />
+                          <p class="text-tiny text-muted num">{{ money(goal.currentAmount) }} із {{ money(goal.targetAmount) }}</p>
+                        </li>
+                      }
+                    </ul>
+                  }
+                }
+              }
+            </section>
+
+            <section class="card dash-panel" aria-labelledby="dash-budgets-title">
+              <div class="dash-panel__head">
+                <h2 class="text-h4" id="dash-budgets-title">Бюджети</h2>
+                @if (overLimit() > 0) {
+                  <sb-badge tone="amber">{{ overLimitText() }}</sb-badge>
+                } @else {
+                  <a class="link" routerLink="/app/planning">Усі бюджети</a>
+                }
+              </div>
+              @switch (budgets().status) {
+                @case ('loading') {
+                  <sb-skeleton height="48" />
+                }
+                @case ('error') {
+                  <sb-error-state title="Не вдалося завантажити бюджети" text="Спробуйте ще раз." (retry)="retry()" />
+                }
+                @default {
+                  @if (budgetItems().length === 0) {
+                    <p class="text-small text-muted">Бюджетів ще немає. <a class="link" routerLink="/app/planning">Створити бюджет</a></p>
+                  } @else {
+                    <ul class="mini-list">
+                      @for (item of budgetItems(); track item.id) {
+                        <li class="mini">
+                          <div class="mini__head">
+                            <span class="text-small mini__name">{{ item.category.name }}</span>
+                            <span class="text-small num text-muted">{{ money(item.spent) }} / {{ money(item.limitAmount) }}</span>
+                          </div>
+                          <sb-progress
+                            [value]="budgetPercent(item.spent, item.limitAmount)"
+                            [tone]="item.spent > item.limitAmount ? 'danger' : 'accent'"
+                            [label]="'Бюджет: ' + item.category.name"
+                          />
+                        </li>
+                      }
+                    </ul>
+                    @if (overLimit() > 0) {
+                      <a class="link" routerLink="/app/planning">Усі бюджети</a>
+                    }
+                  }
+                }
+              }
+            </section>
+          </div>
+        </div>
+      }
+    }
+  }
+}

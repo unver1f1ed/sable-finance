@@ -132,3 +132,16 @@ export function formatPointsDelta(current: number, previous: number): string {
   }
   return `${delta > 0 ? '+' : MINUS}${Math.abs(delta)}${NON_BREAKING_SPACE}п.п.`;
 }
+
+export function greetingFor(hour: number): string {
+  if (hour >= 5 && hour <= 11) {
+    return 'Доброго ранку';
+  }
+  if (hour >= 12 && hour <= 17) {
+    return 'Добрий день';
+  }
+  if (hour >= 18 && hour <= 22) {
+    return 'Добрий вечір';
+  }
+  return 'Доброї ночі';
+}
