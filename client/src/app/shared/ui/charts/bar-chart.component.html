@@ -1,0 +1,74 @@
+@if (hasData()) {
+  <div class="bar-chart">
+    <svg
+      class="bar-chart__svg"
+      role="img"
+      [attr.aria-label]="ariaLabel()"
+      [attr.viewBox]="'0 0 ' + width + ' ' + height"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      @for (tick of ticks(); track tick.value) {
+        <line class="bar-chart__grid" [attr.x1]="left" [attr.x2]="width" [attr.y1]="tick.y" [attr.y2]="tick.y" />
+        <text class="bar-chart__tick" [attr.x]="left - 12" [attr.y]="tick.y + 4" text-anchor="end">{{ tick.label }}</text>
+      }
+      @for (group of groups(); track group.index) {
+        <g
+          class="bar-chart__group"
+          [class.bar-chart__group--current]="group.current"
+          tabindex="0"
+          role="group"
+          [attr.aria-label]="group.label + ': ' + group.tooltip"
+          (mouseenter)="show(group.index)"
+          (mouseleave)="hide(group.index)"
+          (focus)="show(group.index)"
+          (blur)="hide(group.index)"
+        >
+          <rect class="bar-chart__hit" [attr.x]="group.center - 30" [attr.y]="0" width="60" [attr.height]="baseline + 28" />
+          <rect
+            class="bar-chart__bar bar-chart__bar--income"
+            rx="5"
+            [attr.x]="group.incomeX"
+            [attr.y]="baseline - group.incomeHeight"
+            width="22"
+            [attr.height]="group.incomeHeight"
+          />
+          <rect
+            class="bar-chart__bar bar-chart__bar--expense"
+            rx="5"
+            [attr.x]="group.expenseX"
+            [attr.y]="baseline - group.expenseHeight"
+            width="22"
+            [attr.height]="group.expenseHeight"
+          />
+          <text class="bar-chart__label" [attr.x]="group.center" [attr.y]="height - 8" text-anchor="middle">{{ group.label }}</text>
+        </g>
+      }
+    </svg>
+    @if (activeGroup(); as group) {
+      <span class="bar-chart__tooltip" [style.left.%]="group.tooltipLeft" [style.top.%]="group.tooltipTop">{{ group.tooltip }}</span>
+    }
+    <table class="visually-hidden">
+      <caption>
+        {{ ariaLabel() }}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Місяць</th>
+          <th scope="col">Доходи</th>
+          <th scope="col">Витрати</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of data(); track item.label) {
+          <tr>
+            <th scope="row">{{ item.label }}</th>
+            <td>{{ money(item.income) }}</td>
+            <td>{{ money(item.expense) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <p class="chart-empty text-small text-muted">Поки немає даних</p>
+}

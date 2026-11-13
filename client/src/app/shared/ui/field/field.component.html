@@ -3,6 +3,7 @@
   [class.field--error]="error()"
   [class.field--on-surface]="onSurface()"
   [class.field--search]="variant() === 'search'"
+  [class.field--pill]="variant() === 'pill'"
 >
   <label class="field__label" [class.visually-hidden]="hideLabel()" [attr.for]="controlId()">{{ label() }}</label>
   <div class="field__control">

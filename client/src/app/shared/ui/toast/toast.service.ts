@@ -10,12 +10,14 @@ export interface Toast {
 }
 
 const AUTO_DISMISS_MS = 5000;
+const DEDUPE_MS = 3000;
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly items = signal<Toast[]>([]);
   private nextId = 1;
+  private readonly recent = new Map<string, number>();
 
   readonly toasts = this.items.asReadonly();
 
@@ -36,6 +38,12 @@ export class ToastService {
   }
 
   private push(kind: ToastKind, text: string): void {
+    const now = Date.now();
+    const last = this.recent.get(`${kind}:${text}`);
+    if (last !== undefined && now - last < DEDUPE_MS) {
+      return;
+    }
+    this.recent.set(`${kind}:${text}`, now);
     const id = this.nextId++;
     this.items.update((list) => [...list, { id, kind, text }]);
     if (this.isBrowser) {
