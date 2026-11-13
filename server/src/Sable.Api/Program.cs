@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Sable.Api.Infrastructure;
@@ -14,6 +15,11 @@ using Sable.Infrastructure.Identity;
 const string CorsPolicy = "Client";
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsProduction())
+{
+    ProductionChecks.EnsureValid(builder.Configuration);
+}
 
 builder.Services
     .AddControllers(options =>
@@ -142,7 +148,10 @@ if (app.Environment.IsDevelopment())
 
 if (httpsRedirectPort is not null)
 {
-    app.UseHttpsRedirection();
+    // Platform health probes may reach the container over plain HTTP, so /health is never redirected.
+    app.UseWhen(
+        context => !context.Request.Path.StartsWithSegments("/health"),
+        branch => branch.UseHttpsRedirection());
 }
 
 app.UseCors(CorsPolicy);
@@ -150,7 +159,7 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/health", HealthEndpoint.HandleAsync);
+app.MapGet("/health", HealthEndpoint.HandleAsync).AllowAnonymous().DisableRateLimiting();
 app.MapControllers();
 
 app.Run();

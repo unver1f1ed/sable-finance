@@ -18,6 +18,14 @@ public class ProxyAndHeadersTests(ProductionLikeApiFactory factory)
     }
 
     [Fact]
+    public async Task Health_probe_over_plain_http_is_not_redirected()
+    {
+        var response = await factory.CreateDirectClient().GetAsync("/health");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
     public async Task Request_forwarded_as_https_is_not_redirected_and_gets_hsts()
     {
         var response = await factory.CreateProxiedClient().GetAsync("/api/plans");
