@@ -3,6 +3,7 @@ import {
   Component,
   ViewEncapsulation,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -27,6 +28,7 @@ import { currentMonth, isValidMonth, shiftMonth } from '../../../shared/util/dat
 import {
   formatMoney,
   formatMonth,
+  formatPercent,
   formatPercentDelta,
   formatPointsDelta,
   greetingFor,
@@ -156,7 +158,7 @@ export class OverviewPageComponent {
       {
         key: 'saved',
         label: 'Заощаджено',
-        value: `${data.savedPercent}%`,
+        value: formatPercent(data.savedPercent),
         delta: formatPointsDelta(data.savedPercent, previous.savedPercent),
         tone: tone(data.savedPercent, previous.savedPercent),
         suffix,
@@ -209,6 +211,14 @@ export class OverviewPageComponent {
       )
       .subscribe((block) => this.budgets.set(block));
     this.editor.changes$.pipe(takeUntilDestroyed()).subscribe(() => this.reload());
+    let knownAccounts = -1;
+    effect(() => {
+      const count = this.store.accounts().length;
+      if (knownAccounts !== -1 && count !== knownAccounts) {
+        this.reload();
+      }
+      knownAccounts = count;
+    });
   }
 
   protected reload(): void {

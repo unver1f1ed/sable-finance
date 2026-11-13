@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { environment } from '../environments/environment';
 import { adminGuard, authGuard } from './core/auth/auth.guard';
 import { ReferenceDataStore } from './features/cabinet/data/reference-data.store';
-import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 
 const privateRoute = { noindex: true };
@@ -23,7 +21,7 @@ export const routes: Routes = [
   ...devRoutes,
   {
     path: 'app',
-    component: AppLayoutComponent,
+    loadComponent: () => import('./layouts/app-layout/app-layout.component').then((m) => m.AppLayoutComponent),
     canActivate: [authGuard],
     canActivateChild: [authGuard],
     providers: [ReferenceDataStore],
@@ -62,7 +60,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminLayoutComponent,
+    loadComponent: () => import('./layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
     canActivate: [adminGuard],
     canActivateChild: [adminGuard],
     children: [

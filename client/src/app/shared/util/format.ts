@@ -112,13 +112,20 @@ export function monthShort(month: string): string {
   return MONTHS_SHORT[monthIndex(month)] ?? '';
 }
 
+const ONE_DECIMAL_FORMAT = new Intl.NumberFormat('uk-UA', { maximumFractionDigits: 1, useGrouping: true });
+
+export function formatPercent(value: number): string {
+  const rounded = Math.round(Number.isFinite(value) ? value : 0);
+  return `${rounded < 0 ? MINUS : ''}${normalizeSpaces(WHOLE_FORMAT.format(Math.abs(rounded)))}%`;
+}
+
 export function formatPercentDelta(current: number, previous: number): string {
   if (!previous) {
     return '—';
   }
   const delta = ((current - previous) / Math.abs(previous)) * 100;
   const rounded = Math.round(delta * 10) / 10;
-  const text = String(Math.abs(rounded)).replace('.', ',');
+  const text = normalizeSpaces(ONE_DECIMAL_FORMAT.format(Math.abs(rounded)));
   if (rounded === 0) {
     return '0%';
   }
@@ -130,7 +137,7 @@ export function formatPointsDelta(current: number, previous: number): string {
   if (delta === 0) {
     return `0${NON_BREAKING_SPACE}п.п.`;
   }
-  return `${delta > 0 ? '+' : MINUS}${Math.abs(delta)}${NON_BREAKING_SPACE}п.п.`;
+  return `${delta > 0 ? '+' : MINUS}${normalizeSpaces(WHOLE_FORMAT.format(Math.abs(delta)))}${NON_BREAKING_SPACE}п.п.`;
 }
 
 export function greetingFor(hour: number): string {
