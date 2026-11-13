@@ -27,7 +27,7 @@ export class FieldComponent implements AfterContentInit {
   readonly error = input<string>();
   readonly onSurface = input(false, { transform: booleanAttribute });
   readonly hideLabel = input(false, { transform: booleanAttribute });
-  readonly variant = input<'default' | 'search'>('default');
+  readonly variant = input<'default' | 'search' | 'pill'>('default');
 
   protected readonly controlId = signal(uniqueId('sb-field'));
   protected readonly messageId = uniqueId('sb-field-msg');

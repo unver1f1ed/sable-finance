@@ -134,6 +134,35 @@
     </div>
   </section>
 
+  <section class="kit__section" aria-labelledby="kit-new">
+    <h2 class="text-eyebrow" id="kit-new">Вибір, сума, діалог підтвердження, діаграми</h2>
+    <div class="kit__fields">
+      <sb-select label="Категорія" [options]="selectOptions" [formControl]="selectControl" />
+      <sb-select label="Фільтр категорій" [options]="selectOptions" [formControl]="selectControl" variant="pill" hideLabel placeholder="Усі категорії" />
+      <sb-amount-field label="Сума" [formControl]="amountControl" />
+      <sb-amount-field label="Сума з помилкою" [formControl]="amountControl" error="Сума має бути більшою за нуль" />
+    </div>
+    <sb-amount-field label="Сума (велика)" variant="hero" [formControl]="amountControl" />
+    <div class="kit__row">
+      <button sbButton variant="danger" type="button" (click)="confirmOpen.set(true)">Показати діалог підтвердження</button>
+    </div>
+    <sb-confirm-dialog
+      [open]="confirmOpen()"
+      [title]="'Видалити транзакцію?'"
+      [message]="'«Bolt», −186 ₴ від 11 листопада буде видалено назавжди.'"
+      confirmLabel="Видалити"
+      danger
+      (confirm)="confirmOpen.set(false)"
+      (cancel)="confirmOpen.set(false)"
+    />
+    <div class="grid grid--2">
+      <div class="card"><sb-bar-chart [data]="barData" /></div>
+      <div class="card"><sb-donut-chart [segments]="donutData" /></div>
+      <div class="card"><sb-bar-chart [data]="emptyBarData" /></div>
+      <div class="card"><sb-donut-chart [segments]="[]" /></div>
+    </div>
+  </section>
+
   <section class="kit__section" aria-labelledby="kit-badges">
     <h2 class="text-eyebrow" id="kit-badges">Позначки, прогрес, категорії</h2>
     <div class="kit__row">

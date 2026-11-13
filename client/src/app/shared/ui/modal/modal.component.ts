@@ -34,6 +34,7 @@ export class ModalComponent {
   readonly open = model(false);
   readonly title = input.required<string>();
   readonly width = input(520);
+  readonly locked = input(false);
   readonly closed = output<void>();
 
   protected readonly titleId = uniqueId('sb-modal-title');
@@ -61,7 +62,7 @@ export class ModalComponent {
   }
 
   protected close(): void {
-    if (!this.open()) {
+    if (!this.open() || this.locked()) {
       return;
     }
     this.open.set(false);
