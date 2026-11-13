@@ -63,15 +63,15 @@
   <div class="tx-totals">
     <div class="stat-line card">
       <span class="text-small text-muted">Доходи за період</span>
-      <span class="text-h4 num text-accent">{{ money(data()?.totalIncome ?? 0, true) }}</span>
+      <span class="stat-line__value text-h4 num text-accent">{{ money(data()?.totalIncome ?? 0, true) }}</span>
     </div>
     <div class="stat-line card">
       <span class="text-small text-muted">Витрати за період</span>
-      <span class="text-h4 num">{{ money(-(data()?.totalExpense ?? 0)) }}</span>
+      <span class="stat-line__value text-h4 num">{{ money(-(data()?.totalExpense ?? 0)) }}</span>
     </div>
     <div class="stat-line card">
       <span class="text-small text-muted">Різниця</span>
-      <span class="text-h4 num" [class.text-accent]="difference() >= 0">{{ money(difference(), true) }}</span>
+      <span class="stat-line__value text-h4 num" [class.text-accent]="difference() >= 0">{{ money(difference(), true) }}</span>
     </div>
   </div>
 
