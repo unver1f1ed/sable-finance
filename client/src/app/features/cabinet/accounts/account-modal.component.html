@@ -1,0 +1,40 @@
+<sb-modal [open]="open()" [title]="title()" [locked]="sending()" (closed)="closed.emit()">
+  <form class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    @if (limitMessage()) {
+      <div class="notice" role="alert">
+        <sb-icon name="info" [size]="18" />
+        <div class="notice__body">
+          <p class="text-small">{{ limitMessage() }}</p>
+          <a class="link" routerLink="/app/settings" fragment="plan" (click)="closed.emit()">Перейти на Плюс</a>
+        </div>
+      </div>
+    }
+
+    <sb-field label="Назва рахунку" onSurface [error]="error('name')">
+      <input type="text" autocomplete="off" placeholder="Наприклад, Картка Monobank" formControlName="name" />
+    </sb-field>
+
+    <sb-segmented [options]="typeOptions" formControlName="type" block onSurface ariaLabel="Тип рахунку" />
+
+    <sb-amount-field label="Початковий баланс" onSurface allowNegative formControlName="initialBalance" [error]="error('initialBalance')" />
+
+    <div class="toggle-row">
+      <div class="toggle-row__text">
+        <p class="text-body">Основний рахунок</p>
+        @if (isFirst() && !editing()) {
+          <p class="text-small text-muted">Перший рахунок завжди основний</p>
+        } @else {
+          <p class="text-small text-muted">Підставляється в нові транзакції</p>
+        }
+      </div>
+      <sb-toggle label="Основний рахунок" formControlName="isDefault" />
+    </div>
+
+    <div class="form-stack__actions">
+      <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+      <button sbButton type="submit" [disabled]="sending()">
+        {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати рахунок' }}
+      </button>
+    </div>
+  </form>
+</sb-modal>

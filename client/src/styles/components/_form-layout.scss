@@ -1,0 +1,89 @@
+@use '../mixins' as *;
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  &__pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+
+    @include tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      gap: 16px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+
+    @include tablet {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    &--split {
+      @include tablet {
+        justify-content: space-between;
+      }
+    }
+  }
+
+  &__spacer {
+    @include tablet {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-accent-border);
+  border-radius: 16px;
+  background: var(--color-accent-wash);
+
+  sb-icon {
+    margin-top: 1px;
+    color: var(--color-accent);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 0;
+
+  &__text {
+    min-width: 0;
+  }
+}
+
+.onboarding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 24px;
+  text-align: center;
+
+  &__text {
+    max-width: 440px;
+  }
+}

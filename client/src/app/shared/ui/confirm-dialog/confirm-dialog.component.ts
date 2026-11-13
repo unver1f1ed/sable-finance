@@ -19,7 +19,7 @@ export class ConfirmDialogComponent {
   readonly danger = input(false, { transform: booleanAttribute });
   readonly busy = input(false, { transform: booleanAttribute });
   readonly confirm = output<void>();
-  // The handoff fixes the API names `confirm` and `cancel`.
+  // `cancel` reads naturally next to `confirm`, so the native event name is kept on purpose.
   // eslint-disable-next-line @angular-eslint/no-output-native
   readonly cancel = output<void>();
 }
