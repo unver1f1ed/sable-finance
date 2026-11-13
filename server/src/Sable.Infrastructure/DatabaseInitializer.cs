@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Sable.Application.Auth;
 using Sable.Domain.Entities;
 using Sable.Infrastructure.Finance;
@@ -14,7 +16,10 @@ public class DatabaseInitializer(
     FinanceDbContext financeDb,
     RoleManager<IdentityRole<Guid>> roles,
     UserManager<AppUser> users,
-    IConfiguration configuration)
+    IConfiguration configuration,
+    IHostEnvironment environment,
+    TimeProvider timeProvider,
+    ILogger<DatabaseInitializer> logger)
 {
     public async Task InitializeAsync()
     {
@@ -29,6 +34,7 @@ public class DatabaseInitializer(
         await SeedAdminAsync();
         await SeedSystemCategoriesAsync();
         await SeedContentAsync();
+        await SeedDemoAsync();
     }
 
     private async Task SeedRolesAsync()
@@ -187,6 +193,62 @@ public class DatabaseInitializer(
 
             await financeDb.SaveChangesAsync();
         }
+    }
+
+    /// <summary>Creates the demo user with six months of data in Development or when <c>Seed:Demo</c> is true.</summary>
+    private async Task SeedDemoAsync()
+    {
+        if (!environment.IsDevelopment() && !configuration.GetValue<bool>("Seed:Demo"))
+        {
+            return;
+        }
+
+        var password = configuration["Seed:DemoPassword"];
+        if (string.IsNullOrEmpty(password))
+        {
+            logger.LogWarning("Demo data is enabled but Seed:DemoPassword is not set; the demo user was not created.");
+            return;
+        }
+
+        var user = await users.FindByEmailAsync(DemoData.Email);
+        if (user is null)
+        {
+            user = new AppUser
+            {
+                Id = Guid.CreateVersion7(),
+                UserName = DemoData.Email,
+                Email = DemoData.Email,
+                FirstName = DemoData.FirstName,
+                LastName = DemoData.LastName,
+                PlanCode = "plus",
+                CreatedAt = timeProvider.GetUtcNow()
+            };
+            EnsureSucceeded(await users.CreateAsync(user, password), "create the demo user");
+            EnsureSucceeded(await users.AddToRoleAsync(user, Roles.User), "assign the demo user role");
+        }
+
+        // The seeder has no current user, so the per-user query filter would hide the demo rows.
+        if (await financeDb.Accounts.IgnoreQueryFilters().AnyAsync(a => a.UserId == user.Id))
+        {
+            return;
+        }
+
+        var categories = await financeDb.Categories
+            .Where(c => c.UserId == null && DemoData.RequiredCategories.Contains(c.Name))
+            .ToDictionaryAsync(c => c.Name, c => c.Id);
+        var missing = DemoData.RequiredCategories.Where(name => !categories.ContainsKey(name)).ToList();
+        if (missing.Count > 0)
+        {
+            throw new InvalidOperationException($"Demo seed needs system categories that are missing: {string.Join(", ", missing)}");
+        }
+
+        var now = timeProvider.GetUtcNow();
+        var data = DemoData.Generate(user.Id, DateOnly.FromDateTime(now.UtcDateTime), now, categories);
+        financeDb.Accounts.AddRange(data.Accounts);
+        financeDb.Goals.AddRange(data.Goals);
+        financeDb.Budgets.AddRange(data.Budgets);
+        financeDb.Transactions.AddRange(data.Transactions);
+        await financeDb.SaveChangesAsync();
     }
 
     private static void AddFeatureValue(
