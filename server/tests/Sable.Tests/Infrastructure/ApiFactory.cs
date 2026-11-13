@@ -20,8 +20,6 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithDatabase(IdentityDatabase)
         .Build();
 
-    protected virtual int AuthRateLimit => 100_000;
-
     public string IdentityConnectionString => _postgres.GetConnectionString();
 
     public string FinanceConnectionString =>
@@ -44,6 +42,11 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await _postgres.DisposeAsync();
     }
 
+    /// <summary>Lets a derived factory override settings after the defaults were applied.</summary>
+    protected virtual void ConfigureSettings(IWebHostBuilder builder)
+    {
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -55,9 +58,11 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Cors:Origins:0", "http://localhost:4200");
         builder.UseSetting("Seed:AdminEmail", AdminEmail);
         builder.UseSetting("Seed:AdminPassword", AdminPassword);
-        builder.UseSetting("RateLimit:AuthPerMinute", AuthRateLimit.ToString());
         builder.UseSetting("Seed:Demo", "true");
         builder.UseSetting("Seed:DemoPassword", DemoPassword);
+
+        builder.UseSetting("RateLimit:AuthPerMinute", "100000");
+        ConfigureSettings(builder);
 
         builder.ConfigureServices(services => services
             .AddControllers()

@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Sable.Api.Infrastructure;
@@ -80,7 +81,32 @@ var corsOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>
 builder.Services.AddCors(options => options.AddPolicy(CorsPolicy, policy => policy
     .WithOrigins(corsOrigins)
     .AllowAnyHeader()
-    .AllowAnyMethod()));
+    .AllowAnyMethod()
+    .WithExposedHeaders("Content-Disposition", "Retry-After")));
+
+var behindProxy = !builder.Environment.IsDevelopment();
+if (behindProxy)
+{
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        options.KnownIPNetworks.Clear();
+        options.KnownProxies.Clear();
+    });
+    builder.Services.AddHsts(options =>
+    {
+        options.MaxAge = TimeSpan.FromDays(365);
+        options.ExcludedHosts.Clear();
+    });
+}
+
+var httpsRedirectPort = builder.Configuration.GetValue<int?>("HttpsRedirection:Port");
+if (httpsRedirectPort is not null)
+{
+    builder.Services.AddHttpsRedirection(options => options.HttpsPort = httpsRedirectPort);
+}
+
+builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 
 builder.Services.AddAuthRateLimiting(builder.Configuration);
 builder.Services.AddExceptionHandler<ExceptionHandler>();
@@ -92,6 +118,14 @@ if (builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
+
+if (behindProxy)
+{
+    app.UseForwardedHeaders();
+    app.UseHsts();
+}
+
+app.Use(SecurityHeaders.AddAsync);
 
 using (var scope = app.Services.CreateScope())
 {
@@ -106,7 +140,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+if (httpsRedirectPort is not null)
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors(CorsPolicy);
 app.UseRateLimiter();
 app.UseAuthentication();
