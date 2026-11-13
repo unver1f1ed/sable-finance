@@ -20,6 +20,8 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithDatabase(IdentityDatabase)
         .Build();
 
+    protected virtual int AuthRateLimit => 100_000;
+
     public string IdentityConnectionString => _postgres.GetConnectionString();
 
     public string FinanceConnectionString =>
@@ -53,6 +55,7 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Cors:Origins:0", "http://localhost:4200");
         builder.UseSetting("Seed:AdminEmail", AdminEmail);
         builder.UseSetting("Seed:AdminPassword", AdminPassword);
+        builder.UseSetting("RateLimit:AuthPerMinute", AuthRateLimit.ToString());
         builder.UseSetting("Seed:Demo", "true");
         builder.UseSetting("Seed:DemoPassword", DemoPassword);
 

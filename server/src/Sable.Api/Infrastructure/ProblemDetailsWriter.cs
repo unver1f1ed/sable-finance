@@ -27,7 +27,8 @@ public static class ProblemDetailsWriter
         ["not_found"] = "Not found",
         ["email_taken"] = "Email already in use",
         ["conflict"] = "Conflict",
-        ["server_error"] = "Server error"
+        ["server_error"] = "Server error",
+        ["too_many_requests"] = "Too many requests"
     };
 
     public static ApiError Create(int status, string code, string detail, IDictionary<string, string[]>? errors = null) =>
