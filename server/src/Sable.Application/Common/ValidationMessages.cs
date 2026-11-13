@@ -9,9 +9,12 @@ public static class ValidationMessages
     public const string InvalidValue = "Некоректне значення";
     public const string ChooseFromList = "Оберіть значення зі списку";
 
+    public const string MaxLength20 = "Не більше 20 символів";
     public const string MaxLength40 = "Не більше 40 символів";
     public const string MaxLength60 = "Не більше 60 символів";
+    public const string MaxLength100 = "Не більше 100 символів";
     public const string MaxLength120 = "Не більше 120 символів";
+    public const string MaxLength200 = "Не більше 200 символів";
     public const string MaxLength300 = "Не більше 300 символів";
     public const string TooManyDecimals = "Не більше двох знаків після коми";
 
@@ -40,7 +43,6 @@ public static class ValidationMessages
     public const string InvalidPlan = "Оберіть доступний тариф";
 
     public const string MaxLength80 = "Не більше 80 символів";
-    public const string MaxLength160 = "Не більше 160 символів";
     public const string PriceRange = "Ціна має бути від 0 до 100 000";
     public const string YearlyAboveMonthly = "Річна ціна за місяць не може перевищувати місячну";
     public const string UnknownPlanCode = "Невідомий код тарифу";

@@ -22,26 +22,31 @@ public sealed record RegisterRequest
     public string Password { get; init; } = string.Empty;
 
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(20, ErrorMessage = ValidationMessages.MaxLength20)]
     public string PlanCode { get; init; } = string.Empty;
 }
 
 public sealed record LoginRequest
 {
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(120, ErrorMessage = ValidationMessages.MaxLength120)]
     public string Email { get; init; } = string.Empty;
 
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(100, ErrorMessage = ValidationMessages.MaxLength100)]
     public string Password { get; init; } = string.Empty;
 }
 
 public sealed record RefreshRequest
 {
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(200, ErrorMessage = ValidationMessages.MaxLength200)]
     public string RefreshToken { get; init; } = string.Empty;
 }
 
 public sealed record LogoutRequest
 {
+    [StringLength(200, ErrorMessage = ValidationMessages.MaxLength200)]
     public string? RefreshToken { get; init; }
 }
 
@@ -64,6 +69,7 @@ public sealed record UpdateProfileRequest
 public sealed record ChangePasswordRequest
 {
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(100, ErrorMessage = ValidationMessages.MaxLength100)]
     public string CurrentPassword { get; init; } = string.Empty;
 
     [Password]
@@ -73,12 +79,14 @@ public sealed record ChangePasswordRequest
 public sealed record ChangePlanRequest
 {
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(20, ErrorMessage = ValidationMessages.MaxLength20)]
     public string PlanCode { get; init; } = string.Empty;
 }
 
 public sealed record DeleteAccountRequest
 {
     [Required(ErrorMessage = ValidationMessages.Required)]
+    [StringLength(100, ErrorMessage = ValidationMessages.MaxLength100)]
     public string Password { get; init; } = string.Empty;
 }
 

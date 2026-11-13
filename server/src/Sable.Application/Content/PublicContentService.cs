@@ -12,6 +12,7 @@ public class PublicContentService(IFinanceDbContext db, TimeProvider timeProvide
         var plans = await db.Plans
             .Where(p => p.IsPublished)
             .OrderBy(p => p.SortOrder)
+            .ThenBy(p => p.Id)
             .Select(p => new PlanDto
             {
                 Code = p.Code,
@@ -25,6 +26,7 @@ public class PublicContentService(IFinanceDbContext db, TimeProvider timeProvide
 
         var features = await db.PlanFeatures
             .OrderBy(f => f.SortOrder)
+            .ThenBy(f => f.Id)
             .Select(f => new
             {
                 f.Id,

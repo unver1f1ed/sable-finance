@@ -39,19 +39,34 @@ public class DeleteAccountDataTests(ApiFactory factory)
         var account = new Account { Id = Guid.CreateVersion7(), UserId = userId, Name = "Картка", Type = AccountType.Card };
         var category = new Category
         {
-            Id = Guid.CreateVersion7(), UserId = userId, Name = "Власна", Type = TransactionType.Expense,
-            Icon = "cart", Color = "#6FDBD4"
+            Id = Guid.CreateVersion7(),
+            UserId = userId,
+            Name = "Власна",
+            Type = TransactionType.Expense,
+            Icon = "cart",
+            Color = "#6FDBD4"
         };
         var goal = new Goal
         {
-            Id = Guid.CreateVersion7(), UserId = userId, Name = "Відпустка", TargetAmount = 1000,
-            Icon = "target", Color = "#6FDBD4"
+            Id = Guid.CreateVersion7(),
+            UserId = userId,
+            Name = "Відпустка",
+            TargetAmount = 1000,
+            Icon = "target",
+            Color = "#6FDBD4"
         };
         var budget = new Budget { Id = Guid.CreateVersion7(), UserId = userId, Category = category, LimitAmount = 500 };
         var transaction = new Transaction
         {
-            Id = Guid.CreateVersion7(), UserId = userId, Account = account, Category = category, Goal = goal,
-            Type = TransactionType.Expense, Amount = 10, OccurredOn = new DateOnly(2026, 11, 1), Description = "Кава"
+            Id = Guid.CreateVersion7(),
+            UserId = userId,
+            Account = account,
+            Category = category,
+            Goal = goal,
+            Type = TransactionType.Expense,
+            Amount = 10,
+            OccurredOn = new DateOnly(2026, 11, 1),
+            Description = "Кава"
         };
 
         db.AddRange(account, category, goal, budget, transaction);

@@ -80,16 +80,16 @@ public static class FinanceClientExtensions
         string description = "Покупка",
         string? note = null,
         Guid? goalId = null) => new
-    {
-        type,
-        amount,
-        occurredOn = (date ?? Today).ToString("yyyy-MM-dd"),
-        description,
-        note,
-        accountId,
-        categoryId,
-        goalId
-    };
+        {
+            type,
+            amount,
+            occurredOn = (date ?? Today).ToString("yyyy-MM-dd"),
+            description,
+            note,
+            accountId,
+            categoryId,
+            goalId
+        };
 
     public static async Task<TransactionDto> CreateTransactionAsync(
         this HttpClient client,
@@ -132,13 +132,13 @@ public static class FinanceClientExtensions
         string name = "Відпустка",
         decimal targetAmount = 1000,
         DateOnly? deadline = null) => new
-    {
-        name,
-        targetAmount,
-        deadline = deadline?.ToString("yyyy-MM-dd"),
-        icon = "target",
-        color = "#6FDBD4"
-    };
+        {
+            name,
+            targetAmount,
+            deadline = deadline?.ToString("yyyy-MM-dd"),
+            icon = "target",
+            color = "#6FDBD4"
+        };
 
     public static async Task<GoalDto> CreateGoalAsync(
         this HttpClient client,
