@@ -1,0 +1,168 @@
+.chart-empty {
+  padding: 48px 0;
+  text-align: center;
+}
+
+.bar-chart {
+  position: relative;
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__grid {
+    stroke: var(--color-border-soft);
+    stroke-width: 1;
+  }
+
+  &__tick,
+  &__label {
+    font-size: 11px;
+    fill: var(--color-text-tertiary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__group {
+    outline: none;
+    cursor: default;
+
+    &:focus-visible .bar-chart__hit {
+      stroke: var(--color-accent);
+      stroke-width: 2;
+      rx: 8;
+    }
+  }
+
+  &__hit {
+    fill: transparent;
+  }
+
+  &__bar {
+    transition: opacity 0.15s ease;
+
+    &--income {
+      fill: var(--color-accent);
+      opacity: 0.45;
+    }
+
+    &--expense {
+      fill: var(--color-white);
+      opacity: 0.25;
+    }
+  }
+
+  &__group--current &__bar--income,
+  &__group:hover &__bar--income,
+  &__group:focus-visible &__bar--income {
+    opacity: 1;
+  }
+
+  &__group--current &__bar--expense,
+  &__group:hover &__bar--expense,
+  &__group:focus-visible &__bar--expense {
+    opacity: 0.9;
+  }
+
+  &__group--current &__label {
+    fill: var(--color-text);
+  }
+
+  &__tooltip {
+    position: absolute;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--color-white);
+    color: var(--color-on-accent);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translate(-50%, calc(-100% - 8px));
+  }
+}
+
+.donut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  &__figure {
+    position: relative;
+    flex: none;
+    width: 180px;
+    height: 180px;
+  }
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__arc {
+    fill: none;
+  }
+
+  &__center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 28px;
+    text-align: center;
+  }
+
+  &__total {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 20px;
+    overflow-wrap: anywhere;
+  }
+
+  &__legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: stretch;
+    min-width: 0;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 28px;
+    text-align: left;
+
+    &--button {
+      border-radius: 8px;
+
+      &:hover .donut__name {
+        color: var(--color-accent);
+      }
+    }
+  }
+
+  &__dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+  }
+
+  &__name {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

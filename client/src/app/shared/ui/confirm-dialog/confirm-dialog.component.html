@@ -1,0 +1,19 @@
+<sb-modal [open]="open()" [title]="title()" [width]="460" [locked]="busy()" (closed)="cancel.emit()">
+  <div class="confirm">
+    @if (danger()) {
+      <sb-category-icon icon="trash" color="var(--color-danger)" />
+    }
+    <p class="text-body text-muted">{{ message() }}</p>
+  </div>
+  <button modalFooter sbButton variant="ghost" type="button" [disabled]="busy()" (click)="cancel.emit()">Скасувати</button>
+  <button
+    modalFooter
+    sbButton
+    type="button"
+    [variant]="danger() ? 'danger-solid' : 'primary'"
+    [disabled]="busy()"
+    (click)="confirm.emit()"
+  >
+    {{ confirmLabel() }}
+  </button>
+</sb-modal>

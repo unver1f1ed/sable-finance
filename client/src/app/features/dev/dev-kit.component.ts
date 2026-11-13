@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AmountFieldComponent } from '../../shared/ui/amount-field/amount-field.component';
+import { BarChartComponent, BarChartDatum } from '../../shared/ui/charts/bar-chart.component';
+import { DonutChartComponent, DonutSegment } from '../../shared/ui/charts/donut-chart.component';
+import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { SelectComponent, SelectOption } from '../../shared/ui/select/select.component';
 import { BadgeComponent, BadgeTone } from '../../shared/ui/badge/badge.component';
 import { AvatarComponent } from '../../shared/ui/avatar/avatar.component';
 import { ButtonDirective } from '../../shared/ui/button/button.directive';
@@ -57,8 +62,13 @@ const ICON_NAMES = [
   selector: 'sb-dev-kit',
   imports: [
     ReactiveFormsModule,
+    AmountFieldComponent,
     AvatarComponent,
     BadgeComponent,
+    BarChartComponent,
+    ConfirmDialogComponent,
+    DonutChartComponent,
+    SelectComponent,
     ButtonDirective,
     CategoryIconComponent,
     CheckboxComponent,
@@ -150,6 +160,29 @@ export class DevKitComponent {
     { value: 'year', label: 'Щороку · −20%' },
   ];
 
+  protected readonly selectOptions: SelectOption[] = [
+    { value: 'food', label: 'Продукти' },
+    { value: 'transport', label: 'Транспорт' },
+    { value: 'cafe', label: 'Кафе й ресторани' },
+  ];
+  protected readonly selectControl = new FormControl('transport');
+  protected readonly amountControl = new FormControl<number | null>(842.5);
+  protected readonly confirmOpen = signal(false);
+  protected readonly barData: BarChartDatum[] = [
+    { label: 'Чер', income: 41000, expense: 29500 },
+    { label: 'Лип', income: 44500, expense: 36200 },
+    { label: 'Сер', income: 43000, expense: 27800 },
+    { label: 'Вер', income: 48000, expense: 33400 },
+    { label: 'Жов', income: 48200, expense: 27600 },
+    { label: 'Лис', income: 52000, expense: 31480, current: true },
+  ];
+  protected readonly emptyBarData: BarChartDatum[] = [{ label: 'Лис', income: 0, expense: 0, current: true }];
+  protected readonly donutData: DonutSegment[] = [
+    { id: 'a', label: 'Житло', value: 14000, color: 'var(--color-purple)' },
+    { id: 'b', label: 'Продукти', value: 7850, color: 'var(--color-accent)', selectable: true },
+    { id: 'c', label: 'Кафе й ресторани', value: 3620, color: 'var(--color-warning)' },
+    { id: 'd', label: 'Транспорт', value: 2410, color: 'var(--color-blue)' },
+  ];
   protected readonly segmented = new FormControl('expense');
   protected readonly segmentedBlock = new FormControl('year');
   protected readonly checkboxOn = new FormControl(true);

@@ -1,0 +1,75 @@
+@if (total() > 0) {
+  <div class="donut">
+    <div class="donut__figure">
+      <svg
+        class="donut__svg"
+        role="img"
+        [attr.aria-label]="ariaLabel() + ': ' + totalText()"
+        [attr.viewBox]="'0 0 ' + size + ' ' + size"
+      >
+        <g [attr.transform]="'rotate(-90 ' + size / 2 + ' ' + size / 2 + ')'">
+          @for (row of rows(); track row.segment.id) {
+            @if (row.segment.value > 0) {
+              <circle
+                class="donut__arc"
+                [attr.cx]="size / 2"
+                [attr.cy]="size / 2"
+                [attr.r]="radius"
+                [attr.stroke]="row.segment.color"
+                [attr.stroke-width]="stroke"
+                [attr.stroke-dasharray]="row.arc.length + ' ' + row.arc.gap"
+                [attr.stroke-dashoffset]="row.arc.offset"
+              />
+            }
+          }
+        </g>
+      </svg>
+      <div class="donut__center">
+        <span class="text-tiny text-muted">{{ centerLabel() }}</span>
+        <span class="donut__total text-h4 num">{{ totalText() }}</span>
+      </div>
+    </div>
+    <ul class="donut__legend">
+      @for (row of rows(); track row.segment.id) {
+        <li>
+          @if (row.segment.selectable) {
+            <button class="donut__row donut__row--button" type="button" (click)="selected.emit(row.segment)">
+              <i class="donut__dot" [style.background]="row.segment.color"></i>
+              <span class="donut__name text-small">{{ row.segment.label }}</span>
+              <span class="text-small num text-muted">{{ row.percent }}%</span>
+            </button>
+          } @else {
+            <div class="donut__row">
+              <i class="donut__dot" [style.background]="row.segment.color"></i>
+              <span class="donut__name text-small">{{ row.segment.label }}</span>
+              <span class="text-small num text-muted">{{ row.percent }}%</span>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+    <table class="visually-hidden">
+      <caption>
+        {{ ariaLabel() }}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Категорія</th>
+          <th scope="col">Сума</th>
+          <th scope="col">Частка</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.segment.id) {
+          <tr>
+            <th scope="row">{{ row.segment.label }}</th>
+            <td>{{ money(row.segment.value) }}</td>
+            <td>{{ row.percent }}%</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <p class="chart-empty text-small text-muted">Поки немає даних</p>
+}

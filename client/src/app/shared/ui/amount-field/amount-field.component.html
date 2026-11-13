@@ -1,0 +1,43 @@
+@if (variant() === 'hero') {
+  <div class="amount" [class.amount--error]="error()">
+    <label class="amount__label text-small text-muted" [attr.for]="inputId">{{ label() }}</label>
+    <div class="amount__row">
+      <input
+        class="amount__input num"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        [id]="inputId"
+        [placeholder]="placeholder()"
+        [value]="text()"
+        [disabled]="disabled()"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-describedby]="error() ? messageId : null"
+        (input)="input($event)"
+        (blur)="touch()"
+      />
+      <span class="amount__currency" aria-hidden="true">₴</span>
+    </div>
+    <span class="amount__line" aria-hidden="true"></span>
+    @if (error()) {
+      <p class="field__message field__message--error" [id]="messageId">
+        <sb-icon name="alert" [size]="14" />
+        <span>{{ error() }}</span>
+      </p>
+    }
+  </div>
+} @else {
+  <sb-field [label]="label()" [hint]="hint()" [error]="error()" [onSurface]="onSurface()">
+    <input
+      type="text"
+      inputmode="decimal"
+      autocomplete="off"
+      [placeholder]="placeholder()"
+      [value]="text()"
+      [disabled]="disabled()"
+      (input)="input($event)"
+      (blur)="touch()"
+    />
+    <span fieldTrailing>₴</span>
+  </sb-field>
+}

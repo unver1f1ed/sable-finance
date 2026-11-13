@@ -13,7 +13,7 @@
       <div class="modal__handle" aria-hidden="true"></div>
       <div class="modal__header">
         <h2 class="modal__title text-h4" [id]="titleId">{{ title() }}</h2>
-        <button sbIconButton size="sm" type="button" aria-label="Закрити" (click)="close()">
+        <button sbIconButton size="sm" type="button" aria-label="Закрити" [disabled]="locked()" (click)="close()">
           <sb-icon name="x" [size]="16" />
         </button>
       </div>
