@@ -30,14 +30,24 @@
 
 .stat-line {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 4px 12px;
+  min-width: 0;
   padding: 16px 20px;
 
   @include desktop {
     padding: 20px 24px;
   }
+}
+
+.stat-line__value {
+  min-width: 0;
+  max-width: 100%;
+  margin-left: auto;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .tx-totals {
@@ -190,7 +200,7 @@
   }
 
   &__head th:nth-child(4) {
-    width: 18%;
+    width: 170px;
   }
 
   &__head th:nth-child(5) {
@@ -222,6 +232,7 @@
 
   &__right {
     text-align: right;
+    white-space: nowrap;
   }
 
   &__cut {

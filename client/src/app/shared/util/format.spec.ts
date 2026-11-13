@@ -5,6 +5,7 @@ import {
   formatDayHeading,
   formatMoney,
   formatMonth,
+  formatPercent,
   formatPercentDelta,
   greetingFor,
   monthGenitive,
@@ -80,6 +81,15 @@ describe('dates', () => {
     expect(shiftMonth('2026-12', 1)).toBe('2027-01');
     expect(shiftMonth('2026-01', -1)).toBe('2025-12');
     expect(currentMonth(today)).toBe('2026-11');
+  });
+});
+
+describe('formatPercent', () => {
+  it('uses the real minus and grouping', () => {
+    expect(formatPercent(39)).toBe('39%');
+    expect(formatPercent(-12.4)).toBe(`${MINUS}12%`);
+    expect(formatPercent(-2173832)).toBe(`${MINUS}2${NBSP}173${NBSP}832%`);
+    expect(formatPercent(Number.NaN)).toBe('0%');
   });
 });
 
