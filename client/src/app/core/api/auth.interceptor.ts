@@ -33,8 +33,12 @@ export const authInterceptor: HttpInterceptorFn = (request, next: HttpHandlerFn)
           return throwError(() => error);
         }
         return from(auth.refresh()).pipe(
-          catchError(() => {
-            void auth.handleSessionLost();
+          catchError((refreshError: unknown) => {
+            const rejected =
+              refreshError instanceof HttpErrorResponse && (refreshError.status === 401 || refreshError.status === 403);
+            if (rejected) {
+              void auth.handleSessionLost();
+            }
             return throwError(() => error);
           }),
           switchMap(() => send(current.clone({ context: current.context.set(AUTH_RETRIED, true) }))),

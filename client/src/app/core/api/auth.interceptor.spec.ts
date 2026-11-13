@@ -73,6 +73,28 @@ describe('authInterceptor', () => {
     controller.expectNone(apiUrl('/api/me'));
   });
 
+  it('keeps the session and rethrows the original error when the refresh fails with a network or server error', async () => {
+    for (const status of [0, 503]) {
+      auth.setSession(authResponse('access-1', 'refresh-1'), true);
+      const result = firstValueFrom(http.get(apiUrl('/api/me'))).catch((error: unknown) => error);
+
+      controller.expectOne(apiUrl('/api/me')).flush(unauthorized(), { status: 401, statusText: 'Unauthorized' });
+      const refresh = controller.expectOne(apiUrl('/api/auth/refresh'));
+      if (status === 0) {
+        refresh.error(new ProgressEvent('error'));
+      } else {
+        refresh.flush({}, { status, statusText: 'Service Unavailable' });
+      }
+      await tick();
+
+      const error = (await result) as { status: number };
+      expect(error.status).toBe(401);
+      expect(auth.status()).toBe('signedIn');
+      expect(window.localStorage.getItem(REFRESH_TOKEN_KEY)).toBe('refresh-1');
+      controller.expectNone(apiUrl('/api/me'));
+    }
+  });
+
   it('does not attach the token to other origins', () => {
     void firstValueFrom(http.get('https://other.example/data'));
     const other = controller.expectOne('https://other.example/data');
