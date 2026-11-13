@@ -87,7 +87,7 @@
     <sb-icon name="swap" [size]="22" />
     Транзакції
   </a>
-  <button class="tab-bar__add" type="button" aria-label="Додати транзакцію">
+  <button class="tab-bar__add" type="button" aria-label="Додати транзакцію" (click)="editor.openCreate()">
     <sb-icon name="plus" [size]="24" />
   </button>
   <a class="tab-bar__item" routerLink="/app/planning" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
@@ -99,3 +99,5 @@
     Налаштування
   </a>
 </nav>
+
+<sb-transaction-modal />
