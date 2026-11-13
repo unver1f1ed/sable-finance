@@ -11,5 +11,6 @@ public static class ErrorDetails
     public const string NotFound = "Запис не знайдено";
     public const string EmailTaken = "Ця адреса пошти вже використовується";
     public const string ServerError = "Сталася неочікувана помилка. Спробуйте пізніше";
+    public const string TooManyRequests = "Забагато спроб. Спробуйте за хвилину";
     public const string ServiceUnavailable = "Сервіс тимчасово недоступний. Спробуйте пізніше";
 }

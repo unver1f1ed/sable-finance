@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Sable.Api.Infrastructure;
 using Sable.Application.Abstractions;
 using Sable.Application.Content;
 
@@ -25,6 +27,7 @@ public class PublicContentController(IPublicContentService content, ICurrentUser
     public async Task<ActionResult<IReadOnlyList<FaqTopicDto>>> Faq([FromQuery] string? search, CancellationToken ct) =>
         Ok(await content.GetFaqAsync(search, ct));
 
+    [EnableRateLimiting(RateLimiting.AuthPolicy)]
     [HttpPost("contact")]
     public async Task<ActionResult<ContactResult>> Contact(ContactInput input, CancellationToken ct) =>
         StatusCode(StatusCodes.Status201Created, await content.SendContactAsync(input, ct));
