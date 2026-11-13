@@ -37,7 +37,7 @@ const WHOLE_FORMAT = new Intl.NumberFormat('uk-UA', { maximumFractionDigits: 0, 
 const KOPECK_FORMAT = new Intl.NumberFormat('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true });
 
 function normalizeSpaces(value: string): string {
-  return value.replace(/s/g, NON_BREAKING_SPACE);
+  return value.replace(/\s/g, NON_BREAKING_SPACE);
 }
 
 function monthIndex(month: string): number {
