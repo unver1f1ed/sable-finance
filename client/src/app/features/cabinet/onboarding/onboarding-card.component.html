@@ -1,0 +1,13 @@
+<section class="onboarding card card--lg">
+  <sb-category-icon icon="wallet" />
+  <h2 class="text-h3">Почнімо з першого рахунку</h2>
+  <p class="onboarding__text text-body text-muted">
+    Додайте картку, готівку чи заощадження зі стартовим балансом — і зможете записувати доходи та витрати.
+  </p>
+  <button sbButton type="button" (click)="modalOpen.set(true)">
+    <sb-icon name="plus" [size]="16" />
+    Додати рахунок
+  </button>
+</section>
+
+<sb-account-modal [open]="modalOpen()" [isFirst]="true" (closed)="modalOpen.set(false)" (saved)="onSaved()" />

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { environment } from '../environments/environment';
 import { adminGuard, authGuard } from './core/auth/auth.guard';
+import { ReferenceDataStore } from './features/cabinet/data/reference-data.store';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
@@ -25,6 +26,7 @@ export const routes: Routes = [
     component: AppLayoutComponent,
     canActivate: [authGuard],
     canActivateChild: [authGuard],
+    providers: [ReferenceDataStore],
     children: [
       {
         path: '',
