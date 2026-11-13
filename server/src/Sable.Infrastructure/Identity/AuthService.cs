@@ -13,7 +13,6 @@ internal sealed class AuthService(
     IFinanceDbContext db)
     : IAuthService
 {
-    private const string InvalidPlanMessage = "Оберіть доступний тариф";
     private const string WrongCurrentPasswordMessage = "Неправильний поточний пароль";
     private const string WrongPasswordMessage = "Неправильний пароль";
     private const string InvalidValueMessage = "Некоректне значення";
@@ -22,7 +21,7 @@ internal sealed class AuthService(
     {
         if (!await IsPublishedPlanAsync(request.PlanCode))
         {
-            throw Errors.Validation("planCode", InvalidPlanMessage);
+            throw Errors.Validation("planCode", ValidationMessages.InvalidPlan);
         }
 
         var email = NormalizeEmail(request.Email);
@@ -175,7 +174,7 @@ internal sealed class AuthService(
     {
         if (!await IsPublishedPlanAsync(request.PlanCode))
         {
-            throw Errors.Validation("planCode", InvalidPlanMessage);
+            throw Errors.Validation("planCode", ValidationMessages.InvalidPlan);
         }
 
         var user = await FindUserAsync(userId);

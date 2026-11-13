@@ -28,6 +28,7 @@ public static class ProblemDetailsWriter
         ["email_taken"] = "Email already in use",
         ["conflict"] = "Conflict",
         ["server_error"] = "Server error",
+        ["method_not_allowed"] = "Method not allowed",
         ["too_many_requests"] = "Too many requests"
     };
 

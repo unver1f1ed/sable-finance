@@ -128,18 +128,18 @@ public class BudgetService(IFinanceDbContext db, ICurrentUser currentUser, TimeP
             .OrderBy(b => b.Category.Name)
             .ThenBy(b => b.Id)
             .Select(b => new BudgetDto
-        {
-            Id = b.Id,
-            Category = new CategoryRef(b.CategoryId, b.Category.Name, b.Category.Icon, b.Category.Color),
-            LimitAmount = b.LimitAmount,
-            Spent = db.Transactions
+            {
+                Id = b.Id,
+                Category = new CategoryRef(b.CategoryId, b.Category.Name, b.Category.Icon, b.Category.Color),
+                LimitAmount = b.LimitAmount,
+                Spent = db.Transactions
                 .Where(t => t.CategoryId == b.CategoryId
                     && t.Type == TransactionType.Expense
                     && t.OccurredOn >= firstOfMonth
                     && t.OccurredOn <= last)
                 .Sum(t => (decimal?)t.Amount) ?? 0m,
-            Month = month
-        });
+                Month = month
+            });
     }
 
     private async Task<BudgetDto> GetDtoAsync(Guid id, CancellationToken cancellationToken)

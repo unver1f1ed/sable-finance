@@ -17,9 +17,6 @@ public static class Errors
     public static AppException InvalidRefreshToken(string detail = ErrorDetails.InvalidRefreshToken) =>
         new(401, "invalid_refresh_token", detail);
 
-    public static AppException Forbidden(string detail = ErrorDetails.Forbidden) =>
-        new(403, "forbidden", detail);
-
     public static AppException AccountBlocked(string detail = ErrorDetails.AccountBlocked) =>
         new(403, "account_blocked", detail);
 
