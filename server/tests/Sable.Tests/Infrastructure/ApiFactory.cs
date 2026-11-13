@@ -13,6 +13,8 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     public const string AdminEmail = "admin@test.ua";
     public const string AdminPassword = "Admin-Test-1234";
+    public const string DemoPassword = "Demo-Test-1234";
+    public const string DemoEmail = "demo@sable.ua";
 
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:16")
         .WithDatabase(IdentityDatabase)
@@ -51,6 +53,8 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Cors:Origins:0", "http://localhost:4200");
         builder.UseSetting("Seed:AdminEmail", AdminEmail);
         builder.UseSetting("Seed:AdminPassword", AdminPassword);
+        builder.UseSetting("Seed:Demo", "true");
+        builder.UseSetting("Seed:DemoPassword", DemoPassword);
 
         builder.ConfigureServices(services => services
             .AddControllers()
