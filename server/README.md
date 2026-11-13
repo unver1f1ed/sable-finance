@@ -25,13 +25,14 @@ REST API сервісу персонального фінансового пла
    docker compose up -d
    ```
 
-3. Збережіть секрети застосунку в `dotnet user-secrets` (вони лежать поза репозиторієм). Підставте свої значення замість `<...>`; пароль у рядках підключення має збігатися з `POSTGRES_PASSWORD`:
+3. Збережіть секрети застосунку в `dotnet user-secrets` (вони лежать поза репозиторієм). Підставте свої значення замість `<...>` (`Seed:DemoPassword` потрібен лише для демо-користувача `demo@sable.ua`, його створено з даними за пів року в середовищі Development); пароль у рядках підключення має збігатися з `POSTGRES_PASSWORD`:
 
    ```bash
    dotnet user-secrets set "ConnectionStrings:Identity" "Host=localhost;Port=5432;Username=sable;Password=<пароль бази>;Database=sable_identity" --project src/Sable.Api
    dotnet user-secrets set "ConnectionStrings:Finance" "Host=localhost;Port=5432;Username=sable;Password=<пароль бази>;Database=sable_finance" --project src/Sable.Api
    dotnet user-secrets set "Jwt:Key" "<щонайменше 64 випадкових символи>" --project src/Sable.Api
    dotnet user-secrets set "Seed:AdminPassword" "<пароль першого адміністратора>" --project src/Sable.Api
+   dotnet user-secrets set "Seed:DemoPassword" "<пароль демо-користувача demo@sable.ua>" --project src/Sable.Api
    ```
 
    Ключ для `Jwt:Key` можна згенерувати так:
@@ -86,5 +87,6 @@ dotnet ef migrations add <Name> --context FinanceDbContext --project src/Sable.I
 | `Jwt__Audience` | аудиторія токенів, наприклад `sable-client` |
 | `Cors__Origins__0` | дозволене джерело клієнта, наприклад `http://localhost:4200` |
 | `Seed__AdminEmail`, `Seed__AdminPassword` | дані першого адміністратора |
+| `Seed__Demo`, `Seed__DemoPassword` | `true` створює демо-користувача `demo@sable.ua` з даними (завжди в Development); пароль обов’язковий, без нього демо-дані пропускаються |
 
 Шаблон значень наведено у файлі `.env.example`.
