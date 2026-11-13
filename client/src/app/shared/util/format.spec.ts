@@ -6,6 +6,7 @@ import {
   formatMoney,
   formatMonth,
   formatPercentDelta,
+  greetingFor,
   monthGenitive,
 } from './format';
 import { pluralize, resultsLabel } from './plural';
@@ -113,5 +114,21 @@ describe('plural forms', () => {
     expect(resultsLabel(1)).toBe('1 результат');
     expect(resultsLabel(3)).toBe('3 результати');
     expect(resultsLabel(12)).toBe('12 результатів');
+  });
+});
+
+describe('greetingFor', () => {
+  it.each([
+    [4, 'Доброї ночі'],
+    [5, 'Доброго ранку'],
+    [11, 'Доброго ранку'],
+    [12, 'Добрий день'],
+    [17, 'Добрий день'],
+    [18, 'Добрий вечір'],
+    [22, 'Добрий вечір'],
+    [23, 'Доброї ночі'],
+    [0, 'Доброї ночі'],
+  ])('%i -> %s', (hour, text) => {
+    expect(greetingFor(hour)).toBe(text);
   });
 });
