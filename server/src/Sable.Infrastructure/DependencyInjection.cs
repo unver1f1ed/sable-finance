@@ -18,11 +18,15 @@ public static class DependencyInjection
         var financeConnection = GetConnectionString(configuration, "Finance");
 
         services.AddDbContext<IdentityDbContext>(options => options
-            .UseNpgsql(identityConnection, npgsql => npgsql.MigrationsAssembly("Sable.Infrastructure"))
+            .UseNpgsql(identityConnection, npgsql => npgsql
+                .MigrationsAssembly("Sable.Infrastructure")
+                .EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(5), errorCodesToAdd: null))
             .UseSnakeCaseNamingConvention());
 
         services.AddDbContext<FinanceDbContext>(options => options
-            .UseNpgsql(financeConnection, npgsql => npgsql.MigrationsAssembly("Sable.Infrastructure"))
+            .UseNpgsql(financeConnection, npgsql => npgsql
+                .MigrationsAssembly("Sable.Infrastructure")
+                .EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(5), errorCodesToAdd: null))
             .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IFinanceDbContext>(sp => sp.GetRequiredService<FinanceDbContext>());

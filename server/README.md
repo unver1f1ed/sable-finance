@@ -90,3 +90,31 @@ dotnet ef migrations add <Name> --context FinanceDbContext --project src/Sable.I
 | `Seed__Demo`, `Seed__DemoPassword` | `true` створює демо-користувача `demo@sable.ua` з даними (завжди в Development); пароль обов’язковий, без нього демо-дані пропускаються |
 
 Шаблон значень наведено у файлі `.env.example`.
+
+## Розгортання
+
+Збірка для публікації (з каталогу `server/`):
+
+```bash
+dotnet publish src/Sable.Api -c Release -o publish
+```
+
+Застосунок запускається командою `dotnet publish/Sable.Api.dll` із `ASPNETCORE_ENVIRONMENT=Production`. Усі налаштування передаються змінними середовища; у продакшні запуск зупиняється з переліком усіх відсутніх обов’язкових значень.
+
+| Ключ | Призначення | Обов’язковий |
+|---|---|---|
+| `ConnectionStrings__Identity` | рядок підключення до бази `sable_identity` | так |
+| `ConnectionStrings__Finance` | рядок підключення до бази `sable_finance` | так |
+| `Jwt__Key` | ключ підпису токенів, щонайменше 32 символи (рекомендовано 64) | так |
+| `Jwt__Issuer` | видавець токенів | так |
+| `Jwt__Audience` | аудиторія токенів | так |
+| `Cors__Origins__0`, `Cors__Origins__1`, … | дозволені джерела клієнта (без `*`) | так, щонайменше одне |
+| `Seed__AdminEmail`, `Seed__AdminPassword` | перший адміністратор; якщо користувач уже є, пароль не змінюється | ні |
+| `Seed__Demo` | `true` створює демо-користувача `demo@sable.ua` з даними (без нього лише в Development) | ні |
+| `Seed__DemoPassword` | пароль демо-користувача; без нього демо-дані не створюються | лише з `Seed__Demo` |
+| `RateLimit__AuthPerMinute` | ліміт запитів на хвилину з однієї адреси для входу, реєстрації, оновлення токена й форми контактів (типово 10) | ні |
+| `HttpsRedirection__Port` | порт для перенаправлення з HTTP на HTTPS (у `appsettings.Production.json` — 443) | ні |
+
+Для Azure Database for PostgreSQL у рядках підключення додайте `SSL Mode=Require`, наприклад `Host=<сервер>.postgres.database.azure.com;Port=5432;Database=sable_finance;Username=<користувач>;Password=<пароль>;SSL Mode=Require`.
+
+Особливості роботи за зворотним проксі (Azure App Service): поза Development застосунок довіряє заголовкам `X-Forwarded-For` і `X-Forwarded-Proto`, додає `Strict-Transport-Security` та заголовки безпеки й не показує заголовок `Server`. Міграції обох баз застосовуються під час запуску; для безпечного одночасного старту кількох екземплярів використовується блокування міграцій, яке реалізує провайдер Npgsql. Час міграцій і початкового наповнення пишеться в журнал одним рядком. Ендпоінт `GET /health` відкритий, не кешується й не обмежується за частотою.

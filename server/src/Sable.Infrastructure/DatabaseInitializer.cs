@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,9 +24,13 @@ public class DatabaseInitializer(
 {
     public async Task InitializeAsync()
     {
+        var stopwatch = Stopwatch.StartNew();
+
         await identityDb.Database.MigrateAsync();
         await financeDb.Database.MigrateAsync();
         await SeedAsync();
+
+        logger.LogInformation("Database migrations and seeding took {ElapsedMs} ms", stopwatch.ElapsedMilliseconds);
     }
 
     private async Task SeedAsync()
