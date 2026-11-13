@@ -1,0 +1,17 @@
+<div class="month-switcher" role="group" aria-label="Період">
+  <button sbIconButton size="sm" type="button" aria-label="Попередній місяць" [disabled]="isAll()" (click)="previous()">
+    <sb-icon name="chev-left" [size]="14" />
+  </button>
+  <span class="month-switcher__label text-small" aria-live="polite">
+    <sb-icon name="calendar" [size]="14" />
+    {{ label() }}
+  </span>
+  <button sbIconButton size="sm" type="button" aria-label="Наступний місяць" [disabled]="nextDisabled()" (click)="next()">
+    <sb-icon name="chev-right" [size]="14" />
+  </button>
+  @if (allowAll()) {
+    <button class="chip month-switcher__all" [class.chip--active]="isAll()" type="button" [attr.aria-pressed]="isAll()" (click)="toggleAll()">
+      Увесь час
+    </button>
+  }
+</div>
