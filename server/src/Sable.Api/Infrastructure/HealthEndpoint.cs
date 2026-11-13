@@ -13,6 +13,7 @@ public static class HealthEndpoint
         FinanceDbContext financeDb,
         ILogger<IdentityDbContext> logger)
     {
+        context.Response.Headers.CacheControl = "no-store";
         var ct = context.RequestAborted;
 
         if (await CanConnectAsync(identityDb, logger, ct) && await CanConnectAsync(financeDb, logger, ct))
