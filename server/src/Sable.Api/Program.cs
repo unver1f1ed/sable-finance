@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Sable.Api.Infrastructure;
@@ -37,9 +36,16 @@ builder.Services
         messages.SetMissingRequestBodyRequiredValueAccessor(() => ValidationMessages.InvalidValue);
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     })
-    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new NulSafeStringConverter());
+    })
     .ConfigureApiBehaviorOptions(options =>
-        options.InvalidModelStateResponseFactory = ValidationResponseFactory.Create);
+    {
+        options.InvalidModelStateResponseFactory = ValidationResponseFactory.Create;
+        options.SuppressMapClientErrors = true;
+    });
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -132,6 +138,7 @@ if (behindProxy)
 }
 
 app.Use(SecurityHeaders.AddAsync);
+app.Use(NulCharacterGuard.RejectInQueryAsync);
 
 using (var scope = app.Services.CreateScope())
 {
