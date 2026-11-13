@@ -1,0 +1,308 @@
+<ng-template #controls>
+  <sb-segmented
+    [options]="typeOptions"
+    [ngModel]="filters().type"
+    (ngModelChange)="changeType($event)"
+    [ngModelOptions]="{ standalone: true }"
+    ariaLabel="Тип транзакцій"
+    onSurface
+  />
+  <sb-select
+    label="Рахунок"
+    hideLabel
+    variant="pill"
+    [options]="accountOptions()"
+    [ngModel]="filters().accountId ?? ''"
+    (ngModelChange)="update({ accountId: $event || null })"
+    [ngModelOptions]="{ standalone: true }"
+  />
+  <sb-select
+    label="Категорія"
+    hideLabel
+    variant="pill"
+    [options]="categoryOptions()"
+    [ngModel]="filters().categoryId ?? ''"
+    (ngModelChange)="update({ categoryId: $event || null })"
+    [ngModelOptions]="{ standalone: true }"
+  />
+  <sb-month-switcher allowAll [month]="filters().month" (monthChange)="update({ month: $event })" />
+</ng-template>
+
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">Транзакції</h1>
+    @if (store.hasAccounts() && subtitle()) {
+      <p class="text-body text-muted">{{ subtitle() }}</p>
+    }
+  </div>
+  @if (store.hasAccounts()) {
+    <div class="page-head__actions">
+      <button sbButton variant="ghost" type="button" [disabled]="exporting()" (click)="exportCsv()">
+        <sb-icon name="download" [size]="16" />
+        {{ exporting() ? 'Експорт…' : 'Експорт CSV' }}
+      </button>
+      <a sbButton [routerLink]="[]" [queryParams]="{ new: 'transaction' }" queryParamsHandling="merge">
+        <sb-icon name="plus" [size]="16" />
+        Транзакція
+      </a>
+    </div>
+  }
+</header>
+
+@if (store.status() === 'error') {
+  <sb-error-state (retry)="store.reload()" />
+} @else if (!store.loaded()) {
+  <div class="card tx-skeleton" aria-busy="true">
+    @for (row of skeletonRows; track row) {
+      <sb-skeleton height="20" />
+    }
+  </div>
+} @else if (!store.hasAccounts()) {
+  <sb-onboarding-card />
+} @else {
+  <div class="tx-totals">
+    <div class="stat-line card">
+      <span class="text-small text-muted">Доходи за період</span>
+      <span class="text-h4 num text-accent">{{ money(data()?.totalIncome ?? 0, true) }}</span>
+    </div>
+    <div class="stat-line card">
+      <span class="text-small text-muted">Витрати за період</span>
+      <span class="text-h4 num">{{ money(-(data()?.totalExpense ?? 0)) }}</span>
+    </div>
+    <div class="stat-line card">
+      <span class="text-small text-muted">Різниця</span>
+      <span class="text-h4 num" [class.text-accent]="difference() >= 0">{{ money(difference(), true) }}</span>
+    </div>
+  </div>
+
+  <section class="card tx-panel" aria-label="Список транзакцій">
+    <div class="tx-filters">
+      <div class="tx-filters__search">
+        <sb-field label="Пошук за описом" hideLabel variant="pill" onSurface>
+          <sb-icon fieldLeading name="search" [size]="16" />
+          <input type="search" placeholder="Пошук за описом" autocomplete="off" [formControl]="searchControl" />
+        </sb-field>
+      </div>
+      @if (wide()) {
+        <div class="tx-filters__controls">
+          <ng-container [ngTemplateOutlet]="controls" />
+        </div>
+      } @else {
+        <button class="tx-filters__toggle" sbIconButton type="button" aria-label="Фільтри" (click)="sheetOpen.set(true)">
+          <sb-icon name="filter" [size]="18" />
+          @if (filterCount() > 0) {
+            <span class="tx-filters__badge num">{{ filterCount() }}</span>
+          }
+        </button>
+      }
+    </div>
+
+    <div class="tx-chips">
+      <div class="tx-chips__list">
+        @for (chip of chips(); track chip.key) {
+          <button sbChip active type="button" [attr.aria-label]="'Прибрати фільтр: ' + chip.label" (click)="update(chip.patch)">
+            {{ chip.label }}
+            <sb-icon name="x" [size]="12" />
+          </button>
+        }
+        @if (chips().length > 0) {
+          <button class="link tx-chips__reset" type="button" (click)="resetFilters()">Скинути фільтри</button>
+        }
+      </div>
+      @if (wide()) {
+        <div class="tx-chips__sort">
+          <sb-select
+            label="Сортування"
+            hideLabel
+            variant="pill"
+            [options]="sortOptions"
+            [ngModel]="filters().sort"
+            (ngModelChange)="update({ sort: $event })"
+            [ngModelOptions]="{ standalone: true }"
+          />
+        </div>
+      }
+    </div>
+
+    @switch (state()) {
+      @case ('loading') {
+        <div class="tx-skeleton" aria-busy="true">
+          @for (row of skeletonRows; track row) {
+            <sb-skeleton height="20" />
+          }
+        </div>
+      }
+      @case ('error') {
+        <sb-error-state (retry)="retry()" />
+      }
+      @default {
+        @if (data(); as list) {
+          @if (list.total === 0) {
+            @if (filterCount() > 0) {
+              <div class="tx-empty">
+                <sb-category-icon icon="search" />
+                <p class="text-h4">Нічого не знайдено</p>
+                <p class="text-body text-muted tx-empty__text">
+                  Спробуйте змінити запит або скинути фільтри, щоб побачити всі транзакції за період.
+                </p>
+                <button sbButton variant="ghost" type="button" (click)="resetFilters()">
+                  <sb-icon name="refresh" [size]="16" />
+                  Скинути фільтри
+                </button>
+              </div>
+            } @else {
+              <sb-empty-state icon="swap" title="Ще немає транзакцій" text="Додайте першу витрату чи дохід, і тут з’явиться історія.">
+                <a sbButton size="sm" [routerLink]="[]" [queryParams]="{ new: 'transaction' }" queryParamsHandling="merge">
+                  <sb-icon name="plus" [size]="14" />
+                  Додати транзакцію
+                </a>
+              </sb-empty-state>
+            }
+          } @else {
+            <div class="tx-list" [class.tx-list--busy]="busy()" [attr.aria-busy]="busy()">
+              @if (wide()) {
+                <table class="tx-table">
+                  <caption class="visually-hidden">
+                    Транзакції
+                  </caption>
+                  <thead>
+                    <tr class="tx-table__head">
+                      <th scope="col">Опис</th>
+                      <th scope="col">Категорія</th>
+                      <th scope="col">Рахунок</th>
+                      <th scope="col" class="tx-table__right">Сума</th>
+                      <th scope="col"><span class="visually-hidden">Дії</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of rows(); track row.key) {
+                      @if (row.kind === 'day') {
+                        <tr class="tx-table__day">
+                          <th scope="colgroup" colspan="5">{{ row.label }}</th>
+                        </tr>
+                      } @else {
+                        <tr class="tx-table__row">
+                          <td class="tx-table__main">
+                            <div class="tx-desc">
+                              <sb-category-icon size="sm" [icon]="row.transaction.category.icon" [color]="row.transaction.category.color" />
+                              <div class="tx-desc__text">
+                                <button class="tx-desc__link" type="button" [title]="row.transaction.description" (click)="edit(row.transaction)">
+                                  {{ row.transaction.description }}
+                                </button>
+                                @if (row.transaction.note) {
+                                  <p class="text-tiny text-muted tx-desc__note">{{ row.transaction.note }}</p>
+                                }
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-muted tx-table__cut">{{ row.transaction.category.name }}</td>
+                          <td class="text-muted tx-table__cut">{{ row.transaction.account.name }}</td>
+                          <td class="tx-table__right num text-semibold" [class.text-accent]="row.transaction.type === 'Income'">
+                            {{ amountText(row.transaction) }}
+                          </td>
+                          <td class="tx-table__actions">
+                            <div class="row-menu">
+                              <button
+                                sbIconButton
+                                size="sm"
+                                class="icon-btn--plain"
+                                type="button"
+                                aria-haspopup="menu"
+                                [attr.aria-expanded]="openMenu() === row.transaction.id"
+                                [attr.aria-label]="'Дії: ' + row.transaction.description"
+                                (click)="toggleMenu(row.transaction.id, $event)"
+                              >
+                                <sb-icon name="more" [size]="16" />
+                              </button>
+                              @if (openMenu() === row.transaction.id) {
+                                <ul class="row-menu__list" role="menu">
+                                  <li role="none">
+                                    <button class="row-menu__item" type="button" role="menuitem" (click)="edit(row.transaction)">
+                                      <sb-icon name="pencil" [size]="14" />
+                                      Редагувати
+                                    </button>
+                                  </li>
+                                  <li role="none">
+                                    <button class="row-menu__item row-menu__item--danger" type="button" role="menuitem" (click)="askDelete(row.transaction)">
+                                      <sb-icon name="trash" [size]="14" />
+                                      Видалити
+                                    </button>
+                                  </li>
+                                </ul>
+                              }
+                            </div>
+                          </td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              } @else {
+                <ul class="tx-cards">
+                  @for (row of rows(); track row.key) {
+                    @if (row.kind === 'day') {
+                      <li class="tx-cards__day text-small text-semibold">{{ row.label }}</li>
+                    } @else {
+                      <li class="tx-card">
+                        <sb-category-icon size="sm" [icon]="row.transaction.category.icon" [color]="row.transaction.category.color" />
+                        <div class="tx-card__text">
+                          <button class="tx-desc__link" type="button" [title]="row.transaction.description" (click)="edit(row.transaction)">
+                            {{ row.transaction.description }}
+                          </button>
+                          <p class="text-tiny text-muted tx-card__meta">{{ row.transaction.category.name }} · {{ row.transaction.account.name }}</p>
+                        </div>
+                        <span class="num text-semibold tx-card__amount" [class.text-accent]="row.transaction.type === 'Income'">
+                          {{ amountText(row.transaction) }}
+                        </span>
+                      </li>
+                    }
+                  }
+                </ul>
+              }
+            </div>
+
+            <sb-pagination
+              [page]="filters().page"
+              [pageSize]="filters().pageSize"
+              [total]="list.total"
+              (pageChange)="update({ page: $event })"
+              (pageSizeChange)="update({ pageSize: $event })"
+            />
+          }
+        }
+      }
+    }
+  </section>
+}
+
+<sb-modal [open]="sheetOpen()" title="Фільтри" (closed)="sheetOpen.set(false)">
+  <div class="tx-sheet">
+    <ng-container [ngTemplateOutlet]="controls" />
+    <sb-select
+      label="Сортування"
+      onSurface
+      [options]="sortOptions"
+      [ngModel]="filters().sort"
+      (ngModelChange)="update({ sort: $event })"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <button modalFooter sbButton type="button" (click)="sheetOpen.set(false)">Застосувати</button>
+</sb-modal>
+
+<sb-confirm-dialog
+  [open]="deleting() !== null"
+  title="Видалити транзакцію?"
+  [message]="deleteMessage()"
+  confirmLabel="Видалити"
+  danger
+  [busy]="deleteBusy()"
+  (confirm)="confirmDelete()"
+  (cancel)="deleting.set(null)"
+/>
+
+<sb-modal [open]="upgradeOpen()" title="Експорт доступний у тарифі Плюс" [width]="460" (closed)="upgradeOpen.set(false)">
+  <p class="text-body text-muted">Перейдіть на Плюс, щоб вивантажувати транзакції у файл CSV.</p>
+  <button modalFooter sbButton variant="ghost" type="button" (click)="upgradeOpen.set(false)">Закрити</button>
+  <a modalFooter sbButton routerLink="/app/settings" fragment="plan" (click)="upgradeOpen.set(false)">Перейти на Плюс</a>
+</sb-modal>
