@@ -366,3 +366,12 @@
     right: 0;
   }
 }
+
+.recent__link,
+.donut__row--button {
+  min-height: 44px;
+
+  @media (hover: hover) and (pointer: fine) {
+    min-height: 0;
+  }
+}
