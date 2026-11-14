@@ -244,9 +244,16 @@ strong {
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--color-accent);
   font-size: 14px;
   font-weight: 500;
+
+  @media (hover: hover) and (pointer: fine) {
+    min-height: 0;
+  }
 
   &:hover {
     color: var(--color-accent-hover);
