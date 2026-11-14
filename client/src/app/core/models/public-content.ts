@@ -15,7 +15,7 @@ export interface PlanFeatureValueDto {
   text: string | null;
 }
 
-export interface PlanFeatureDto {
+interface PlanFeatureDto {
   id: string;
   name: string;
   values: Record<string, PlanFeatureValueDto>;
@@ -38,7 +38,7 @@ export interface ReviewsDto {
   items: ReviewDto[];
 }
 
-export interface FaqItemDto {
+interface FaqItemDto {
   id: string;
   question: string;
   answer: string;

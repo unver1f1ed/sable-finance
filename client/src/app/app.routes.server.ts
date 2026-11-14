@@ -9,6 +9,5 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'app/**', renderMode: RenderMode.Client },
   { path: 'admin/**', renderMode: RenderMode.Client },
   { path: 'forbidden', renderMode: RenderMode.Client },
-  { path: 'dev/**', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Client },
 ];

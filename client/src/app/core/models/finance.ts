@@ -113,7 +113,7 @@ export interface GoalDto {
   monthlyNeeded: number | null;
 }
 
-export interface DashboardPrevious {
+interface DashboardPrevious {
   totalBalance: number;
   income: number;
   expense: number;

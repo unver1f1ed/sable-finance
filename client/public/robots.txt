@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /admin
+Disallow: /forbidden
+
+Sitemap: https://red-smoke-06a408310.5.azurestaticapps.net/sitemap.xml

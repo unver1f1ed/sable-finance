@@ -1,7 +1,5 @@
 import { Directive, input } from '@angular/core';
 
-export type IconButtonSize = 'sm' | 'md';
-
 @Directive({
   selector: 'button[sbIconButton], a[sbIconButton]',
   host: {

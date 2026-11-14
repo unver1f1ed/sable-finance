@@ -3,7 +3,7 @@ import { serverError } from '../../../core/forms/form-errors';
 import { TransactionType } from '../../../core/models/finance';
 import { toIsoDate } from '../../../shared/util/date';
 
-export const AMOUNT_LIMIT = 1_000_000_000;
+const AMOUNT_LIMIT = 1_000_000_000;
 export const MIN_DATE = '2000-01-01';
 
 export type TransactionField = 'amount' | 'description' | 'categoryId' | 'accountId' | 'occurredOn' | 'note';
@@ -12,7 +12,7 @@ export function tomorrowIso(today: Date = new Date()): string {
   return toIsoDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1));
 }
 
-export function amountRule(control: AbstractControl): ValidationErrors | null {
+function amountRule(control: AbstractControl): ValidationErrors | null {
   const value = control.value as number | null;
   if (value === null || value === undefined) {
     return { required: true };
@@ -29,7 +29,7 @@ export function amountRule(control: AbstractControl): ValidationErrors | null {
   return null;
 }
 
-export function dateRule(today: () => Date): ValidatorFn {
+function dateRule(today: () => Date): ValidatorFn {
   return (control) => {
     const value = control.value as string;
     if (!value) {

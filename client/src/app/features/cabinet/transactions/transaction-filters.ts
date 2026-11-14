@@ -2,8 +2,8 @@ import { ParamMap } from '@angular/router';
 import { TransactionQuery, TransactionSort, TransactionType } from '../../../core/models/finance';
 import { currentMonth, isValidMonth, monthRange } from '../../../shared/util/date';
 
-export const PAGE_SIZES = [10, 20, 50] as const;
-export const DEFAULT_SORT: TransactionSort = 'date_desc';
+const PAGE_SIZES = [10, 20, 50] as const;
+const DEFAULT_SORT: TransactionSort = 'date_desc';
 export const ALL_TIME = 'all';
 
 export type TypeFilter = 'all' | TransactionType;
