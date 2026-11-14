@@ -9,13 +9,12 @@ import { AuthApiService } from '../../../core/api/auth-api.service';
 import { BudgetsApiService } from '../../../core/api/budgets-api.service';
 import { CategoriesApiService } from '../../../core/api/categories-api.service';
 import { GoalsApiService } from '../../../core/api/goals-api.service';
-import { PlansApiService } from '../../../core/api/plans-api.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { applyServerErrors, serverError } from '../../../core/forms/form-errors';
 import { isApiError } from '../../../core/models/api-error';
 import { AccountDto, CategoryDto } from '../../../core/models/finance';
 import { PLAN_LIMITS } from '../../../core/models/plan-limits';
-import { PlanCode, PlanDto } from '../../../core/models/public-content';
+import { PlanCode } from '../../../core/models/public-content';
 import { AvatarComponent } from '../../../shared/ui/avatar/avatar.component';
 import { BadgeComponent } from '../../../shared/ui/badge/badge.component';
 import { ButtonDirective } from '../../../shared/ui/button/button.directive';
@@ -29,6 +28,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { currentMonth } from '../../../shared/util/date';
 import { formatMoney, formatPrice } from '../../../shared/util/format';
+import { PublicContentService } from '../../public/data/public-content.service';
 import { EMAIL_MESSAGE, EMAIL_PATTERN, REQUIRED_MESSAGE } from '../../auth/register-form';
 import { AccountModalComponent } from '../accounts/account-modal.component';
 import { ReferenceDataStore } from '../data/reference-data.store';
@@ -91,7 +91,7 @@ export class SettingsPageComponent {
   });
   protected readonly profileSaving = signal(false);
   protected readonly usage = signal<{ budgets: number; goals: number } | null>(null);
-  protected readonly plans = signal<PlanDto[]>([]);
+  protected readonly plans = inject(PublicContentService).plans();
   protected readonly planBusy = signal(false);
   protected readonly accountModal = signal<{ account: AccountDto | null } | null>(null);
   protected readonly categoryModal = signal<{ category: CategoryDto | null } | null>(null);
@@ -102,7 +102,6 @@ export class SettingsPageComponent {
   protected readonly upgradeMessage = signal<string | null>(null);
 
   private readonly authApi = inject(AuthApiService);
-  private readonly plansApi = inject(PlansApiService);
   private readonly budgetsApi = inject(BudgetsApiService);
   private readonly goalsApi = inject(GoalsApiService);
   private readonly accountsApi = inject(AccountsApiService);
@@ -129,7 +128,7 @@ export class SettingsPageComponent {
   protected readonly planCode = computed<PlanCode>(() => (this.auth.planCode() === 'plus' ? 'plus' : 'start'));
   protected readonly planName = computed(() => (this.planCode() === 'plus' ? 'Плюс' : 'Старт'));
   protected readonly otherPlan = computed<PlanCode>(() => (this.planCode() === 'plus' ? 'start' : 'plus'));
-  protected readonly plusPrice = computed(() => this.plans().find((plan) => plan.code === 'plus')?.priceYearlyPerMonth ?? FALLBACK_PLUS_PRICE);
+  protected readonly plusPrice = computed(() => this.plans().plans.find((plan) => plan.code === 'plus')?.priceYearlyPerMonth ?? FALLBACK_PLUS_PRICE);
   protected readonly planUsage = computed<PlanUsage | null>(() => {
     const usage = this.usage();
     return usage ? { accounts: this.store.accounts().length, budgets: usage.budgets, goals: usage.goals } : null;
@@ -185,7 +184,6 @@ export class SettingsPageComponent {
         this.submitted.set(false);
       }
     });
-    this.plansApi.get().subscribe({ next: (data) => this.plans.set(data.plans), error: () => undefined });
     this.loadUsage();
   }
 

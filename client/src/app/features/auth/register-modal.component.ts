@@ -55,10 +55,14 @@ export class RegisterModalComponent {
   protected readonly showPassword = signal(false);
   protected readonly passwordHint = 'Надійний пароль · щонайменше 8 символів, літери й цифри';
   protected readonly strengthBars = [0, 1, 2, 3];
-  protected readonly plusPrice = computed(() => {
-    const plus = this.plans().plans.find((plan) => plan.code === 'plus');
-    return formatPrice(plus?.priceYearlyPerMonth ?? 0);
-  });
+  protected readonly planOptions = computed(() =>
+    this.plans().plans.map((plan) => ({
+      code: plan.code,
+      title: plan.name.replace(/^Sable\s+/, ''),
+      price: plan.priceYearlyPerMonth > 0 ? `${formatPrice(plan.priceYearlyPerMonth)} / міс` : formatPrice(0),
+      note: plan.priceYearlyPerMonth > 0 ? 'при оплаті за рік' : 'назавжди',
+    })),
+  );
   protected readonly strength = toSignal(
     this.form.controls['password'].valueChanges.pipe(
       startWith(''),
@@ -76,8 +80,9 @@ export class RegisterModalComponent {
     effect(() => {
       const open = this.open();
       const plan = this.initialPlan();
+      const codes = this.plans().plans.map((item) => item.code);
       if (open) {
-        this.form.controls['plan'].setValue(plan);
+        this.form.controls['plan'].setValue(codes.includes(plan) ? plan : (codes[0] ?? plan));
       } else {
         this.reset();
       }

@@ -118,21 +118,23 @@
 
 <sb-plans-compare [data]="plans()" [rows]="6" billing="yearly" visual="images" />
 
-<section class="reviews">
-  <div class="reviews__summary">
-    <h2 class="visually-hidden">Відгуки користувачів</h2>
-    <div class="reviews__stars" aria-hidden="true">
-      @for (star of stars; track star) {
-        <img src="/images/star.svg" alt="" width="22" height="22" loading="lazy" />
-      }
+@if (reviews().items.length > 0) {
+  <section class="reviews">
+    <div class="reviews__summary">
+      <h2 class="visually-hidden">Відгуки користувачів</h2>
+      <div class="reviews__stars" aria-hidden="true">
+        @for (star of stars; track star) {
+          <img src="/images/star.svg" alt="" width="22" height="22" loading="lazy" />
+        }
+      </div>
+      <p class="reviews__average">{{ reviews().average }}</p>
+      <p class="text-small text-muted">середня оцінка користувачів</p>
     </div>
-    <p class="reviews__average">{{ reviews().average }}</p>
-    <p class="text-small text-muted">середня оцінка користувачів</p>
-  </div>
-  <div class="container reviews__slider">
-    <sb-reviews-slider [reviews]="reviews().items" />
-  </div>
-</section>
+    <div class="container reviews__slider">
+      <sb-reviews-slider [reviews]="reviews().items" />
+    </div>
+  </section>
+}
 
 <section class="download" id="app" aria-labelledby="download-title">
   <div class="container">
