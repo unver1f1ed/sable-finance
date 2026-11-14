@@ -1,5 +1,14 @@
 @use 'mixins' as *;
 
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
+
 *,
 *::before,
 *::after {
