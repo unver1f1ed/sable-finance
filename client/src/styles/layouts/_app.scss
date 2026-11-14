@@ -164,7 +164,8 @@
     gap: 4px;
     min-width: 0;
     min-height: 48px;
-    font-size: 10px;
+    padding-inline: 3px;
+    font-size: 9px;
     line-height: 12px;
     font-weight: 500;
     color: var(--color-text-secondary);
@@ -172,6 +173,13 @@
     &--active {
       color: var(--color-accent);
     }
+  }
+
+  &__label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__add {

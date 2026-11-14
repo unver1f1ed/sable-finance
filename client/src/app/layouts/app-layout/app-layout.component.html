@@ -80,22 +80,22 @@
     ariaCurrentWhenActive="page"
   >
     <sb-icon name="grid" [size]="22" />
-    Огляд
+    <span class="tab-bar__label">Огляд</span>
   </a>
   <a class="tab-bar__item" routerLink="/app/transactions" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
     <sb-icon name="swap" [size]="22" />
-    Транзакції
+    <span class="tab-bar__label">Транзакції</span>
   </a>
   <button class="tab-bar__add" type="button" aria-label="Додати транзакцію" (click)="editor.openCreate()">
     <sb-icon name="plus" [size]="24" />
   </button>
   <a class="tab-bar__item" routerLink="/app/planning" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
     <sb-icon name="target" [size]="22" />
-    Планування
+    <span class="tab-bar__label">Планування</span>
   </a>
   <a class="tab-bar__item" routerLink="/app/settings" routerLinkActive="tab-bar__item--active" ariaCurrentWhenActive="page">
     <sb-icon name="sliders" [size]="22" />
-    Налаштування
+    <span class="tab-bar__label">Налаштування</span>
   </a>
 </nav>
 
