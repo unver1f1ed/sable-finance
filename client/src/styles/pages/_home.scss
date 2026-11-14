@@ -28,7 +28,8 @@
     max-width: none;
     height: auto;
     opacity: 0.45;
-    transform: translateX(-50%);
+    transform: translate3d(-50%, var(--parallax-y, 0px), 0);
+    animation: hero-float var(--motion-float) var(--ease-soft) infinite alternate;
 
     @include desktop {
       top: -207px;
@@ -393,20 +394,51 @@
 }
 
 .press {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 24px 40px;
-  padding: 48px var(--space-page-mobile);
+  overflow: hidden;
+
+  &__track {
+    display: flex;
+    width: 100%;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 24px 40px;
+    padding: 48px var(--space-page-mobile);
+
+    &--copy {
+      display: none;
+    }
+
+    @include desktop {
+      flex: none;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 270px;
+      min-height: 232px;
+      padding: 0 270px 0 0;
+
+      &--copy {
+        display: flex;
+      }
+    }
+  }
 
   @include desktop {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 270px;
     height: 232px;
-    padding: 0;
-    overflow: hidden;
+
+    &__track {
+      width: max-content;
+      animation: marquee-left calc(var(--motion-marquee) * 1.4) linear infinite;
+    }
+
+    &:hover &__track {
+      animation-play-state: paused;
+    }
   }
 
   &__item {

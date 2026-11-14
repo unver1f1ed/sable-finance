@@ -45,7 +45,7 @@
               >
                 <span class="faq__question text-h4">{{ item.question }}</span>
                 <span class="faq__icon" [class.faq__icon--open]="openItems().has(item.id)" aria-hidden="true">
-                  <sb-icon [name]="openItems().has(item.id) ? 'chev-up' : 'chev-down'" [size]="18" />
+                  <sb-icon class="faq__chevron" name="chev-down" [size]="18" />
                 </span>
               </button>
             </h3>
