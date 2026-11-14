@@ -4,7 +4,7 @@ import { IconComponent } from '../../../shared/ui/icon/icon.component';
 import { currentMonth, shiftMonth } from '../../../shared/util/date';
 import { formatMonth } from '../../../shared/util/format';
 
-export const ALL_TIME_MONTH = 'all';
+const ALL_TIME_MONTH = 'all';
 
 @Component({
   selector: 'sb-month-switcher',

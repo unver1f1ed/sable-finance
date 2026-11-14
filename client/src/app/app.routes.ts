@@ -1,24 +1,11 @@
 import { Routes } from '@angular/router';
-import { environment } from '../environments/environment';
 import { adminGuard, authGuard, signedInMatch } from './core/auth/auth.guard';
 import { ReferenceDataStore } from './features/cabinet/data/reference-data.store';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 
 const privateRoute = { noindex: true };
 
-const devRoutes: Routes = environment.production
-  ? []
-  : [
-      {
-        path: 'dev/kit',
-        title: 'UI-кіт — Sable',
-        data: privateRoute,
-        loadComponent: () => import('./features/dev/dev-kit.component').then((m) => m.DevKitComponent),
-      },
-    ];
-
 export const routes: Routes = [
-  ...devRoutes,
   {
     path: 'app',
     loadComponent: () => import('./layouts/app-layout/app-layout.component').then((m) => m.AppLayoutComponent),

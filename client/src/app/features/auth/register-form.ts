@@ -8,7 +8,7 @@ export const PASSWORD_RULE_MESSAGE = 'Пароль має містити щон�
 export const REQUIRED_MESSAGE = 'Поле обов’язкове';
 export const EMAIL_MESSAGE = 'Вкажіть коректну адресу пошти';
 export const MISMATCH_MESSAGE = 'Паролі не збігаються';
-export const TERMS_MESSAGE = 'Потрібно прийняти умови';
+const TERMS_MESSAGE = 'Потрібно прийняти умови';
 
 export type RegisterField = 'firstName' | 'lastName' | 'email' | 'password' | 'repeatPassword' | 'plan' | 'terms';
 
@@ -21,7 +21,7 @@ export function passwordRule(control: AbstractControl): ValidationErrors | null 
   return valid ? null : { passwordRule: true };
 }
 
-export function passwordsMatch(group: AbstractControl): ValidationErrors | null {
+function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value as string | undefined;
   const repeat = group.get('repeatPassword')?.value as string | undefined;
   return repeat && password !== repeat ? { mismatch: true } : null;
