@@ -47,7 +47,9 @@ describe('PublicContentService', () => {
     http.expectOne(apiUrl('/api/faq')).flush([]);
     service.invalidate('faq');
     service.faq();
-    http.expectOne(apiUrl('/api/faq')).flush([]);
+    const again = http.expectOne((request) => request.url === apiUrl('/api/faq'));
+    expect(again.request.params.has('_')).toBe(true);
+    again.flush([]);
   });
 
   it('keeps the constants when the API fails', () => {

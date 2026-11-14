@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { environment } from '../environments/environment';
-import { adminGuard, authGuard } from './core/auth/auth.guard';
+import { adminGuard, authGuard, signedInMatch } from './core/auth/auth.guard';
 import { ReferenceDataStore } from './features/cabinet/data/reference-data.store';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 
@@ -55,6 +55,21 @@ export const routes: Routes = [
         data: privateRoute,
         loadComponent: () =>
           import('./features/cabinet/settings/settings-page.component').then((m) => m.SettingsPageComponent),
+      },
+    ],
+  },
+  {
+    path: 'forbidden',
+    canMatch: [signedInMatch],
+    loadComponent: () => import('./layouts/app-layout/app-layout.component').then((m) => m.AppLayoutComponent),
+    providers: [ReferenceDataStore],
+    children: [
+      {
+        path: '',
+        title: 'Немає доступу — Sable',
+        data: privateRoute,
+        loadComponent: () =>
+          import('./features/public/forbidden/forbidden-page.component').then((m) => m.ForbiddenPageComponent),
       },
     ],
   },
