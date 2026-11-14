@@ -137,3 +137,15 @@
     white-space: nowrap;
   }
 }
+
+.field-counter {
+  margin-top: 6px;
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+
+  &--over {
+    color: var(--color-danger);
+  }
+}
