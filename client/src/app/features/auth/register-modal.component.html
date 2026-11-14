@@ -72,24 +72,17 @@
       <fieldset class="plan-picker">
         <legend class="plan-picker__legend">Тариф</legend>
         <div class="plan-picker__options">
-          <label class="plan-option" [class.plan-option--selected]="form.controls['plan'].value === 'start'">
-            <input class="plan-option__input visually-hidden" type="radio" value="start" formControlName="plan" />
-            <span class="plan-option__head">
-              <span class="text-body text-semibold">Старт</span>
-              <span class="plan-option__radio" aria-hidden="true"></span>
-            </span>
-            <span class="text-h4">0&nbsp;₴</span>
-            <span class="text-tiny text-muted">назавжди</span>
-          </label>
-          <label class="plan-option" [class.plan-option--selected]="form.controls['plan'].value === 'plus'">
-            <input class="plan-option__input visually-hidden" type="radio" value="plus" formControlName="plan" />
-            <span class="plan-option__head">
-              <span class="text-body text-semibold">Плюс</span>
-              <span class="plan-option__radio" aria-hidden="true"></span>
-            </span>
-            <span class="text-h4">{{ plusPrice() }} / міс</span>
-            <span class="text-tiny text-muted">при оплаті за рік</span>
-          </label>
+          @for (option of planOptions(); track option.code) {
+            <label class="plan-option" [class.plan-option--selected]="form.controls['plan'].value === option.code">
+              <input class="plan-option__input visually-hidden" type="radio" [value]="option.code" formControlName="plan" />
+              <span class="plan-option__head">
+                <span class="text-body text-semibold">{{ option.title }}</span>
+                <span class="plan-option__radio" aria-hidden="true"></span>
+              </span>
+              <span class="text-h4">{{ option.price }}</span>
+              <span class="text-tiny text-muted">{{ option.note }}</span>
+            </label>
+          }
         </div>
       </fieldset>
 

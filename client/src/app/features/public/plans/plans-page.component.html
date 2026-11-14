@@ -42,6 +42,7 @@
     </a>
   </article>
 
+  @if (plus()) {
   <article class="plan-card card card--lg card--accent plan-card--plus">
     <div class="plan-card__head">
       <div class="plan-card__intro">
@@ -78,6 +79,7 @@
     </ul>
     <a sbButton size="lg" block [routerLink]="[]" [queryParams]="{ auth: 'register', plan: 'plus' }">Обрати Плюс</a>
   </article>
+  }
 </section>
 
 <sb-plans-compare [data]="data()" [billing]="billing()" visual="cards" />

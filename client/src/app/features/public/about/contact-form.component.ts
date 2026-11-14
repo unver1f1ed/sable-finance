@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { applyServerErrors, serverError } from '../../../core/forms/form-errors';
+import { isApiError } from '../../../core/models/api-error';
 import { ButtonDirective } from '../../../shared/ui/button/button.directive';
 import { CheckboxComponent } from '../../../shared/ui/checkbox/checkbox.component';
 import { FieldComponent } from '../../../shared/ui/field/field.component';
@@ -84,7 +86,9 @@ export class ContactFormComponent {
           this.focusFirstInvalid();
           return;
         }
-        this.toast.error('Не вдалося надіслати звернення. Спробуйте пізніше.');
+        const body: unknown = response instanceof HttpErrorResponse ? response.error : null;
+        const tooMany = response instanceof HttpErrorResponse && response.status === 429 && isApiError(body);
+        this.toast.error(tooMany ? body.detail : 'Не вдалося надіслати звернення. Спробуйте пізніше.');
       },
     });
   }
