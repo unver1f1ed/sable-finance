@@ -85,7 +85,7 @@
   }
 }
 
-.plan-card {
+.planning-card {
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -119,7 +119,7 @@
     white-space: nowrap;
   }
 
-  a.plan-card__name:hover {
+  a.planning-card__name:hover {
     color: var(--color-accent);
   }
 
