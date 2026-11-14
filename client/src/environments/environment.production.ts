@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://CHANGE-ME.azurewebsites.net',
+  apiUrl: 'https://sable-api-qejdm.azurewebsites.net',
 };
