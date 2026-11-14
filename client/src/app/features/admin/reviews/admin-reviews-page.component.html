@@ -1,0 +1,166 @@
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">Відгуки</h1>
+    <p class="text-body text-muted">Відгуки користувачів, що показуються на головній сторінці</p>
+  </div>
+  <div class="page-head__actions">
+    <button sbButton type="button" (click)="modal.set({ review: null })">
+      <sb-icon name="plus" [size]="16" />
+      Новий відгук
+    </button>
+  </div>
+</header>
+
+<section class="admin-stats" aria-label="Статистика відгуків">
+  @if (stats(); as numbers) {
+    <div class="card admin-stat">
+      <p class="text-label">Середня оцінка</p>
+      <p class="admin-stat__value num">{{ averageText() }}</p>
+    </div>
+    <div class="card admin-stat">
+      <p class="text-label">На сайті</p>
+      <p class="admin-stat__value num">{{ numbers.published }}</p>
+    </div>
+    <div class="card admin-stat">
+      <p class="text-label">Приховані</p>
+      <p class="admin-stat__value num">{{ numbers.hidden }}</p>
+    </div>
+  } @else {
+    @for (row of [0, 1, 2]; track row) {
+      <div class="card admin-stat" aria-busy="true"><sb-skeleton height="48" /></div>
+    }
+  }
+</section>
+
+<section class="card admin-panel" aria-label="Список відгуків">
+  <div class="admin-toolbar">
+    <sb-field class="admin-toolbar__search" label="Пошук за автором або текстом" hideLabel>
+      <sb-icon fieldLeading name="search" [size]="18" />
+      <input type="search" autocomplete="off" placeholder="Пошук за автором або текстом" [formControl]="searchControl" />
+    </sb-field>
+    <sb-segmented
+      [options]="statusOptions"
+      [ngModel]="statusValue()"
+      (ngModelChange)="changeStatus($event)"
+      [ngModelOptions]="{ standalone: true }"
+      ariaLabel="Статус відгуку"
+      onSurface
+    />
+    <sb-select
+      label="Оцінка"
+      hideLabel
+      variant="pill"
+      [options]="ratingOptions"
+      [ngModel]="filters().rating === null ? '' : '' + filters().rating"
+      (ngModelChange)="update({ rating: $event ? +$event : null })"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="admin-skeleton" aria-busy="true">
+        @for (row of skeletonRows; track row) {
+          <sb-skeleton height="20" />
+        }
+      </div>
+    }
+    @case ('error') {
+      <sb-error-state (retry)="retry()" />
+    }
+    @default {
+      @if (data(); as list) {
+        @if (list.total === 0) {
+          @if (filterCount() > 0) {
+            <div class="tx-empty">
+              <sb-category-icon icon="search" />
+              <p class="text-h4">Нічого не знайдено</p>
+              <p class="text-body text-muted tx-empty__text">Спробуйте змінити запит або скинути фільтри.</p>
+              <button sbButton variant="ghost" type="button" (click)="resetFilters()">
+                <sb-icon name="refresh" [size]="16" />
+                Скинути фільтри
+              </button>
+            </div>
+          } @else {
+            <sb-empty-state icon="star" title="Відгуків ще немає" text="Додайте перший відгук, і він з’явиться на головній сторінці.">
+              <button sbButton size="sm" type="button" (click)="modal.set({ review: null })">Новий відгук</button>
+            </sb-empty-state>
+          }
+        } @else {
+          <div class="admin-list" [class.admin-list--busy]="busy()" [attr.aria-busy]="busy()">
+            <table class="admin-table">
+              <caption class="visually-hidden">
+                Відгуки
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Автор</th>
+                  <th scope="col">Відгук</th>
+                  <th scope="col">Оцінка</th>
+                  <th scope="col">Дата</th>
+                  <th scope="col">Статус</th>
+                  <th scope="col"><span class="visually-hidden">Дії</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (review of list.items; track review.id) {
+                  <tr>
+                    <td class="admin-table__main admin-table__author">
+                      <div class="admin-person">
+                        <sb-avatar size="sm" [name]="review.author" />
+                        <button class="admin-person__name" type="button" (click)="modal.set({ review })">{{ review.author }}</button>
+                      </div>
+                    </td>
+                    <td class="admin-table__wide"><p class="admin-clamp text-small">{{ review.text }}</p></td>
+                    <td data-label="Оцінка"><sb-rating [value]="review.rating" /></td>
+                    <td data-label="Дата" class="num text-muted">{{ date(review.createdAt) }}</td>
+                    <td data-label="Статус">
+                      <sb-badge [tone]="review.isPublished ? 'teal' : 'grey'">{{ review.isPublished ? 'На сайті' : 'Приховано' }}</sb-badge>
+                    </td>
+                    <td class="admin-table__actions">
+                      <button sbIconButton size="sm" type="button" [attr.aria-label]="'Редагувати відгук: ' + review.author" title="Редагувати" (click)="modal.set({ review })">
+                        <sb-icon name="pencil" [size]="16" />
+                      </button>
+                      <button
+                        sbIconButton
+                        size="sm"
+                        type="button"
+                        [attr.aria-label]="(review.isPublished ? 'Приховати відгук: ' : 'Опублікувати відгук: ') + review.author"
+                        [title]="review.isPublished ? 'Приховати' : 'Опублікувати'"
+                        (click)="togglePublished(review)"
+                      >
+                        <sb-icon [name]="review.isPublished ? 'eye' : 'check'" [size]="16" />
+                      </button>
+                      <button sbIconButton size="sm" type="button" [attr.aria-label]="'Видалити відгук: ' + review.author" title="Видалити" (click)="deleting.set(review)">
+                        <sb-icon name="trash" [size]="16" />
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <sb-pagination
+              [page]="filters().page"
+              [pageSize]="filters().pageSize"
+              [total]="list.total"
+              (pageChange)="update({ page: $event })"
+              (pageSizeChange)="update({ pageSize: $event })"
+            />
+          </div>
+        }
+      }
+    }
+  }
+</section>
+
+<sb-review-modal [open]="modal() !== null" [review]="modal()?.review ?? null" (closed)="modal.set(null)" (saved)="onSaved()" />
+<sb-confirm-dialog
+  [open]="deleting() !== null"
+  title="Видалити відгук?"
+  [message]="'Відгук від ' + (deleting()?.author ?? '') + ' буде видалено без можливості відновлення.'"
+  confirmLabel="Видалити"
+  danger
+  [busy]="deleteBusy()"
+  (confirm)="confirmDelete()"
+  (cancel)="deleting.set(null)"
+/>

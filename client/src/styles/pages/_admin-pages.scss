@@ -225,3 +225,27 @@
     white-space: nowrap;
   }
 }
+
+.admin-clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.admin-table__wide {
+  grid-column: 1 / -1;
+}
+
+@include tablet {
+  .admin-table__author {
+    width: 22%;
+    max-width: none;
+  }
+
+  .admin-table__wide {
+    grid-column: auto;
+    width: 40%;
+  }
+}
