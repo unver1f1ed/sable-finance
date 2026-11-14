@@ -23,6 +23,8 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
       const detail = isApiError(body) ? body.detail : null;
       if (error.status === 0) {
         toast.error('Немає з’єднання із сервером. Перевірте інтернет і спробуйте ще раз.');
+      } else if (error.status === 429) {
+        toast.error(detail ?? 'Забагато запитів. Спробуйте за хвилину.');
       } else if (error.status >= 500) {
         toast.error(detail ?? 'Сталася помилка. Спробуйте пізніше.');
       } else if (error.status === 403 && isApiError(body) && body.code === 'account_blocked') {

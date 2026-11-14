@@ -69,7 +69,7 @@
               </div>
               <span class="text-small text-muted">6 місяців</span>
             </div>
-            <sb-bar-chart [data]="bars()" />
+            <div class="dash-panel__body"><sb-bar-chart [data]="bars()" /></div>
           </section>
 
           <section class="card dash-panel" aria-labelledby="dash-donut-title">
@@ -77,7 +77,7 @@
               <h2 class="text-h4" id="dash-donut-title">Витрати за категоріями</h2>
               <a class="link" routerLink="/app/transactions" [queryParams]="{ type: 'Expense', month: month() }">Детальніше</a>
             </div>
-            <sb-donut-chart [segments]="segments()" (selected)="openCategory($event)" />
+            <div class="dash-panel__body"><sb-donut-chart [segments]="segments()" (selected)="openCategory($event)" /></div>
           </section>
         </div>
 

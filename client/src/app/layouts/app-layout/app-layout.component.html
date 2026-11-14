@@ -60,7 +60,6 @@
 <header class="app-topbar">
   <sb-avatar [name]="fullName()" />
   <div class="app-topbar__text">
-    <p class="text-tiny text-muted">Добрий день,</p>
     <p class="text-body text-semibold">{{ auth.user()?.firstName }}</p>
   </div>
   <button sbIconButton type="button" aria-label="Вийти" (click)="auth.logout()">
