@@ -75,6 +75,12 @@ export class ModalComponent {
     }
   }
 
+  protected keepFocus(event: MouseEvent): void {
+    if ((event.target as HTMLElement).closest('button')) {
+      event.preventDefault();
+    }
+  }
+
   protected onEscape(): void {
     this.close();
   }

@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
+import { CanActivateChildFn, CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
 export const authGuard: CanActivateFn & CanActivateChildFn = async (_route, state) => {
@@ -20,4 +20,10 @@ export const adminGuard: CanActivateFn & CanActivateChildFn = async (_route, sta
     return router.createUrlTree(['/'], { queryParams: { auth: 'login', returnUrl: state.url } });
   }
   return auth.isAdmin() ? true : router.createUrlTree(['/forbidden']);
+};
+
+export const signedInMatch: CanMatchFn = async () => {
+  const auth = inject(AuthService);
+  await auth.ready();
+  return auth.isSignedIn();
 };

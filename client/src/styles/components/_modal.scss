@@ -16,7 +16,7 @@
   @include tablet {
     gap: 28px;
     max-width: var(--modal-width, 520px);
-    max-height: calc(100vh - 48px);
+    max-height: calc(100vh - var(--modal-top) - 24px);
     padding: 40px;
     border-radius: var(--radius-card-lg);
   }
@@ -32,8 +32,10 @@
     overflow-y: auto;
 
     @include tablet {
-      align-items: center;
-      padding: 24px;
+      --modal-top: clamp(24px, 8vh, 96px);
+
+      align-items: flex-start;
+      padding: var(--modal-top) 24px 24px;
     }
   }
 

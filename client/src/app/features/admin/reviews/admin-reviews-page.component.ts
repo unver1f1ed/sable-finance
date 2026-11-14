@@ -129,7 +129,7 @@ export class AdminReviewsPageComponent {
       .pipe(
         switchMap(() =>
           forkJoin({
-            average: this.publicApi.reviews().pipe(map((reviews) => reviews.average)),
+            average: this.publicApi.reviews(true).pipe(map((reviews) => reviews.average)),
             published: this.api.list({ status: 'published', pageSize: 10 }).pipe(map((page) => page.total)),
             hidden: this.api.list({ status: 'hidden', pageSize: 10 }).pipe(map((page) => page.total)),
           }).pipe(catchError(() => of(null))),

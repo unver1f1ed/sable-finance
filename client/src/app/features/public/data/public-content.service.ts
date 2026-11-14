@@ -16,32 +16,35 @@ export class PublicContentService {
   private readonly reviewsState = signal<ReviewsDto>(REVIEWS);
   private readonly faqState = signal<FaqTopicDto[]>(FAQ_TOPICS);
   private readonly requested = new Set<PublicResource>();
+  private readonly stale = new Set<PublicResource>();
 
   plans(): Signal<PlanComparisonDto> {
-    this.ensure('plans', this.api.plans(), (value) => this.plansState.set(value));
+    this.ensure('plans', (fresh) => this.api.plans(fresh), (value) => this.plansState.set(value));
     return this.plansState.asReadonly();
   }
 
   reviews(): Signal<ReviewsDto> {
-    this.ensure('reviews', this.api.reviews(), (value) => this.reviewsState.set(value));
+    this.ensure('reviews', (fresh) => this.api.reviews(fresh), (value) => this.reviewsState.set(value));
     return this.reviewsState.asReadonly();
   }
 
   faq(): Signal<FaqTopicDto[]> {
-    this.ensure('faq', this.api.faq(), (value) => this.faqState.set(value));
+    this.ensure('faq', (fresh) => this.api.faq(fresh), (value) => this.faqState.set(value));
     return this.faqState.asReadonly();
   }
 
   invalidate(resource: PublicResource): void {
     this.requested.delete(resource);
+    this.stale.add(resource);
   }
 
-  private ensure<T>(resource: PublicResource, request: Observable<T>, apply: (value: T) => void): void {
+  private ensure<T>(resource: PublicResource, request: (fresh: boolean) => Observable<T>, apply: (value: T) => void): void {
     if (!this.isBrowser || this.requested.has(resource)) {
       return;
     }
     this.requested.add(resource);
-    request.subscribe({
+    const fresh = this.stale.delete(resource);
+    request(fresh).subscribe({
       next: apply,
       error: () => undefined,
     });
