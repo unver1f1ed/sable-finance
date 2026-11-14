@@ -1,0 +1,34 @@
+<sb-modal [open]="open()" [title]="title()" [width]="540" [locked]="sending()" (closed)="closed.emit()">
+  <form id="review-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    <sb-field label="Автор" onSurface [error]="error('author')">
+      <input type="text" autocomplete="off" placeholder="Наприклад, Марта Д." formControlName="author" />
+    </sb-field>
+
+    <sb-rating-input label="Оцінка" formControlName="rating" [invalid]="!!error('rating')" describedBy="review-rating-error" />
+    @if (error('rating')) {
+      <p class="field__message field__message--error" id="review-rating-error">{{ error('rating') }}</p>
+    }
+
+    <div>
+      <sb-field label="Текст відгуку" onSurface [error]="error('text')">
+        <textarea rows="5" placeholder="Що сподобалось у Sable?" formControlName="text"></textarea>
+      </sb-field>
+      <p class="field-counter num" [class.field-counter--over]="over()">{{ counter() }}</p>
+    </div>
+
+    <div class="toggle-row">
+      <div class="toggle-row__text">
+        <p class="text-body">Показувати на сайті</p>
+        <p class="text-small text-muted">Опубліковані відгуки з’являються на головній сторінці.</p>
+      </div>
+      <sb-toggle label="Показувати на сайті" formControlName="isPublished" />
+    </div>
+  </form>
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton type="submit" form="review-form" [disabled]="sending()">
+      {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати відгук' }}
+    </button>
+  </div>
+</sb-modal>
