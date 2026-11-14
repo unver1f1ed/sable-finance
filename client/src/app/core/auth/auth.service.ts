@@ -7,6 +7,7 @@ import { AuthApiService } from '../api/auth-api.service';
 import { AuthResponse, LoginRequest, RegisterRequest, UserDto } from '../models/auth';
 
 export const REFRESH_TOKEN_KEY = 'sable.refreshToken';
+export const REFRESH_LOCK_NAME = 'sable.refresh';
 
 export type AuthStatus = 'unknown' | 'signedIn' | 'signedOut';
 
@@ -128,14 +129,18 @@ export class AuthService {
     }
   }
 
-  private async performRefresh(): Promise<AuthResponse> {
-    const token = this.readRefreshToken();
-    if (!token) {
-      throw new Error('No refresh token');
-    }
-    const response = await firstValueFrom(this.api.refresh({ refreshToken: token }));
-    this.setSession(response);
-    return response;
+  private performRefresh(): Promise<AuthResponse> {
+    const run = async (): Promise<AuthResponse> => {
+      const token = this.readRefreshToken();
+      if (!token) {
+        throw new Error('No refresh token');
+      }
+      const response = await firstValueFrom(this.api.refresh({ refreshToken: token }));
+      this.setSession(response);
+      return response;
+    };
+    const locks = this.isBrowser && typeof navigator !== 'undefined' ? navigator.locks : undefined;
+    return locks ? locks.request(REFRESH_LOCK_NAME, run) : run();
   }
 
   private listenToStorage(): void {
