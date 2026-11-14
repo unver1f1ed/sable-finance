@@ -1,0 +1,186 @@
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">Тарифи</h1>
+    <p class="text-body text-muted">Ціни, описи та порівняння тарифів для сторінки «Тарифи»</p>
+  </div>
+  <div class="page-head__actions">
+    <a sbButton variant="ghost" href="/plans" target="_blank" rel="noopener">
+      <sb-icon name="arrow-up-right" [size]="16" />
+      Переглянути на сайті
+    </a>
+  </div>
+</header>
+
+@switch (state()) {
+  @case ('loading') {
+    <div class="card admin-panel" aria-busy="true"><sb-skeleton height="160" /></div>
+  }
+  @case ('error') {
+    <sb-error-state (retry)="retry()" />
+  }
+  @default {
+    <section class="admin-section" aria-labelledby="plans-title">
+      <h2 class="text-h4" id="plans-title">Плани</h2>
+      <div class="plans-admin">
+        <ul class="plans-admin__cards">
+          @for (plan of plans(); track plan.id) {
+            <li>
+              <button class="card plans-admin__card" type="button" [class.plans-admin__card--active]="selectedCode() === plan.code" [attr.aria-pressed]="selectedCode() === plan.code" (click)="select(plan)">
+                <span class="plans-admin__head">
+                  <span class="text-h5">{{ plan.name }}</span>
+                  @if (plan.isPopular) {
+                    <sb-badge tone="teal">Популярний</sb-badge>
+                  }
+                  @if (!plan.isPublished) {
+                    <sb-badge tone="grey">Знято з публікації</sb-badge>
+                  }
+                </span>
+                <span class="text-body num">{{ price(plan) }}</span>
+                <span class="text-small text-muted">{{ usersText(plan) }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+
+        @if (selected(); as plan) {
+          <form class="card admin-panel plans-admin__form form-stack" novalidate [formGroup]="form" (ngSubmit)="save()">
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="text-body">Опубліковано</p>
+                <p class="text-small text-muted">
+                  {{ isStart() ? 'Тариф Старт завжди опублікований' : 'Тариф, знятий з публікації, зникає із сайту й реєстрації.' }}
+                </p>
+              </div>
+              <sb-toggle label="Опубліковано" formControlName="isPublished" />
+            </div>
+
+            <div class="form-stack__pair">
+              <sb-field label="Назва" onSurface [error]="error('name')">
+                <input type="text" autocomplete="off" formControlName="name" />
+              </sb-field>
+              <sb-field label="Код" onSurface>
+                <input type="text" [value]="plan.code" disabled />
+              </sb-field>
+            </div>
+
+            <div>
+              <sb-field label="Опис" onSurface [error]="error('description')">
+                <textarea rows="3" formControlName="description"></textarea>
+              </sb-field>
+              <p class="field-counter num" [class.field-counter--over]="descriptionLength() > descriptionMax">{{ descriptionLength() }} / {{ descriptionMax }} символів</p>
+            </div>
+
+            <div class="form-stack__pair">
+              <sb-amount-field label="Ціна за місяць" onSurface formControlName="priceMonthly" [error]="error('priceMonthly')" />
+              <sb-amount-field label="Ціна за місяць при оплаті за рік" onSurface formControlName="priceYearlyPerMonth" [error]="error('priceYearlyPerMonth')" />
+            </div>
+
+            <sb-field label="Знижка за річну оплату" onSurface>
+              <input type="text" [value]="discount() + ' %'" disabled />
+            </sb-field>
+
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="text-body">Позначка «Популярний»</p>
+                <p class="text-small text-muted">Показується біля назви тарифу на сторінці тарифів.</p>
+              </div>
+              <sb-toggle label="Позначка «Популярний»" formControlName="isPopular" />
+            </div>
+
+            <div class="form-stack__actions">
+              <button sbButton variant="ghost" type="button" [disabled]="saving()" (click)="resetForm()">Скасувати</button>
+              <button sbButton type="submit" [disabled]="saving()">{{ saving() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+            </div>
+          </form>
+        }
+      </div>
+    </section>
+
+    <section class="card admin-panel admin-section" aria-labelledby="features-title">
+      <div class="settings-card__head">
+        <div class="settings-card__title">
+          <h2 class="text-h4" id="features-title">Характеристики для порівняння</h2>
+          <p class="text-small text-muted">Рядки таблиці порівняння. Змінюйте порядок стрілками</p>
+        </div>
+        <button sbButton variant="ghost" size="sm" type="button" (click)="featureModal.set({ feature: null })">
+          <sb-icon name="plus" [size]="14" />
+          Додати характеристику
+        </button>
+      </div>
+
+      <div class="features-admin__scroll" role="region" aria-label="Характеристики тарифів" tabindex="0">
+        <table class="features-admin__table">
+          <caption class="visually-hidden">
+            Характеристики для порівняння тарифів
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Характеристика</th>
+              @for (plan of plans(); track plan.id) {
+                <th scope="col">{{ plan.name }}</th>
+              }
+              <th scope="col"><span class="visually-hidden">Дії</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (feature of features(); track feature.id) {
+              <tr>
+                <th scope="row">{{ feature.name }}</th>
+                @for (plan of plans(); track plan.id) {
+                  @let value = valueOf(feature, plan.code);
+                  <td>
+                    @switch (value.kind) {
+                      @case ('Included') {
+                        <sb-icon class="compare__yes" name="check" [size]="18" />
+                        <span class="visually-hidden">Є</span>
+                      }
+                      @case ('NotIncluded') {
+                        <sb-icon class="compare__no" name="x" [size]="16" />
+                        <span class="visually-hidden">Немає</span>
+                      }
+                      @default {
+                        {{ value.text }}
+                      }
+                    }
+                  </td>
+                }
+                <td class="features-admin__actions">
+                  <button sbIconButton size="sm" type="button" [attr.aria-label]="'Перемістити вгору: ' + feature.name" title="Вгору" [disabled]="!can(feature, -1)" (click)="move(feature, -1)">
+                    <sb-icon name="chev-down" class="features-admin__up" [size]="16" />
+                  </button>
+                  <button sbIconButton size="sm" type="button" [attr.aria-label]="'Перемістити вниз: ' + feature.name" title="Вниз" [disabled]="!can(feature, 1)" (click)="move(feature, 1)">
+                    <sb-icon name="chev-down" [size]="16" />
+                  </button>
+                  <button sbIconButton size="sm" type="button" [attr.aria-label]="'Редагувати: ' + feature.name" title="Редагувати" (click)="featureModal.set({ feature })">
+                    <sb-icon name="pencil" [size]="16" />
+                  </button>
+                  <button sbIconButton size="sm" type="button" [attr.aria-label]="'Видалити: ' + feature.name" title="Видалити" (click)="deleting.set(feature)">
+                    <sb-icon name="trash" [size]="16" />
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+}
+
+<sb-feature-modal
+  [open]="featureModal() !== null"
+  [feature]="featureModal()?.feature ?? null"
+  [plans]="plans()"
+  (closed)="featureModal.set(null)"
+  (saved)="onFeatureSaved()"
+/>
+<sb-confirm-dialog
+  [open]="deleting() !== null"
+  title="Видалити характеристику?"
+  [message]="'Рядок «' + (deleting()?.name ?? '') + '» зникне з таблиць порівняння.'"
+  confirmLabel="Видалити"
+  danger
+  [busy]="deleteBusy()"
+  (confirm)="confirmDelete()"
+  (cancel)="deleting.set(null)"
+/>

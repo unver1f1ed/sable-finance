@@ -1,0 +1,34 @@
+<sb-modal [open]="open()" [title]="title()" [width]="560" [locked]="sending()" (closed)="closed.emit()">
+  <form id="feature-form" class="form-stack" novalidate (ngSubmit)="submit()">
+    <sb-field label="Назва характеристики" onSurface [error]="nameError()">
+      <input type="text" autocomplete="off" placeholder="Наприклад, Кількість рахунків" [formControl]="name" />
+    </sb-field>
+
+    @for (plan of plans(); track plan.code) {
+      <fieldset class="feature-plan">
+        <legend class="text-small text-semibold">{{ plan.name }}</legend>
+        <sb-segmented
+          [options]="kindOptions"
+          [ngModel]="kinds()[plan.code]"
+          (ngModelChange)="setKind(plan.code, $event)"
+          [ngModelOptions]="{ standalone: true }"
+          [ariaLabel]="'Значення для тарифу ' + plan.name"
+          block
+          onSurface
+        />
+        @if (kinds()[plan.code] === 'Text') {
+          <sb-field [label]="'Текст для тарифу ' + plan.name" hideLabel onSurface [error]="textError(plan.code)">
+            <input type="text" autocomplete="off" placeholder="Наприклад, До 2" [attr.maxlength]="textMax + 20" [value]="texts()[plan.code]" (input)="setText(plan.code, $event)" />
+          </sb-field>
+        }
+      </fieldset>
+    }
+  </form>
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton type="submit" form="feature-form" [disabled]="sending()">
+      {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати характеристику' }}
+    </button>
+  </div>
+</sb-modal>
