@@ -1,0 +1,23 @@
+<sb-modal [open]="open()" [title]="title()" [width]="520" [locked]="sending()" (closed)="closed.emit()">
+  <form id="category-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    <sb-field label="Назва категорії" onSurface [error]="nameError()">
+      <input type="text" autocomplete="off" placeholder="Наприклад, Подарунки" formControlName="name" />
+    </sb-field>
+
+    <sb-segmented [options]="typeOptions" formControlName="type" block onSurface ariaLabel="Тип категорії" />
+
+    <sb-icon-picker label="Іконка" formControlName="icon" />
+    <sb-color-picker label="Колір" formControlName="color" />
+  </form>
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    @if (editing()) {
+      <button sbButton variant="danger" type="button" [disabled]="sending()" (click)="requestDelete()">Видалити</button>
+      <span class="form-stack__spacer"></span>
+    }
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton type="submit" form="category-form" [disabled]="sending()">
+      {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати категорію' }}
+    </button>
+  </div>
+</sb-modal>
