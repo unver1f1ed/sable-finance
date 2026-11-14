@@ -131,3 +131,22 @@ export interface DashboardDto {
   byCategory: { categoryId: string; name: string; color: string; amount: number }[];
   recent: TransactionDto[];
 }
+
+export interface BudgetInput {
+  categoryId: string;
+  limitAmount: number;
+}
+
+export interface GoalInput {
+  name: string;
+  targetAmount: number;
+  deadline?: string | null;
+  icon: string;
+  color: string;
+}
+
+export interface ContributionInput {
+  amount: number;
+  accountId: string;
+  occurredOn: string;
+}

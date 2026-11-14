@@ -54,6 +54,10 @@ export class ReferenceDataStore {
     });
   }
 
+  reloadCategories(): void {
+    this.categoriesApi.list().subscribe({ next: (categories) => this.categoriesState.set(categories) });
+  }
+
   category(id: string): CategoryDto | undefined {
     return this.categoriesState().find((category) => category.id === id);
   }
