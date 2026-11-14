@@ -5,17 +5,12 @@
 
   <nav class="public-nav" aria-label="Основна навігація">
     <ul class="public-nav__list">
-      <li><a class="public-nav__link" routerLink="/" fragment="features">Можливості</a></li>
+      <li><sb-nav-dropdown label="Можливості" [items]="featureLinks" /></li>
       <li>
         <a class="public-nav__link" routerLink="/plans" routerLinkActive="public-nav__link--active" ariaCurrentWhenActive="page">Тарифи</a>
       </li>
       <li><a class="public-nav__link" routerLink="/" fragment="app">Застосунок</a></li>
-      <li>
-        <a class="public-nav__link" routerLink="/help" routerLinkActive="public-nav__link--active" ariaCurrentWhenActive="page">Довідка</a>
-      </li>
-      <li>
-        <a class="public-nav__link" routerLink="/about" routerLinkActive="public-nav__link--active" ariaCurrentWhenActive="page">Про Sable</a>
-      </li>
+      <li><sb-nav-dropdown label="Довідка" [items]="helpLinks" [active]="helpActive()" /></li>
     </ul>
   </nav>
 
@@ -62,16 +57,25 @@
   <div class="mobile-menu" id="mobile-menu">
     <nav class="mobile-menu__nav" aria-label="Мобільне меню">
       <ul>
-        <li><a class="mobile-menu__link" routerLink="/" fragment="features" (click)="closeMenu()">Можливості</a></li>
+        <li>
+          <p class="mobile-menu__group">Можливості</p>
+          <ul class="mobile-menu__sub">
+            @for (item of featureLinks; track item.label) {
+              <li><a class="mobile-menu__link mobile-menu__link--sub" [routerLink]="item.route" [fragment]="item.fragment" (click)="closeMenu()">{{ item.label }}</a></li>
+            }
+          </ul>
+        </li>
         <li>
           <a class="mobile-menu__link" routerLink="/plans" routerLinkActive="mobile-menu__link--active" ariaCurrentWhenActive="page" (click)="closeMenu()">Тарифи</a>
         </li>
         <li><a class="mobile-menu__link" routerLink="/" fragment="app" (click)="closeMenu()">Застосунок</a></li>
         <li>
-          <a class="mobile-menu__link" routerLink="/help" routerLinkActive="mobile-menu__link--active" ariaCurrentWhenActive="page" (click)="closeMenu()">Довідка</a>
-        </li>
-        <li>
-          <a class="mobile-menu__link" routerLink="/about" routerLinkActive="mobile-menu__link--active" ariaCurrentWhenActive="page" (click)="closeMenu()">Про Sable</a>
+          <p class="mobile-menu__group">Довідка</p>
+          <ul class="mobile-menu__sub">
+            @for (item of helpLinks; track item.label) {
+              <li><a class="mobile-menu__link mobile-menu__link--sub" [routerLink]="item.route" [fragment]="item.fragment" (click)="closeMenu()">{{ item.label }}</a></li>
+            }
+          </ul>
         </li>
       </ul>
     </nav>

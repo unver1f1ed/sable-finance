@@ -7,6 +7,7 @@ import {
   PLATFORM_ID,
   ViewEncapsulation,
   afterNextRender,
+  computed,
   effect,
   inject,
   signal,
@@ -20,6 +21,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { ButtonDirective } from '../../shared/ui/button/button.directive';
 import { IconButtonDirective } from '../../shared/ui/icon-button/icon-button.directive';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
+import { NavDropdownComponent, NavDropdownItem } from '../../shared/ui/nav-dropdown/nav-dropdown.component';
 
 const SCROLL_THRESHOLD = 8;
 
@@ -41,6 +43,7 @@ interface FooterIconLink {
     ButtonDirective,
     IconButtonDirective,
     IconComponent,
+    NavDropdownComponent,
   ],
   templateUrl: './public-layout.component.html',
   host: { '(document:keydown.escape)': 'onEscape()', class: 'public-layout' },
@@ -50,6 +53,16 @@ interface FooterIconLink {
 export class PublicLayoutComponent {
   protected readonly menuOpen = signal(false);
   protected readonly scrolled = signal(false);
+  protected readonly featureLinks: NavDropdownItem[] = [
+    { label: 'Облік і транзакції', route: '/', fragment: 'features' },
+    { label: 'Бюджети', route: '/', fragment: 'budgets' },
+    { label: 'Цілі', route: '/', fragment: 'goals' },
+  ];
+  protected readonly helpLinks: NavDropdownItem[] = [
+    { label: 'Питання та відповіді', route: '/help' },
+    { label: 'Про Sable', route: '/about' },
+    { label: 'Контакти', route: '/about', fragment: 'contact' },
+  ];
   protected readonly socialLinks: FooterIconLink[] = [
     { icon: 'message', label: 'Довідка', route: '/help' },
     { icon: 'mail', label: 'Написати на пошту', href: 'mailto:help@sable.ua' },
@@ -71,6 +84,8 @@ export class PublicLayoutComponent {
     ),
     { initialValue: this.pathOf(this.router.url) },
   );
+
+  protected readonly helpActive = computed(() => this.path() === '/help' || this.path() === '/about');
 
   constructor() {
     const destroyRef = inject(DestroyRef);

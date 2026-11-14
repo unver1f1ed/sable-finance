@@ -27,14 +27,18 @@
       </h2>
     </div>
     <div class="benefits__stage">
-      <img
-        class="benefits__phone"
-        src="/images/app-phone.webp"
-        alt="Застосунок Sable на екрані смартфона"
-        width="1600"
-        height="1027"
-        loading="lazy"
-      />
+      <figure class="benefits__phone phone">
+        <div class="phone__frame">
+          <img
+            class="phone__screen"
+            src="/images/app-overview.webp"
+            alt="Огляд фінансів у кабінеті Sable на екрані смартфона"
+            width="750"
+            height="1456"
+            loading="lazy"
+          />
+        </div>
+      </figure>
       <ul class="benefits__list">
         @for (benefit of benefits; track benefit.title; let i = $index) {
           <li class="benefit" [class.benefit--right]="i > 1" [sbReveal]="i * 90">
@@ -82,7 +86,7 @@
   </div>
 </section>
 
-<section class="showcase" aria-labelledby="showcase-title">
+<section class="showcase" id="budgets" aria-labelledby="showcase-title">
   <div class="container">
     <div class="showcase__top">
       <img
@@ -100,7 +104,7 @@
   </div>
 </section>
 
-<section class="panels" aria-label="Можливості Sable">
+<section class="panels" id="goals" aria-label="Можливості Sable">
   <div class="panels__text">
     @for (step of steps; track step.title; let i = $index) {
       <article class="step" [class.step--active]="i === 0" [sbReveal]="i * 100">

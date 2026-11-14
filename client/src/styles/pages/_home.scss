@@ -54,6 +54,10 @@
 
   &__title {
     max-width: 900px;
+
+    @include desktop {
+      max-width: 720px;
+    }
   }
 
   &__cta {
@@ -117,17 +121,14 @@
   }
 
   &__phone {
-    width: 100%;
-    max-width: 640px;
-    height: auto;
     margin: 0 auto;
 
     @include desktop {
       position: absolute;
-      top: -28.6%;
-      left: 0;
-      max-width: 1238px;
-      width: 100%;
+      top: -4%;
+      left: 50%;
+      margin: 0;
+      transform: translateX(-50%);
     }
   }
 
@@ -602,5 +603,29 @@
     @include desktop {
       height: 61px;
     }
+  }
+}
+
+.phone {
+  width: min(260px, 70vw);
+
+  @include desktop {
+    width: 300px;
+  }
+
+  &__frame {
+    padding: 10px;
+    border: 2px solid var(--color-handle);
+    border-radius: 44px;
+    background: var(--color-surface);
+    overflow: hidden;
+    rotate: -3deg;
+  }
+
+  &__screen {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 34px;
   }
 }
