@@ -61,6 +61,15 @@
     flex-direction: column;
     gap: 6px;
   }
+
+  &--danger {
+    border-color: var(--color-danger-border-soft);
+    background: var(--color-danger-faint);
+
+    sb-icon {
+      color: var(--color-danger);
+    }
+  }
 }
 
 .toggle-row {

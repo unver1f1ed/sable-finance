@@ -90,6 +90,10 @@ export class AuthService {
     this.writeRefreshToken(response.refreshToken, remember);
   }
 
+  updateUser(user: UserDto): void {
+    this.userState.set(user);
+  }
+
   clearSession(): void {
     this.accessToken = null;
     this.accessTokenExpiresAt = 0;
