@@ -1,0 +1,49 @@
+<sb-modal [open]="open()" title="Редагування користувача" [width]="520" [locked]="sending()" (closed)="closed.emit()">
+  @if (user(); as account) {
+    <form id="admin-user-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+      <div class="settings-identity">
+        <sb-avatar size="lg" [name]="account.firstName + ' ' + account.lastName" />
+        <div class="settings-identity__text">
+          <p class="text-h5">{{ account.firstName }} {{ account.lastName }}</p>
+          <p class="text-small text-muted">{{ account.email }}</p>
+        </div>
+      </div>
+
+      <div class="form-stack__pair">
+        <sb-field label="Ім’я" onSurface [error]="error('firstName')">
+          <input type="text" autocomplete="off" formControlName="firstName" />
+        </sb-field>
+        <sb-field label="Прізвище" onSurface [error]="error('lastName')">
+          <input type="text" autocomplete="off" formControlName="lastName" />
+        </sb-field>
+      </div>
+
+      <div class="form-stack">
+        <p class="text-small text-muted" id="admin-user-role">Роль</p>
+        <sb-segmented [options]="roleOptions" formControlName="role" block onSurface ariaLabel="Роль" />
+        <p class="text-small text-muted">Адміністратор має доступ до цього розділу й може змінювати вміст сайту.</p>
+      </div>
+
+      <sb-select label="Тариф" onSurface formControlName="planCode" [options]="planOptions()" />
+
+      <div class="toggle-row">
+        <div class="toggle-row__text">
+          <p class="text-body">Заблокувати доступ</p>
+          <p class="text-small text-muted">Користувач не зможе увійти, поточні сеанси завершаться.</p>
+        </div>
+        <sb-toggle label="Заблокувати доступ" formControlName="isBlocked" />
+      </div>
+
+      @if (isSelf()) {
+        <p class="text-small text-muted" role="note">Не можна змінити власну роль, заблокувати чи видалити власний акаунт</p>
+      }
+    </form>
+  }
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    <button sbButton variant="danger" type="button" [disabled]="sending() || isSelf()" (click)="requestDelete()">Видалити акаунт</button>
+    <span class="form-stack__spacer"></span>
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton type="submit" form="admin-user-form" [disabled]="sending()">{{ sending() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+  </div>
+</sb-modal>

@@ -1,0 +1,184 @@
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">Користувачі</h1>
+    <p class="text-body text-muted">Облікові записи, ролі та доступ до сервісу</p>
+  </div>
+</header>
+
+<section class="admin-stats" aria-label="Статистика користувачів">
+  @if (stats(); as total) {
+    <div class="card admin-stat">
+      <p class="text-label">Усього користувачів</p>
+      <p class="admin-stat__value num">{{ total.total }}</p>
+    </div>
+    <div class="card admin-stat">
+      <p class="text-label">Активні за місяць</p>
+      <p class="admin-stat__value num">{{ total.activeThisMonth }}</p>
+      @if (hints()?.active) {
+        <p class="text-tiny text-muted">{{ hints()?.active }}</p>
+      }
+    </div>
+    <div class="card admin-stat">
+      <p class="text-label">На тарифі Плюс</p>
+      <p class="admin-stat__value num">{{ total.onPlus }}</p>
+      @if (hints()?.plus) {
+        <p class="text-tiny text-muted">{{ hints()?.plus }}</p>
+      }
+    </div>
+    <div class="card admin-stat">
+      <p class="text-label">Заблоковані</p>
+      <p class="admin-stat__value num">{{ total.blocked }}</p>
+    </div>
+  } @else {
+    @for (row of [0, 1, 2, 3]; track row) {
+      <div class="card admin-stat" aria-busy="true"><sb-skeleton height="48" /></div>
+    }
+  }
+</section>
+
+<section class="card admin-panel" aria-label="Список користувачів">
+  <div class="admin-toolbar">
+    <sb-field class="admin-toolbar__search" label="Пошук за іменем або поштою" hideLabel>
+      <sb-icon fieldLeading name="search" [size]="18" />
+      <input type="search" autocomplete="off" placeholder="Пошук за іменем або поштою" [formControl]="searchControl" />
+    </sb-field>
+    <sb-select
+      label="Роль"
+      hideLabel
+      variant="pill"
+      [options]="roleOptions"
+      [ngModel]="filters().role ?? ''"
+      (ngModelChange)="update({ role: $event || null })"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <sb-select
+      label="Тариф"
+      hideLabel
+      variant="pill"
+      [options]="planFilterOptions()"
+      [ngModel]="filters().planCode ?? ''"
+      (ngModelChange)="update({ planCode: $event || null })"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <sb-select
+      label="Статус"
+      hideLabel
+      variant="pill"
+      [options]="statusOptions"
+      [ngModel]="filters().status ?? ''"
+      (ngModelChange)="update({ status: $event || null })"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <sb-select
+      label="Сортування"
+      hideLabel
+      variant="pill"
+      [options]="sortOptions"
+      [ngModel]="filters().sort"
+      (ngModelChange)="update({ sort: $event })"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="admin-skeleton" aria-busy="true">
+        @for (row of skeletonRows; track row) {
+          <sb-skeleton height="20" />
+        }
+      </div>
+    }
+    @case ('error') {
+      <sb-error-state (retry)="retry()" />
+    }
+    @default {
+      @if (data(); as list) {
+        @if (list.total === 0) {
+          <div class="tx-empty">
+            <sb-category-icon icon="search" />
+            <p class="text-h4">Нікого не знайдено</p>
+            <p class="text-body text-muted tx-empty__text">Спробуйте змінити запит або скинути фільтри.</p>
+            @if (filterCount() > 0) {
+              <button sbButton variant="ghost" type="button" (click)="resetFilters()">
+                <sb-icon name="refresh" [size]="16" />
+                Скинути фільтри
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="admin-list" [class.admin-list--busy]="busy()" [attr.aria-busy]="busy()">
+            <table class="admin-table">
+              <caption class="visually-hidden">
+                Користувачі
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Користувач</th>
+                  <th scope="col">Роль</th>
+                  <th scope="col">Тариф</th>
+                  <th scope="col" class="admin-table__right">Транзакцій</th>
+                  <th scope="col">Реєстрація</th>
+                  <th scope="col">Статус</th>
+                  <th scope="col"><span class="visually-hidden">Дії</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of list.items; track user.id) {
+                  @let st = status(user);
+                  <tr>
+                    <td class="admin-table__main">
+                      <div class="admin-person">
+                        <sb-avatar size="sm" [name]="fullName(user)" />
+                        <div class="admin-person__text">
+                          <button class="admin-person__name" type="button" (click)="editing.set(user)">{{ fullName(user) }}</button>
+                          <p class="text-tiny text-muted admin-person__sub">{{ user.email }}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Роль"><sb-badge [tone]="user.role === 'Admin' ? 'purple' : 'grey'">{{ user.role === 'Admin' ? 'Адмін' : 'Користувач' }}</sb-badge></td>
+                    <td data-label="Тариф"><sb-badge [tone]="user.planCode === 'plus' ? 'teal' : 'grey'">{{ planName(user.planCode) }}</sb-badge></td>
+                    <td data-label="Транзакцій" class="admin-table__right num text-muted">{{ user.transactionCount }}</td>
+                    <td data-label="Реєстрація" class="num text-muted">{{ date(user.createdAt) }}</td>
+                    <td data-label="Статус"><sb-badge [tone]="st.tone">{{ st.label }}</sb-badge></td>
+                    <td class="admin-table__actions">
+                      <button sbIconButton size="sm" type="button" [attr.aria-label]="'Редагувати: ' + fullName(user)" title="Редагувати" (click)="editing.set(user)">
+                        <sb-icon name="pencil" [size]="16" />
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <sb-pagination
+              [page]="filters().page"
+              [pageSize]="filters().pageSize"
+              [total]="list.total"
+              (pageChange)="update({ page: $event })"
+              (pageSizeChange)="update({ pageSize: $event })"
+            />
+          </div>
+        }
+      }
+    }
+  }
+</section>
+
+<sb-admin-user-modal
+  [open]="editing() !== null"
+  [user]="editing()"
+  [planOptions]="planOptions()"
+  [isSelf]="isSelf(editing())"
+  (closed)="editing.set(null)"
+  (saved)="onSaved()"
+  (deleteRequested)="askDelete($event)"
+/>
+<sb-confirm-dialog
+  [open]="deleting() !== null"
+  title="Видалити акаунт?"
+  [message]="deleteMessage()"
+  confirmLabel="Видалити"
+  danger
+  [busy]="deleteBusy()"
+  (confirm)="confirmDelete()"
+  (cancel)="deleting.set(null)"
+/>
