@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CountUpDirective } from '../../../shared/directives/count-up.directive';
+import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { ButtonDirective } from '../../../shared/ui/button/button.directive';
 import { CategoryIconComponent } from '../../../shared/ui/category-icon/category-icon.component';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
@@ -19,7 +21,7 @@ interface Principle {
 
 @Component({
   selector: 'sb-about-page',
-  imports: [RouterLink, ButtonDirective, CategoryIconComponent, IconComponent, SableCardComponent, ContactFormComponent],
+  imports: [RouterLink, ButtonDirective, CategoryIconComponent, CountUpDirective, IconComponent, RevealDirective, SableCardComponent, ContactFormComponent],
   templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

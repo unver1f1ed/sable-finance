@@ -66,6 +66,14 @@
   --header-height: 72px;
   --header-height-stuck: 64px;
   --header-offset: 64px;
+
+  --motion-fast: 160ms;
+  --motion-base: 320ms;
+  --motion-slow: 700ms;
+  --motion-float: 8s;
+  --motion-marquee: 50s;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: ease-in-out;
 }
 
 @include desktop {

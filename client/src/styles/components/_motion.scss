@@ -1,0 +1,140 @@
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes hero-float {
+  from {
+    translate: 0 -6px;
+    rotate: -0.6deg;
+  }
+
+  to {
+    translate: 0 8px;
+    rotate: 0.8deg;
+  }
+}
+
+@keyframes icon-turn {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
+  will-change: opacity, transform;
+
+  &--in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.btn {
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+
+  &:not(:disabled):hover {
+    transform: translate3d(0, -1px, 0);
+  }
+
+  &:not(:disabled):active {
+    transform: none;
+  }
+}
+
+.plan-card.card,
+.about-principles .card,
+.benefit {
+  transition:
+    transform var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) ease;
+
+  &:hover {
+    transform: translate3d(0, -2px, 0);
+    border-color: var(--color-accent-border);
+  }
+}
+
+.tiles__item {
+  transition: transform var(--motion-base) var(--ease-out);
+
+  &:hover {
+    transform: scale(1.04);
+  }
+}
+
+.faq__chevron {
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.faq__icon--open .faq__chevron {
+  transform: rotate(180deg);
+}
+
+.public-header__mobile[aria-expanded='true'] sb-icon {
+  animation: icon-turn var(--motion-base) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal--in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero__bg {
+    animation: none;
+  }
+
+  .compare__track,
+  .press__track {
+    animation: none;
+  }
+
+  .compare__group:not(:first-child),
+  .press__list--copy {
+    display: none;
+  }
+
+  .btn,
+  .plan-card.card,
+  .about-principles .card,
+  .benefit,
+  .tiles__item,
+  .faq__chevron {
+    transition: none;
+  }
+
+  .btn:not(:disabled):hover,
+  .plan-card.card:hover,
+  .about-principles .card:hover,
+  .benefit:hover,
+  .tiles__item:hover {
+    transform: none;
+  }
+
+  .public-header__mobile[aria-expanded='true'] sb-icon {
+    animation: none;
+  }
+}
