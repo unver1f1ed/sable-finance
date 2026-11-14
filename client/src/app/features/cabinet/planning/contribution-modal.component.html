@@ -1,0 +1,69 @@
+<sb-modal [open]="open()" title="Внесок у ціль" [width]="540" [locked]="sending()" (closed)="closed.emit()">
+  @if (goal(); as goal) {
+    <form id="contribution-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+      <div class="goal-summary">
+        <sb-category-icon [icon]="goal.icon" [color]="goal.color" />
+        <div class="goal-summary__body">
+          <div class="goal-summary__head">
+            <p class="text-body text-semibold goal-summary__name">{{ goal.name }}</p>
+            <p class="text-small text-muted num">{{ progressText() }}</p>
+          </div>
+          <sb-progress [value]="progressPercent()" [tone]="goal.color" [label]="'Ціль: ' + goal.name" />
+        </div>
+      </div>
+
+      <sb-amount-field label="Сума внеску" onSurface formControlName="amount" [error]="amountError()" />
+
+      @if (suggestions().length > 0 || remaining() > 0) {
+        <div class="chips-row" role="group" aria-label="Швидкий вибір суми">
+          @for (value of suggestions(); track value) {
+            <button class="chip" type="button" [class.chip--active]="amount() === value" [attr.aria-pressed]="amount() === value" (click)="setAmount(value)">
+              {{ chipLabel(value) }}
+            </button>
+          }
+          <button class="chip" type="button" [class.chip--active]="amount() === remaining()" [attr.aria-pressed]="amount() === remaining()" (click)="setAmount(remaining())">
+            Уся решта
+          </button>
+        </div>
+      }
+
+      <div class="form-stack__pair">
+        <sb-select label="З рахунку" onSurface formControlName="accountId" [options]="accountOptions()" />
+        <sb-field label="Дата" onSurface>
+          <input type="date" formControlName="occurredOn" [max]="maxDate" />
+        </sb-field>
+      </div>
+
+      @if (lowBalance()) {
+        <div class="notice" role="status">
+          <sb-icon name="alert" [size]="18" />
+          <p class="text-small">На рахунку недостатньо коштів — баланс стане від’ємним</p>
+        </div>
+      }
+
+      @if (preview(); as result) {
+        <div class="preview" aria-live="polite">
+          <div class="preview__item">
+            <p class="text-small text-muted">Після внеску</p>
+            <p class="text-body text-semibold num">{{ money(result.after) }} · {{ result.percent }}% цілі</p>
+          </div>
+          <div class="preview__item preview__item--right">
+            @if (result.achieved) {
+              <p class="text-body text-semibold">Ціль буде досягнуто</p>
+            } @else {
+              <p class="text-small text-muted">Залишиться зібрати</p>
+              <p class="text-body text-semibold num">{{ money(result.remaining) }}</p>
+            }
+          </div>
+        </div>
+      }
+    </form>
+  }
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton type="submit" form="contribution-form" [disabled]="sending()">
+      {{ sending() ? 'Вносимо…' : submitLabel() }}
+    </button>
+  </div>
+</sb-modal>

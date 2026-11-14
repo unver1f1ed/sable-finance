@@ -301,8 +301,9 @@
   (cancel)="deleting.set(null)"
 />
 
-<sb-modal [open]="upgradeOpen()" title="Експорт доступний у тарифі Плюс" [width]="460" (closed)="upgradeOpen.set(false)">
-  <p class="text-body text-muted">Перейдіть на Плюс, щоб вивантажувати транзакції у файл CSV.</p>
-  <button modalFooter sbButton variant="ghost" type="button" (click)="upgradeOpen.set(false)">Закрити</button>
-  <a modalFooter sbButton routerLink="/app/settings" fragment="plan" (click)="upgradeOpen.set(false)">Перейти на Плюс</a>
-</sb-modal>
+<sb-upgrade-dialog
+  [open]="upgradeOpen()"
+  title="Експорт доступний у тарифі Плюс"
+  message="Перейдіть на Плюс, щоб вивантажувати транзакції у файл CSV."
+  (closed)="upgradeOpen.set(false)"
+/>

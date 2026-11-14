@@ -1,0 +1,57 @@
+<sb-modal [open]="open()" [title]="title()" [width]="520" [locked]="sending()" (closed)="closed.emit()">
+  @if (noCategoriesLeft()) {
+    <div class="notice">
+      <sb-icon name="info" [size]="18" />
+      <p class="text-small">Для всіх категорій витрат бюджети вже створено. Змініть ліміт наявного бюджету або видаліть його.</p>
+    </div>
+  } @else {
+    <form id="budget-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+      @if (editing()) {
+        <p class="text-body">{{ budget()?.category?.name }}</p>
+      } @else {
+        <sb-select
+          label="Категорія"
+          onSurface
+          formControlName="categoryId"
+          placeholder="Оберіть категорію"
+          [options]="categoryOptions()"
+          [error]="error('categoryId')"
+        />
+      }
+
+      <sb-amount-field label="Ліміт на місяць" onSurface formControlName="limitAmount" [error]="error('limitAmount')" />
+
+      @if (!editing()) {
+        <div class="toggle-row">
+          <div class="toggle-row__text">
+            <p class="text-body">Повторювати щомісяця</p>
+            <p class="text-small text-muted">Бюджет завжди діє щомісяця, цей параметр не вимикається</p>
+          </div>
+          <sb-toggle label="Повторювати щомісяця" formControlName="recurring" />
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row__text">
+            <p class="text-body">Попереджати на 85% ліміту</p>
+            <p class="text-small text-muted">Стан «Майже ліміт» показується завжди</p>
+          </div>
+          <sb-toggle label="Попереджати на 85% ліміту" formControlName="warn" />
+        </div>
+        @if (hint()) {
+          <div class="hint-box">
+            <sb-icon name="info" [size]="18" />
+            <p class="text-small text-muted">{{ hint() }}</p>
+          </div>
+        }
+      }
+    </form>
+  }
+
+  @if (!noCategoriesLeft()) {
+    <div modalFooter class="form-stack__actions form-stack__footer">
+      <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+      <button sbButton type="submit" form="budget-form" [disabled]="sending()">
+        {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти' : 'Створити бюджет' }}
+      </button>
+    </div>
+  }
+</sb-modal>
