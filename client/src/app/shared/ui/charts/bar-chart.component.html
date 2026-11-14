@@ -23,7 +23,7 @@
           (focus)="show(group.index)"
           (blur)="hide(group.index)"
         >
-          <rect class="bar-chart__hit" [attr.x]="group.center - 30" [attr.y]="0" width="60" [attr.height]="baseline + 28" />
+          <rect class="bar-chart__hit" [attr.x]="group.center - 30" [attr.y]="0" width="60" rx="8" [attr.height]="baseline + 28" />
           <rect
             class="bar-chart__bar bar-chart__bar--income"
             rx="5"

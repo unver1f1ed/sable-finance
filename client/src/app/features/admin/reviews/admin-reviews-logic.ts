@@ -1,7 +1,7 @@
 import { ParamMap } from '@angular/router';
 import { AdminReviewQuery, AdminReviewStatus } from '../../../core/models/admin';
 
-export const REVIEW_PAGE_SIZES = [10, 20, 50] as const;
+const REVIEW_PAGE_SIZES = [10, 20, 50] as const;
 export const REVIEW_TEXT_MIN = 10;
 export const REVIEW_TEXT_MAX = 280;
 

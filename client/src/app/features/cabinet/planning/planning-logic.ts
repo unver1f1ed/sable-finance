@@ -3,7 +3,7 @@ import { parseIsoDate, toIsoDate } from '../../../shared/util/date';
 import { formatDate, formatMoney } from '../../../shared/util/format';
 import { pluralize } from '../../../shared/util/plural';
 
-export type BudgetStateKind = 'ok' | 'near' | 'full' | 'over';
+type BudgetStateKind = 'ok' | 'near' | 'full' | 'over';
 
 export interface BudgetState {
   kind: BudgetStateKind;

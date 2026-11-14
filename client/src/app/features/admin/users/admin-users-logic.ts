@@ -4,8 +4,8 @@ import { PlanCode } from '../../../core/models/public-content';
 import { Role } from '../../../core/models/auth';
 import { BadgeTone } from '../../../shared/ui/badge/badge.component';
 
-export const USER_PAGE_SIZES = [10, 20, 50] as const;
-export const DEFAULT_USER_SORT: AdminUserSort = 'created_desc';
+const USER_PAGE_SIZES = [10, 20, 50] as const;
+const DEFAULT_USER_SORT: AdminUserSort = 'created_desc';
 
 const SORTS: AdminUserSort[] = ['created_desc', 'created_asc', 'name_asc'];
 const PERCENT_FORMAT = new Intl.NumberFormat('uk-UA', { maximumFractionDigits: 1 });

@@ -1,4 +1,4 @@
-export const MAX_RATING = 5;
+const MAX_RATING = 5;
 
 export function nextRating(current: number, key: string): number | null {
   switch (key) {

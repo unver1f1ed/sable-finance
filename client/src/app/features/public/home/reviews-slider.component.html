@@ -8,16 +8,16 @@
   >
     <div class="slider__track" [style.--position]="current()">
       @for (review of reviews(); track review.id) {
-        <article class="slider__card">
+        <figure class="slider__card">
           <img class="slider__quote" src="/images/quote.svg" alt="" width="39" height="31" loading="lazy" />
           <div class="slider__content">
             <blockquote class="slider__text">{{ review.text }}</blockquote>
-            <footer class="slider__author">
+            <figcaption class="slider__author">
               <span class="slider__line" aria-hidden="true"></span>
               <cite class="slider__name">{{ review.author }}</cite>
-            </footer>
+            </figcaption>
           </div>
-        </article>
+        </figure>
       }
     </div>
   </div>
