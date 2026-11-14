@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Directive, ElementRef, PLATFORM_ID, afterNextRender, inject, input } from '@angular/core';
 import { CountSpec, easeOutCubic, formatCount, parseCount } from './count-up';
-import { prefersReducedMotion } from './motion';
+import { prefersReducedMotion, whenIdle } from './motion';
 
 @Directive({ selector: '[sbCountUp]' })
 export class CountUpDirective {
@@ -11,7 +11,7 @@ export class CountUpDirective {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
-    afterNextRender(() => this.init());
+    afterNextRender(() => whenIdle(() => this.init()));
   }
 
   private init(): void {

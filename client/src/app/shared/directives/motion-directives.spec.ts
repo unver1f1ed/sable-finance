@@ -19,6 +19,7 @@ type ObserverCallback = (entries: { isIntersecting: boolean }[]) => void;
 let observerCallback: ObserverCallback | null = null;
 
 function mockEnvironment(reduced: boolean): void {
+  vi.stubGlobal('requestIdleCallback', (callback: () => void) => callback());
   vi.stubGlobal('matchMedia', (query: string) => ({ matches: reduced && query.includes('reduce'), media: query, addEventListener: () => undefined, removeEventListener: () => undefined }));
   vi.stubGlobal(
     'IntersectionObserver',

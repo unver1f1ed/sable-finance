@@ -1,12 +1,13 @@
 {
   "navigationFallback": {
     "rewrite": "/index.csr.html",
-    "exclude": ["/icons/*", "/images/*", "/media/*", "/*.{css,js,svg,png,webp,avif,ico,woff2,txt,xml}"]
+    "exclude": ["/icons/*", "/images/*", "/fonts/*", "/media/*", "/*.{css,js,svg,png,webp,avif,ico,woff2,txt,xml}"]
   },
   "routes": [
     { "route": "/*.js", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
     { "route": "/*.css", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
     { "route": "/media/*", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
+    { "route": "/fonts/*", "headers": { "cache-control": "public, max-age=2592000" } },
     { "route": "/images/*", "headers": { "cache-control": "public, max-age=604800" } },
     { "route": "/icons/*", "headers": { "cache-control": "public, max-age=604800" } }
   ],
