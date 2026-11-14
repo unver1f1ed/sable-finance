@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonDirective } from '../../../shared/ui/button/button.directive';
 import { IconComponent } from '../../../shared/ui/icon/icon.component';
+import { CountUpDirective } from '../../../shared/directives/count-up.directive';
+import { ParallaxDirective } from '../../../shared/directives/parallax.directive';
+import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { PublicContentService } from '../data/public-content.service';
 import { PlansCompareComponent } from '../plans-compare/plans-compare.component';
 import { ReviewsSliderComponent } from './reviews-slider.component';
@@ -25,7 +28,7 @@ interface Step {
 
 @Component({
   selector: 'sb-home-page',
-  imports: [RouterLink, ButtonDirective, IconComponent, PlansCompareComponent, ReviewsSliderComponent],
+  imports: [RouterLink, ButtonDirective, CountUpDirective, IconComponent, ParallaxDirective, PlansCompareComponent, RevealDirective, ReviewsSliderComponent],
   templateUrl: './home-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -36,6 +39,8 @@ export class HomePageComponent {
   protected readonly plans = this.content.plans();
   protected readonly reviews = this.content.reviews();
   protected readonly stars = [1, 2, 3, 4, 5];
+  protected readonly pressCopies = [0, 1];
+  protected readonly averageText = computed(() => String(this.reviews().average));
 
   protected readonly benefits: Benefit[] = [
     {

@@ -22,8 +22,8 @@
 <section class="container about-stats" aria-label="Sable у цифрах">
   <ul class="about-stats__list">
     @for (stat of stats; track stat.value) {
-      <li class="about-stats__item">
-        <p class="about-stats__value num">{{ stat.value }}</p>
+      <li class="about-stats__item" [sbReveal]="$index * 100">
+        <p class="about-stats__value num"><span sbCountUp [textContent]="stat.value"></span></p>
         <p class="text-lead text-muted">{{ stat.text }}</p>
       </li>
     }

@@ -1,8 +1,18 @@
 <section class="compare" aria-labelledby="compare-title">
   <div class="compare__banner">
-    <h2 class="compare__banner-text text-display" id="compare-title">Порівняйте тарифи</h2>
-    <span class="compare__banner-dot" aria-hidden="true"></span>
-    <p class="compare__banner-text compare__banner-text--copy text-display" aria-hidden="true">Порівняйте тарифи</p>
+    <h2 class="visually-hidden" id="compare-title">Порівняйте тарифи</h2>
+    <div class="compare__marquee" aria-hidden="true">
+      <div class="compare__track">
+        @for (group of marqueeGroups; track group) {
+          <div class="compare__group">
+            @for (phrase of marqueePhrases; track phrase) {
+              <p class="compare__banner-text text-display">Порівняйте тарифи</p>
+              <span class="compare__banner-dot"></span>
+            }
+          </div>
+        }
+      </div>
+    </div>
   </div>
 
   <div class="container compare__body">

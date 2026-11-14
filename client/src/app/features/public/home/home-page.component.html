@@ -1,6 +1,7 @@
 <section class="hero">
   <img
     class="hero__bg"
+    sbParallax
     src="/images/hero-cards.webp"
     alt=""
     width="1500"
@@ -20,8 +21,8 @@
 <section class="benefits" id="features" aria-labelledby="benefits-title">
   <div class="container">
     <div class="benefits__intro">
-      <p class="text-eyebrow">400 000 користувачів і більше</p>
-      <h2 class="benefits__title text-h2" id="benefits-title">
+      <p class="text-eyebrow" sbReveal><span sbCountUp>400 000</span> користувачів і більше</p>
+      <h2 class="benefits__title text-h2" id="benefits-title" [sbReveal]="80">
         <b>Жодних прихованих платежів.</b> Жодних таблиць. Жодних перепон на шляху до ваших цілей.
       </h2>
     </div>
@@ -36,7 +37,7 @@
       />
       <ul class="benefits__list">
         @for (benefit of benefits; track benefit.title; let i = $index) {
-          <li class="benefit" [class.benefit--right]="i > 1">
+          <li class="benefit" [class.benefit--right]="i > 1" [sbReveal]="i * 90">
             <sb-icon class="text-accent" [name]="benefit.icon" [size]="38" />
             <h3 class="benefit__title text-h4">{{ benefit.title }}</h3>
             <p class="text-body text-muted">{{ benefit.text }}</p>
@@ -45,18 +46,24 @@
       </ul>
     </div>
   </div>
-  <ul class="press" aria-label="Про Sable пишуть">
-    @for (logo of press; track $index) {
-      <li class="press__item">
-        <img class="press__logo" [src]="logo.src" [alt]="logo.alt" [attr.width]="logo.width" height="46" loading="lazy" />
-      </li>
-    }
-  </ul>
+  <div class="press">
+    <div class="press__track">
+      @for (copy of pressCopies; track copy) {
+        <ul class="press__list" [class.press__list--copy]="copy === 1" [attr.aria-label]="copy === 0 ? 'Про Sable пишуть' : null" [attr.aria-hidden]="copy === 1 ? 'true' : null">
+          @for (logo of press; track $index) {
+            <li class="press__item">
+              <img class="press__logo" [src]="logo.src" [alt]="copy === 0 ? logo.alt : ''" [attr.width]="logo.width" height="46" loading="lazy" />
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
 </section>
 
 <section class="overview" aria-labelledby="overview-title">
   <div class="container overview__inner">
-    <div class="overview__text">
+    <div class="overview__text" sbReveal>
       <h2 class="overview__title text-h2" id="overview-title">
         Повна картина доходів і витрат <span class="text-strong">в одному кабінеті.</span>
       </h2>
@@ -65,7 +72,7 @@
       </p>
     </div>
     <img
-      class="overview__card"
+      class="overview__card" [sbReveal]="120"
       src="/images/card-dark.webp"
       alt=""
       width="330"
@@ -79,14 +86,14 @@
   <div class="container">
     <div class="showcase__top">
       <img
-        class="showcase__card"
+        class="showcase__card" sbReveal
         src="/images/card-light.webp"
         alt=""
         width="330"
         height="518"
         loading="lazy"
       />
-      <h2 class="showcase__title text-h2" id="showcase-title">
+      <h2 class="showcase__title text-h2" id="showcase-title" [sbReveal]="100">
         Перший бюджет і перша ціль — <span class="text-strong">за п’ять хвилин.</span>
       </h2>
     </div>
@@ -96,7 +103,7 @@
 <section class="panels" aria-label="Можливості Sable">
   <div class="panels__text">
     @for (step of steps; track step.title; let i = $index) {
-      <article class="step" [class.step--active]="i === 0">
+      <article class="step" [class.step--active]="i === 0" [sbReveal]="i * 100">
         <h3 class="step__title">{{ step.title }}</h3>
         <p class="step__text text-lead">{{ step.text }}</p>
       </article>
@@ -120,14 +127,14 @@
 
 @if (reviews().items.length > 0) {
   <section class="reviews">
-    <div class="reviews__summary">
+    <div class="reviews__summary" sbReveal>
       <h2 class="visually-hidden">Відгуки користувачів</h2>
       <div class="reviews__stars" aria-hidden="true">
         @for (star of stars; track star) {
           <img src="/images/star.svg" alt="" width="22" height="22" loading="lazy" />
         }
       </div>
-      <p class="reviews__average">{{ reviews().average }}</p>
+      <p class="reviews__average"><span sbCountUp [textContent]="averageText()"></span></p>
       <p class="text-small text-muted">середня оцінка користувачів</p>
     </div>
     <div class="container reviews__slider">
@@ -138,7 +145,7 @@
 
 <section class="download" id="app" aria-labelledby="download-title">
   <div class="container">
-    <div class="download__card">
+    <div class="download__card" sbReveal>
       <img
         class="download__bg"
         src="/images/download-bg.webp"

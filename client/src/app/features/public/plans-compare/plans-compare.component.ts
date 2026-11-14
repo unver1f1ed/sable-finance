@@ -22,6 +22,8 @@ export class PlansCompareComponent {
   readonly billing = input<Billing>('yearly');
   readonly visual = input<CompareVisual>('cards');
 
+  protected readonly marqueeGroups = [0, 1];
+  protected readonly marqueePhrases = [0, 1, 2];
   protected readonly columns = computed(() => {
     const plans = this.data().plans;
     return ['plus', 'start'].flatMap((code) => plans.filter((plan) => plan.code === code));

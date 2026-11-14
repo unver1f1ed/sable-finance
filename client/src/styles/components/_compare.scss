@@ -8,43 +8,48 @@
   }
 
   &__banner {
-    display: flex;
-    align-items: center;
-    gap: 64px;
-    padding: 0 var(--space-page-mobile);
     overflow: hidden;
+  }
+
+  &__marquee {
+    overflow: hidden;
+  }
+
+  &__track {
+    display: flex;
+    width: max-content;
+    animation: marquee-left var(--motion-marquee) linear infinite;
+  }
+
+  &__banner:hover &__track,
+  &__banner:focus-within &__track {
+    animation-play-state: paused;
+  }
+
+  &__group {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 40px;
+    padding-right: 40px;
 
     @include desktop {
-      padding: 0 0 0 101px;
+      gap: 64px;
+      padding-right: 64px;
     }
   }
 
   &__banner-text {
-    @include desktop {
-      flex: none;
-      white-space: nowrap;
-    }
-
-    &--copy {
-      display: none;
-
-      @include desktop {
-        display: block;
-      }
-    }
+    flex: none;
+    white-space: nowrap;
   }
 
   &__banner-dot {
-    display: none;
     flex: none;
     width: 16px;
     height: 16px;
     border-radius: var(--radius-pill);
     background: var(--color-white);
-
-    @include desktop {
-      display: block;
-    }
   }
 
   &__body {
