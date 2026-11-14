@@ -4,6 +4,10 @@
   color: var(--color-accent-strong);
 }
 
+.showcase .text-strong {
+  color: var(--color-accent-on-light);
+}
+
 .hero {
   position: relative;
   display: flex;
@@ -316,7 +320,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  opacity: 0.3;
+  opacity: 0.5;
 
   &--active {
     opacity: 1;
