@@ -103,6 +103,12 @@
   &__question {
     min-width: 0;
     overflow-wrap: anywhere;
+
+    @include desktop {
+      font-size: 21px;
+      line-height: 28px;
+      font-weight: 500;
+    }
   }
 
   &__icon {

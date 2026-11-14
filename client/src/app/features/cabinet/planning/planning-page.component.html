@@ -22,7 +22,7 @@
       <div class="card plan-summary" aria-busy="true"><sb-skeleton height="60" /></div>
       <div class="plan-grid">
         @for (item of skeletons; track item) {
-          <div class="card plan-card"><sb-skeleton height="110" /></div>
+          <div class="card planning-card"><sb-skeleton height="110" /></div>
         }
       </div>
     }
@@ -70,11 +70,11 @@
         <div class="plan-grid">
           @for (budget of visibleBudgets(); track budget.id) {
             @let st = state(budget);
-            <article class="card plan-card" [class.plan-card--over]="st.danger">
-              <div class="plan-card__head">
+            <article class="card planning-card" [class.planning-card--over]="st.danger">
+              <div class="planning-card__head">
                 <sb-category-icon size="sm" [icon]="budget.category.icon" [color]="budget.category.color" />
-                <div class="plan-card__title">
-                  <a class="plan-card__name text-body text-semibold" routerLink="/app/transactions" [queryParams]="{ categoryId: budget.category.id, type: 'Expense', month: month() }">
+                <div class="planning-card__title">
+                  <a class="planning-card__name text-body text-semibold" routerLink="/app/transactions" [queryParams]="{ categoryId: budget.category.id, type: 'Expense', month: month() }">
                     {{ budget.category.name }}
                   </a>
                   <p class="text-tiny text-muted">Ліміт {{ money(budget.limitAmount) }} на місяць</p>
@@ -110,7 +110,7 @@
                   }
                 </div>
               </div>
-              <div class="plan-card__amount">
+              <div class="planning-card__amount">
                 <p class="text-h4 num">{{ money(budget.spent) }}</p>
                 @if (st.badge) {
                   <sb-badge [tone]="st.badgeTone ?? 'grey'">{{ st.badge }}</sb-badge>
@@ -152,7 +152,7 @@
     @case ('loading') {
       <div class="plan-grid plan-grid--wide" aria-busy="true">
         @for (item of skeletons; track item) {
-          <div class="card plan-card"><sb-skeleton height="130" /></div>
+          <div class="card planning-card"><sb-skeleton height="130" /></div>
         }
       </div>
     }
@@ -168,11 +168,11 @@
         <div class="plan-grid plan-grid--wide">
           @for (goal of goals().data; track goal.id) {
             @let line = deadline(goal);
-            <article class="card plan-card plan-card--goal" [class.plan-card--dim]="goal.isArchived">
-              <div class="plan-card__head">
+            <article class="card planning-card planning-card--goal" [class.planning-card--dim]="goal.isArchived">
+              <div class="planning-card__head">
                 <sb-category-icon [icon]="goal.icon" [color]="goal.color" />
-                <div class="plan-card__title">
-                  <h3 class="text-h5 plan-card__name">{{ goal.name }}</h3>
+                <div class="planning-card__title">
+                  <h3 class="text-h5 planning-card__name">{{ goal.name }}</h3>
                   <p class="text-small" [class.text-muted]="!line.warning" [class.text-warning]="line.warning">{{ line.text }}</p>
                 </div>
                 <div class="row-menu">
@@ -214,18 +214,18 @@
                   }
                 </div>
               </div>
-              <div class="plan-card__amount">
-                <p class="plan-card__big num">
+              <div class="planning-card__amount">
+                <p class="planning-card__big num">
                   {{ money(goal.currentAmount) }}
                   <span class="text-small text-muted">із {{ money(goal.targetAmount) }}</span>
                 </p>
                 <p class="text-h4 num" [style.color]="goal.color">{{ goalPercent(goal) }}%</p>
               </div>
               <sb-progress [value]="goalPercent(goal)" [tone]="goal.color" thick [label]="'Ціль: ' + goal.name" />
-              <div class="plan-card__foot">
+              <div class="planning-card__foot">
                 <p class="text-small text-muted num">
                   @if (goal.monthlyNeeded !== null) {
-                    Щоб встигнути: <strong class="plan-card__need">{{ money(goal.monthlyNeeded) }}</strong> на місяць
+                    Щоб встигнути: <strong class="planning-card__need">{{ money(goal.monthlyNeeded) }}</strong> на місяць
                   } @else if (goal.isAchieved) {
                     Ціль досягнуто
                   }
