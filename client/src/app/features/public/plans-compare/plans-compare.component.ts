@@ -22,19 +22,21 @@ export class PlansCompareComponent {
   readonly billing = input<Billing>('yearly');
   readonly visual = input<CompareVisual>('cards');
 
-  protected readonly codes = ['plus', 'start'];
-  protected readonly plus = computed(() => this.data().plans.find((plan) => plan.code === 'plus'));
-  protected readonly start = computed(() => this.data().plans.find((plan) => plan.code === 'start'));
+  protected readonly columns = computed(() => {
+    const plans = this.data().plans;
+    return ['plus', 'start'].flatMap((code) => plans.filter((plan) => plan.code === code));
+  });
   protected readonly features = computed(() => {
     const limit = this.rows();
     const all = this.data().features;
     return limit === undefined ? all : all.slice(0, limit);
   });
 
-  protected price(plan: PlanDto | undefined): string {
-    if (!plan) {
-      return '';
-    }
+  protected shortName(plan: PlanDto): string {
+    return plan.name.replace(/^Sable\s+/, '');
+  }
+
+  protected price(plan: PlanDto): string {
     return formatPrice(this.billing() === 'yearly' ? plan.priceYearlyPerMonth : plan.priceMonthly);
   }
 
