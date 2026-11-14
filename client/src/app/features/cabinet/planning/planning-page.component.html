@@ -30,7 +30,7 @@
       <sb-error-state title="Не вдалося завантажити бюджети" (retry)="retryBudgets()" />
     }
     @default {
-      @if (summary(); as sum) {
+      @if (items().length > 0 && summary(); as sum) {
         <div class="card plan-summary">
           <div class="plan-summary__main">
             <p class="text-label">Бюджет на {{ monthName() }}</p>
