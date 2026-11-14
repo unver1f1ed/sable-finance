@@ -1,0 +1,35 @@
+<form class="faq-editor form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+  <div class="toggle-row">
+    <div class="toggle-row__text">
+      <p class="text-body">{{ form.controls.isPublished.value ? 'Опубліковано' : 'Чернетка' }}</p>
+      <p class="text-small text-muted">Лише опубліковані питання видно на сторінці довідки.</p>
+    </div>
+    <sb-toggle label="Опубліковано" formControlName="isPublished" />
+  </div>
+
+  <sb-field label="Питання" onSurface [error]="error('question')">
+    <input type="text" autocomplete="off" placeholder="Наприклад, Як додати рахунок?" formControlName="question" />
+  </sb-field>
+
+  <sb-select label="Тема" onSurface formControlName="topicId" [options]="topicOptions()" [error]="error('topicId')" />
+
+  <div>
+    <sb-field label="Відповідь" onSurface [error]="error('answer')">
+      <textarea rows="7" placeholder="Коротка й зрозуміла відповідь" formControlName="answer"></textarea>
+    </sb-field>
+    <p class="field-counter num" [class.field-counter--over]="answerOver()">{{ answerCounter() }}</p>
+  </div>
+
+  @if (item()) {
+    <p class="text-small text-muted">Востаннє змінено {{ updated() }}</p>
+  }
+
+  <div class="form-stack__actions">
+    @if (item()) {
+      <button sbButton variant="danger" type="button" [disabled]="sending()" (click)="requestDelete()">Видалити</button>
+      <span class="form-stack__spacer"></span>
+    }
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="cancelled.emit()">Скасувати</button>
+    <button sbButton type="submit" [disabled]="sending()">{{ sending() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+  </div>
+</form>

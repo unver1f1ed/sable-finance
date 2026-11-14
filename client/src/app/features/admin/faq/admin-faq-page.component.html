@@ -1,0 +1,127 @@
+<ng-template #editor>
+  @for (key of [editorKey()]; track key) {
+    <sb-faq-editor
+      [item]="editorItem()"
+      [topics]="topics()"
+      [defaultTopicId]="filters().topicId"
+      (saved)="onSaved($event)"
+      (cancelled)="closeEditor()"
+      (deleteRequested)="askDeleteItem($event)"
+      (dirtyChange)="dirty.set($event)"
+    />
+  }
+</ng-template>
+
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">Довідка (FAQ)</h1>
+    <p class="text-body text-muted">Питання й відповіді, що показуються на сторінці довідки</p>
+  </div>
+  <div class="page-head__actions">
+    <button sbButton variant="ghost" type="button" (click)="topicModal.set(true)">
+      <sb-icon name="plus" [size]="16" />
+      Нова тема
+    </button>
+    <button sbButton type="button" (click)="newItem()">
+      <sb-icon name="plus" [size]="16" />
+      Нове питання
+    </button>
+  </div>
+</header>
+
+<div class="faq-admin">
+  <section class="card admin-panel faq-admin__list" aria-label="Питання довідки">
+    <sb-field label="Пошук за питанням або відповіддю" hideLabel>
+      <sb-icon fieldLeading name="search" [size]="18" />
+      <input type="search" autocomplete="off" placeholder="Пошук за питанням або відповіддю" [formControl]="searchControl" />
+    </sb-field>
+
+    @if (topicsState() === 'ready') {
+      <ul class="faq-admin__chips" aria-label="Теми">
+        <li>
+          <button class="chip" type="button" [class.chip--active]="filters().topicId === null" [attr.aria-pressed]="filters().topicId === null" (click)="selectTopic(null)">
+            Усі · {{ totalCount() }}
+          </button>
+        </li>
+        @for (topic of topics(); track topic.id) {
+          <li class="faq-admin__chip-wrap">
+            <button class="chip" type="button" [class.chip--active]="filters().topicId === topic.id" [attr.aria-pressed]="filters().topicId === topic.id" (click)="selectTopic(topic.id)">
+              {{ topic.name }} · {{ topic.itemCount }}
+            </button>
+            @if (topic.itemCount === 0) {
+              <button class="faq-admin__chip-delete" type="button" [attr.aria-label]="'Видалити тему ' + topic.name" (click)="askDeleteTopic(topic, $event)">
+                <sb-icon name="x" [size]="12" />
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    @if (itemsState() === 'error' || topicsState() === 'error') {
+      <sb-error-state (retry)="retry()" />
+    } @else if (itemsState() === 'loading') {
+      <div class="admin-skeleton" aria-busy="true">
+        @for (row of skeletonRows; track row) {
+          <sb-skeleton height="20" />
+        }
+      </div>
+    } @else if (items().length === 0) {
+      <sb-empty-state icon="search" title="Питань немає" text="Змініть пошук чи тему або додайте нове питання.">
+        <button sbButton size="sm" type="button" (click)="newItem()">Нове питання</button>
+      </sb-empty-state>
+    } @else {
+      <ul class="faq-admin__items">
+        @for (item of items(); track item.id) {
+          <li>
+            <button class="faq-admin__item" type="button" [class.faq-admin__item--active]="filters().item === item.id && !creating()" [attr.aria-current]="filters().item === item.id && !creating() ? 'true' : null" (click)="openItem(item)">
+              <span class="faq-admin__question text-body text-medium">{{ item.question }}</span>
+              <span class="faq-admin__meta">
+                <span class="text-tiny text-muted">{{ item.topicName }}</span>
+                @if (!item.isPublished) {
+                  <sb-badge tone="grey">Чернетка</sb-badge>
+                }
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  @if (wide()) {
+    <section class="card admin-panel faq-admin__editor" aria-label="Редактор питання">
+      @if (editorOpen()) {
+        <h2 class="text-h4">{{ creating() ? 'Нове питання' : 'Редагування питання' }}</h2>
+        <ng-container *ngTemplateOutlet="editor" />
+      } @else {
+        <sb-empty-state icon="pencil" title="Оберіть питання" text="Виберіть питання зі списку або створіть нове." />
+      }
+    </section>
+  } @else {
+    <sb-modal [open]="editorOpen()" [title]="creating() ? 'Нове питання' : 'Редагування питання'" [width]="560" (closed)="closeEditor()">
+      <ng-container *ngTemplateOutlet="editor" />
+    </sb-modal>
+  }
+</div>
+
+<sb-topic-modal [open]="topicModal()" (closed)="topicModal.set(false)" (created)="onTopicCreated($event)" />
+<sb-confirm-dialog
+  [open]="deletion() !== null"
+  [title]="deleteTitle()"
+  [message]="deleteMessage()"
+  confirmLabel="Видалити"
+  danger
+  [busy]="deleteBusy()"
+  (confirm)="confirmDelete()"
+  (cancel)="deletion.set(null)"
+/>
+<sb-confirm-dialog
+  [open]="pending() !== null"
+  title="Незбережені зміни"
+  message="Незбережені зміни буде втрачено."
+  confirmLabel="Відкинути зміни"
+  danger
+  (confirm)="confirmDiscard()"
+  (cancel)="pending.set(null)"
+/>
