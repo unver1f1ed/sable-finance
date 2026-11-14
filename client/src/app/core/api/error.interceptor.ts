@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { isApiError } from '../models/api-error';
@@ -13,6 +14,7 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
   }
   const toast = inject(ToastService);
   const auth = inject(AuthService);
+  const router = inject(Router);
 
   return next(request).pipe(
     catchError((error: unknown) => {
@@ -30,6 +32,8 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
       } else if (error.status === 403 && isApiError(body) && body.code === 'account_blocked') {
         auth.clearSession();
         toast.error(body.detail);
+      } else if (error.status === 403 && request.url.includes('/api/admin/')) {
+        void router.navigateByUrl('/forbidden');
       }
       return throwError(() => error);
     }),

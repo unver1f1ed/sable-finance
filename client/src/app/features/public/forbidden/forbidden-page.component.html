@@ -5,11 +5,13 @@
   </div>
   <p class="text-eyebrow">Помилка 403</p>
   <h1 class="not-found__title text-h2"><b>Немає доступу.</b></h1>
-  <p class="text-lead text-muted">У вас недостатньо прав для перегляду цієї сторінки.</p>
+  <p class="text-lead text-muted">Цей розділ доступний лише адміністраторам.</p>
+  <p class="text-body text-muted">Якщо вам потрібен доступ, зверніться до адміністратора сервісу.</p>
   <div class="not-found__actions">
-    <a sbButton size="lg" routerLink="/">На головну</a>
     @if (auth.isSignedIn()) {
-      <a sbButton variant="ghost" size="lg" routerLink="/app">До кабінету</a>
+      <a sbButton size="lg" routerLink="/app">Повернутись до кабінету</a>
+    } @else {
+      <a sbButton size="lg" routerLink="/">На головну</a>
     }
   </div>
 </section>

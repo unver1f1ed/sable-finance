@@ -1,0 +1,227 @@
+@use '../mixins' as *;
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 18px 20px;
+
+  &__value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 36px;
+  }
+}
+
+.admin-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px;
+
+  @include desktop {
+    padding: 24px;
+  }
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  &__search {
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+}
+
+.admin-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 0;
+}
+
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+
+  &--busy {
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+  }
+}
+
+.admin-table {
+  display: block;
+  width: 100%;
+
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  tbody {
+    display: flex;
+    flex-direction: column;
+  }
+
+  tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--color-border);
+
+    &:first-child {
+      border-top: 0;
+    }
+  }
+
+  td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 0;
+
+    &[data-label]::before {
+      content: attr(data-label);
+      color: var(--color-text-tertiary);
+      font-size: 12px;
+      line-height: 16px;
+    }
+  }
+
+  &__main {
+    grid-column: 1 / -1;
+  }
+
+  &__right {
+    text-align: left;
+  }
+
+  &__actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  @include tablet {
+    display: table;
+    border-collapse: collapse;
+
+    thead {
+      position: static;
+      display: table-header-group;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+    }
+
+    tbody {
+      display: table-row-group;
+    }
+
+    tr {
+      display: table-row;
+      padding: 0;
+      border-top: 0;
+    }
+
+    th {
+      padding: 10px 12px;
+      color: var(--color-text-tertiary);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-top: 1px solid var(--color-border);
+    }
+
+    td {
+      display: table-cell;
+      padding: 14px 12px;
+      vertical-align: middle;
+
+      &[data-label]::before {
+        content: none;
+      }
+    }
+
+    &__right {
+      text-align: right;
+    }
+
+    &__main {
+      grid-column: auto;
+      width: 100%;
+      max-width: 0;
+    }
+
+    &__actions {
+      width: 1%;
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+}
+
+.admin-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+
+  &__text {
+    min-width: 0;
+  }
+
+  &__name {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  &__sub {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
