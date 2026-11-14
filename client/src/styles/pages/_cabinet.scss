@@ -46,8 +46,10 @@
   min-width: 0;
   max-width: 100%;
   margin-left: auto;
-  overflow-wrap: anywhere;
+  overflow: hidden;
   text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tx-totals {
@@ -352,9 +354,11 @@
 
   &__amount {
     flex: none;
-    max-width: 45%;
-    overflow-wrap: anywhere;
+    max-width: 55%;
+    overflow: hidden;
     text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 15px;
   }
 
