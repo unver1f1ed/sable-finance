@@ -47,7 +47,7 @@
     @if (activeGroup(); as group) {
       <span class="bar-chart__tooltip" [style.left.%]="group.tooltipLeft" [style.top.%]="group.tooltipTop">{{ group.tooltip }}</span>
     }
-    <table class="visually-hidden">
+    <div class="visually-hidden"><table>
       <caption>
         {{ ariaLabel() }}
       </caption>
@@ -67,7 +67,7 @@
           </tr>
         }
       </tbody>
-    </table>
+    </table></div>
   </div>
 } @else {
   <p class="chart-empty text-small text-muted">Поки немає даних</p>
