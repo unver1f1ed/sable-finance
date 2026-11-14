@@ -1,0 +1,26 @@
+<sb-modal [open]="open()" [title]="title()" [width]="520" [locked]="sending()" (closed)="closed.emit()">
+  <form id="goal-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    <sb-field label="Назва цілі" onSurface [error]="error('name')">
+      <input type="text" autocomplete="off" placeholder="Наприклад, Відпустка" formControlName="name" />
+    </sb-field>
+
+    <sb-amount-field label="Цільова сума" onSurface formControlName="targetAmount" [error]="error('targetAmount')" />
+
+    <sb-field label="Термін (необов’язково)" onSurface [error]="error('deadline')">
+      <input type="date" formControlName="deadline" [min]="today" />
+      @if (form.controls.deadline.value) {
+        <button fieldTrailing class="field__clear" type="button" aria-label="Без терміну" (click)="clearDeadline()">Без терміну</button>
+      }
+    </sb-field>
+
+    <sb-icon-picker label="Іконка" formControlName="icon" />
+    <sb-color-picker label="Колір" formControlName="color" />
+  </form>
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton type="submit" form="goal-form" [disabled]="sending()">
+      {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Створити ціль' }}
+    </button>
+  </div>
+</sb-modal>

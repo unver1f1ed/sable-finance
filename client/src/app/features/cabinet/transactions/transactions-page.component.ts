@@ -40,6 +40,7 @@ import { pluralize } from '../../../shared/util/plural';
 import { ReferenceDataStore } from '../data/reference-data.store';
 import { OnboardingCardComponent } from '../onboarding/onboarding-card.component';
 import { MonthSwitcherComponent } from '../shared/month-switcher.component';
+import { UpgradeDialogComponent } from '../shared/upgrade-dialog.component';
 import { TransactionEditorService } from './transaction-editor.service';
 import {
   ALL_TIME,
@@ -86,6 +87,7 @@ const COMPACT_QUERY = '(min-width: 768px)';
     SegmentedComponent,
     SelectComponent,
     SkeletonComponent,
+    UpgradeDialogComponent,
   ],
   templateUrl: './transactions-page.component.html',
   host: { '(document:click)': 'openMenu.set(null)', '(document:keydown.escape)': 'openMenu.set(null)' },
