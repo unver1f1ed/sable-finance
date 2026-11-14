@@ -116,6 +116,7 @@
 
   &__stage {
     position: relative;
+    container-type: inline-size;
     margin-top: 32px;
 
     @include desktop {
@@ -125,14 +126,19 @@
   }
 
   &__phone {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
     margin: 0 auto;
 
     @include desktop {
       position: absolute;
-      top: -4%;
-      left: 50%;
-      margin: 0;
-      transform: translateX(-50%);
+      top: -16.64cqw;
+      left: 0;
+      max-width: none;
+      aspect-ratio: 1238 / 883;
+      object-fit: fill;
     }
   }
 
@@ -302,7 +308,7 @@
 
   &__tiles {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: center;
     gap: 20px;
     height: 360px;
@@ -348,25 +354,51 @@
   }
 }
 
-.tiles {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.tiles-col {
+  position: relative;
+  width: 120px;
+  overflow: hidden;
 
   @include desktop {
-    gap: 54px;
+    width: 216px;
   }
 
-  &--first {
+  &--first .tiles__track {
     margin-top: -40px;
+    animation-name: tiles-up;
 
     @include desktop {
       margin-top: -68px;
     }
   }
 
-  &--second {
+  &--second .tiles__track {
     margin-top: -12px;
+    animation-name: tiles-down;
+  }
+}
+
+.panels__tiles:hover .tiles__track {
+  animation-play-state: paused;
+}
+
+.tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 20px;
+
+  @include desktop {
+    gap: 54px;
+    padding-bottom: 54px;
+  }
+
+  &__track {
+    display: flex;
+    flex-direction: column;
+    animation-duration: calc(var(--motion-tiles) * var(--motion-loop-scale));
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
   }
 
   &__item {
@@ -403,46 +435,25 @@
 
   &__track {
     display: flex;
-    width: 100%;
+    width: max-content;
+    animation: marquee-left calc(var(--motion-marquee) * 1.4 * var(--motion-loop-scale)) linear infinite;
+  }
+
+  &:hover &__track {
+    animation-play-state: paused;
   }
 
   &__list {
     display: flex;
-    flex-wrap: wrap;
-    flex: 1 1 auto;
+    flex: none;
     align-items: center;
-    justify-content: center;
-    gap: 24px 40px;
-    padding: 48px var(--space-page-mobile);
-
-    &--copy {
-      display: none;
-    }
+    gap: 64px;
+    padding: 48px 64px 48px 0;
 
     @include desktop {
-      flex: none;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
       gap: 270px;
       min-height: 232px;
       padding: 0 270px 0 0;
-
-      &--copy {
-        display: flex;
-      }
-    }
-  }
-
-  @include desktop {
-    height: 232px;
-
-    &__track {
-      width: max-content;
-      animation: marquee-left calc(var(--motion-marquee) * 1.4) linear infinite;
-    }
-
-    &:hover &__track {
-      animation-play-state: paused;
     }
   }
 
@@ -607,29 +618,5 @@
     @include desktop {
       height: 61px;
     }
-  }
-}
-
-.phone {
-  width: min(260px, 70vw);
-
-  @include desktop {
-    width: 300px;
-  }
-
-  &__frame {
-    padding: 10px;
-    border: 2px solid var(--color-handle);
-    border-radius: 44px;
-    background: var(--color-surface);
-    overflow: hidden;
-    rotate: -3deg;
-  }
-
-  &__screen {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 34px;
   }
 }

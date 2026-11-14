@@ -29,18 +29,14 @@
       </h2>
     </div>
     <div class="benefits__stage">
-      <figure class="benefits__phone phone">
-        <div class="phone__frame">
-          <img
-            class="phone__screen"
-            src="/images/app-overview.webp"
-            alt="Огляд фінансів у кабінеті Sable на екрані смартфона"
-            width="750"
-            height="1456"
-            loading="lazy"
-          />
-        </div>
-      </figure>
+      <img
+        class="benefits__phone"
+        src="/images/app-phone.webp"
+        alt="Застосунок Sable на екрані смартфона"
+        width="1600"
+        height="1027"
+        loading="lazy"
+      />
       <ul class="benefits__list">
         @for (benefit of benefits; track benefit.title; let i = $index) {
           <li class="benefit" [class.benefit--right]="i > 1" [sbReveal]="i * 90">
@@ -55,7 +51,7 @@
   <div class="press">
     <div class="press__track">
       @for (copy of pressCopies; track copy) {
-        <ul class="press__list" [class.press__list--copy]="copy === 1" [attr.aria-label]="copy === 0 ? 'Про Sable пишуть' : null" [attr.aria-hidden]="copy === 1 ? 'true' : null">
+        <ul class="press__list" [attr.aria-label]="copy === 0 ? 'Про Sable пишуть' : null" [attr.aria-hidden]="copy === 1 ? 'true' : null">
           @for (logo of press; track $index) {
             <li class="press__item">
               <img class="press__logo" [src]="logo.src" [alt]="copy === 0 ? logo.alt : ''" [attr.width]="logo.width" height="46" loading="lazy" />
@@ -116,16 +112,19 @@
     }
   </div>
   <div class="panels__tiles">
-    <ul class="tiles tiles--first">
-      @for (tile of tilesFirst; track $index) {
-        <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="tile.alt" width="130" height="130" loading="lazy" /></li>
-      }
-    </ul>
-    <ul class="tiles tiles--second">
-      @for (tile of tilesSecond; track $index) {
-        <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="tile.alt" width="130" height="130" loading="lazy" /></li>
-      }
-    </ul>
+    @for (column of tileColumns; track column.name) {
+      <div class="tiles-col" [class.tiles-col--first]="column.name === 'first'" [class.tiles-col--second]="column.name === 'second'">
+        <div class="tiles__track">
+          @for (copy of tileCopies; track copy) {
+            <ul class="tiles" [attr.aria-hidden]="copy > 0 ? 'true' : null">
+              @for (tile of column.items; track $index) {
+                <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="copy === 0 ? tile.alt : ''" width="130" height="130" loading="lazy" /></li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    }
   </div>
 </section>
 

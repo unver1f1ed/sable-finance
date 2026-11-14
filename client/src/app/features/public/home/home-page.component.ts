@@ -87,6 +87,12 @@ export class HomePageComponent {
     { src: '/images/brands/spotify.svg', alt: 'Логотип Spotify' },
   ];
 
+  protected readonly tileCopies = [0, 1, 2];
+  protected readonly tileColumns = [
+    { name: 'first', items: this.tilesFirst },
+    { name: 'second', items: this.tilesSecond },
+  ];
+
   protected readonly steps: Step[] = [
     {
       title: 'Тримайте витрати під контролем',

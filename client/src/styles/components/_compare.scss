@@ -18,7 +18,7 @@
   &__track {
     display: flex;
     width: max-content;
-    animation: marquee-left var(--motion-marquee) linear infinite;
+    animation: marquee-left calc(var(--motion-marquee) * var(--motion-loop-scale)) linear infinite;
   }
 
   &__banner:hover &__track,
