@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Directive, ElementRef, PLATFORM_ID, afterNextRender, inject, input, signal } from '@angular/core';
-import { prefersReducedMotion } from './motion';
+import { prefersReducedMotion, whenIdle } from './motion';
 
 @Directive({
   selector: '[sbReveal]',
@@ -20,7 +20,7 @@ export class RevealDirective {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
-    afterNextRender(() => this.init());
+    afterNextRender(() => whenIdle(() => this.init()));
   }
 
   private init(): void {

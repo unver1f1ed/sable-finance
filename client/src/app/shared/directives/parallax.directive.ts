@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { DestroyRef, Directive, ElementRef, PLATFORM_ID, afterNextRender, inject, input } from '@angular/core';
-import { isCoarsePointer, prefersReducedMotion } from './motion';
+import { isCoarsePointer, prefersReducedMotion, whenIdle } from './motion';
 
 @Directive({ selector: '[sbParallax]' })
 export class ParallaxDirective {
@@ -12,7 +12,7 @@ export class ParallaxDirective {
   private frame = 0;
 
   constructor() {
-    afterNextRender(() => this.init());
+    afterNextRender(() => whenIdle(() => this.init()));
   }
 
   private init(): void {
