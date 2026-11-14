@@ -8,6 +8,26 @@
   }
 }
 
+@keyframes tiles-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, calc(-100% / 3), 0);
+  }
+}
+
+@keyframes tiles-down {
+  from {
+    transform: translate3d(0, calc(-100% / 3), 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @keyframes hero-float {
   from {
     translate: 0 -6px;
@@ -95,6 +115,11 @@
   animation: icon-turn var(--motion-base) var(--ease-out);
 }
 
+/*
+ * Reduced motion: everything that moves readable content or reacts to scrolling is switched off.
+ * The purely decorative loops (compare heading marquee, press strip, tile columns) keep running at
+ * half speed (--motion-loop-scale: 2 in _tokens.scss), a deliberate project decision.
+ */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal--in {
@@ -105,16 +130,6 @@
 
   .hero__bg {
     animation: none;
-  }
-
-  .compare__track,
-  .press__track {
-    animation: none;
-  }
-
-  .compare__group:not(:first-child),
-  .press__list--copy {
-    display: none;
   }
 
   .btn,

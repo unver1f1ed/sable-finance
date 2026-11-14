@@ -73,6 +73,8 @@
   --motion-slow: 700ms;
   --motion-float: 8s;
   --motion-marquee: 50s;
+  --motion-tiles: 50s;
+  --motion-loop-scale: 1;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-soft: ease-in-out;
 }
@@ -82,5 +84,11 @@
     --header-height: 140px;
     --header-height-stuck: 76px;
     --header-offset: 76px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-loop-scale: 2;
   }
 }
