@@ -1,0 +1,247 @@
+<header class="page-head">
+  <div class="page-head__text">
+    <h1 class="text-h3">Налаштування</h1>
+    <p class="text-body text-muted">Профіль, рахунки, категорії та тариф</p>
+  </div>
+</header>
+
+<nav class="settings-nav" aria-label="Розділи налаштувань">
+  @for (section of sections; track section.id) {
+    <a class="chip" routerLink="." [fragment]="section.id">{{ section.label }}</a>
+  }
+</nav>
+
+<div class="settings-grid">
+  <section class="card settings-card" id="profile" aria-labelledby="profile-title">
+    <h2 class="text-h4" id="profile-title">Профіль</h2>
+    <div class="settings-identity">
+      <sb-avatar size="lg" [name]="fullName()" />
+      <div class="settings-identity__text">
+        <p class="text-h5">{{ fullName() }}</p>
+        <p class="text-small text-muted">{{ since() }}</p>
+      </div>
+    </div>
+    <form class="form-stack" novalidate [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="form-stack__pair">
+        <sb-field label="Ім’я" onSurface [error]="profileError('firstName')">
+          <input type="text" autocomplete="given-name" formControlName="firstName" />
+        </sb-field>
+        <sb-field label="Прізвище" onSurface [error]="profileError('lastName')">
+          <input type="text" autocomplete="family-name" formControlName="lastName" />
+        </sb-field>
+      </div>
+      <div class="form-stack__pair">
+        <sb-field label="Електронна пошта" onSurface [error]="profileError('email')">
+          <sb-icon fieldLeading name="mail" [size]="18" />
+          <input type="email" autocomplete="email" formControlName="email" />
+        </sb-field>
+        <sb-field label="Основна валюта" onSurface hint="Інші валюти з’являться пізніше">
+          <input type="text" value="Гривня, ₴" disabled />
+        </sb-field>
+      </div>
+      <div class="form-stack__actions">
+        <button sbButton variant="ghost" type="button" [disabled]="!profileChanged() || profileSaving()" (click)="resetProfile()">Скасувати</button>
+        <button sbButton type="submit" [disabled]="!profileChanged() || profileSaving()">
+          {{ profileSaving() ? 'Зберігаємо…' : 'Зберегти зміни' }}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card card--accent settings-card settings-plan" id="plan" aria-labelledby="plan-title">
+    <div class="settings-card__head">
+      <h2 class="text-h4" id="plan-title">Тариф</h2>
+      <sb-badge [tone]="planCode() === 'plus' ? 'teal' : 'grey'">{{ planName() }}</sb-badge>
+    </div>
+    @if (planUsage()) {
+      <p class="text-body text-muted">{{ summaryText() }}</p>
+      <ul class="usage-list">
+        @for (row of rows(); track row.key) {
+          <li class="usage-list__item">
+            <div class="usage-list__row">
+              <span class="text-small">{{ row.label }}</span>
+              <span class="text-small num text-muted">{{ row.text }}</span>
+            </div>
+            @if (!row.unlimited) {
+              <sb-progress [value]="row.percent" [tone]="row.tone" [label]="row.label" />
+            }
+          </li>
+        }
+      </ul>
+    } @else {
+      <div aria-busy="true"><sb-skeleton height="96" /></div>
+    }
+    <div class="settings-divider"></div>
+    <div class="settings-offer">
+      <div class="settings-offer__text">
+        @if (planCode() === 'start') {
+          <p class="text-body text-semibold">Sable Плюс</p>
+          <p class="text-small text-muted">{{ price(plusPrice()) }} / міс при оплаті за рік</p>
+        } @else {
+          <p class="text-body text-semibold">Sable Старт</p>
+          <p class="text-small text-muted">Безкоштовно, з обмеженнями за рахунками, бюджетами й цілями</p>
+        }
+      </div>
+      @if (planCode() === 'start') {
+        <button sbButton type="button" (click)="askPlan('plus')">Перейти на Плюс</button>
+      } @else {
+        <button sbButton variant="ghost" type="button" (click)="askPlan('start')">Повернутися на Старт</button>
+      }
+    </div>
+  </section>
+
+  <section class="card settings-card" id="accounts" aria-labelledby="accounts-title">
+    <div class="settings-card__head">
+      <h2 class="text-h4" id="accounts-title">Рахунки</h2>
+      <button sbButton variant="ghost" size="sm" type="button" (click)="newAccount()">
+        <sb-icon name="plus" [size]="14" />
+        Додати рахунок
+      </button>
+    </div>
+    @if (!store.loaded()) {
+      <div aria-busy="true"><sb-skeleton height="120" /></div>
+    } @else {
+      <ul class="settings-list">
+        @for (account of store.accounts(); track account.id) {
+          <li class="settings-list__item">
+            <sb-category-icon size="sm" [icon]="account.type === 'Cash' ? 'wallet' : account.type === 'Savings' ? 'shield' : 'card'" [color]="account.isDefault ? 'var(--color-accent)' : 'var(--color-purple)'" />
+            <div class="settings-list__text">
+              <p class="text-body text-medium settings-list__title">{{ account.name }}</p>
+              <p class="text-tiny text-muted">{{ accountTypeText(account) }} · {{ transactionsText(account.transactionCount) }}</p>
+            </div>
+            <p class="text-body text-semibold num settings-list__amount">{{ money(account.balance) }}</p>
+            <div class="settings-list__actions">
+              @if (!account.isDefault) {
+                <button sbIconButton size="sm" type="button" [attr.aria-label]="'Зробити основним: ' + account.name" title="Зробити основним" (click)="makeDefault(account)">
+                  <sb-icon name="star" [size]="16" />
+                </button>
+              }
+              <button sbIconButton size="sm" type="button" [attr.aria-label]="'Редагувати: ' + account.name" title="Редагувати" (click)="accountModal.set({ account })">
+                <sb-icon name="pencil" [size]="16" />
+              </button>
+              <button sbIconButton size="sm" type="button" [attr.aria-label]="'Видалити: ' + account.name" title="Видалити" (click)="confirmation.set({ kind: 'account', account })">
+                <sb-icon name="trash" [size]="16" />
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+      @if (planCode() === 'start' && accountLimitReached()) {
+        <div class="notice" role="note">
+          <sb-icon name="info" [size]="18" />
+          <p class="text-small text-muted">У тарифі Старт доступно 2 рахунки. Перейдіть на Плюс, щоб додати готівку чи інші картки.</p>
+        </div>
+      }
+    }
+  </section>
+
+  <section class="card settings-card" id="security" aria-labelledby="security-title">
+    <h2 class="text-h4" id="security-title">Безпека</h2>
+    <div class="settings-row">
+      <div class="settings-row__text">
+        <p class="text-body">Пароль</p>
+        <p class="text-small text-muted">Рекомендуємо змінювати його раз на кілька місяців</p>
+      </div>
+      <button sbButton variant="ghost" size="sm" type="button" (click)="passwordOpen.set(true)">Змінити</button>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="settings-row">
+      <div class="settings-row__text">
+        <p class="text-body">Сеанси</p>
+        <p class="text-small text-muted">Зміна пароля завершує всі сеанси, крім поточного.</p>
+      </div>
+      <div class="settings-row__actions">
+        <button sbButton variant="ghost" size="sm" type="button" (click)="passwordOpen.set(true)">Вийти на всіх пристроях</button>
+        <button sbButton variant="ghost" size="sm" type="button" (click)="logout()">Вийти</button>
+      </div>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="settings-row">
+      <div class="settings-row__text">
+        <p class="text-body text-danger">Видалити акаунт</p>
+        <p class="text-small text-muted">Усі дані буде стерто без можливості відновлення</p>
+      </div>
+      <button sbButton variant="danger" size="sm" type="button" (click)="deleteOpen.set(true)">Видалити</button>
+    </div>
+    @if (auth.isAdmin()) {
+      <div class="settings-divider settings-mobile-only"></div>
+      <a class="settings-row settings-mobile-only settings-link" routerLink="/admin/users">
+        <span class="settings-row__text">
+          <span class="text-body">Адміністрування</span>
+          <span class="text-small text-muted">Користувачі, тарифи, відгуки та довідка</span>
+        </span>
+        <sb-icon name="chev-right" [size]="18" />
+      </a>
+    }
+  </section>
+</div>
+
+<section class="card settings-card settings-card--wide" id="categories" aria-labelledby="categories-title">
+  <div class="settings-card__head">
+    <div class="settings-card__title">
+      <h2 class="text-h4" id="categories-title">Категорії</h2>
+      <p class="text-small text-muted">Системні категорії спільні для всіх, власні можна додавати, змінювати й видаляти</p>
+    </div>
+    <button sbButton variant="ghost" size="sm" type="button" (click)="openCategory(null)">
+      <sb-icon name="plus" [size]="14" />
+      Нова категорія
+    </button>
+  </div>
+  @if (!store.loaded()) {
+    <div aria-busy="true"><sb-skeleton height="120" /></div>
+  } @else {
+    @for (group of [{ title: 'Витрати', items: expenseCategories() }, { title: 'Доходи', items: incomeCategories() }]; track group.title) {
+      <div class="category-group">
+        <p class="text-label">{{ group.title }}</p>
+        <ul class="category-chips">
+          @for (category of group.items; track category.id) {
+            <li>
+              @if (category.isSystem) {
+                <span class="category-chip category-chip--static" title="Системна категорія">
+                  <sb-category-icon size="sm" [icon]="category.icon" [color]="category.color" />
+                  <span class="text-small">{{ category.name }}</span>
+                  <sb-icon name="lock" [size]="14" />
+                  <span class="visually-hidden">Системна категорія</span>
+                </span>
+              } @else {
+                <button class="category-chip" type="button" [attr.aria-label]="'Редагувати категорію ' + category.name" (click)="openCategory(category)">
+                  <sb-category-icon size="sm" [icon]="category.icon" [color]="category.color" />
+                  <span class="text-small">{{ category.name }}</span>
+                  <sb-icon name="pencil" [size]="14" />
+                </button>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  }
+</section>
+
+<sb-account-modal
+  [open]="accountModal() !== null"
+  [account]="accountModal()?.account ?? null"
+  [isFirst]="store.accounts().length === 0"
+  (closed)="accountModal.set(null)"
+  (saved)="onAccountSaved()"
+/>
+<sb-category-modal
+  [open]="categoryModal() !== null"
+  [category]="categoryModal()?.category ?? null"
+  (closed)="categoryModal.set(null)"
+  (saved)="onCategorySaved()"
+  (deleteRequested)="askDeleteCategory($event)"
+/>
+<sb-password-modal [open]="passwordOpen()" (closed)="passwordOpen.set(false)" (changed)="passwordOpen.set(false)" />
+<sb-delete-account-modal [open]="deleteOpen()" (closed)="deleteOpen.set(false)" />
+<sb-confirm-dialog
+  [open]="confirmation() !== null"
+  [title]="confirmTitle()"
+  [message]="confirmMessage()"
+  [confirmLabel]="confirmLabel()"
+  [danger]="confirmation()?.kind !== 'plan'"
+  [busy]="confirmBusy()"
+  (confirm)="runConfirmation()"
+  (cancel)="confirmation.set(null)"
+/>
+<sb-upgrade-dialog [open]="upgradeMessage() !== null" [message]="upgradeMessage() ?? ''" (closed)="upgradeMessage.set(null)" />

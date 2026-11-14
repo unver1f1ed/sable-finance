@@ -1,0 +1,24 @@
+<sb-modal [open]="open()" title="Видалити акаунт" [width]="480" [locked]="sending()" (closed)="closed.emit()">
+  <form id="delete-account-form" class="form-stack" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    <div class="notice notice--danger" role="alert">
+      <sb-icon name="alert" [size]="18" />
+      <p class="text-small">Усі дані буде стерто без можливості відновлення: рахунки, транзакції, бюджети й цілі.</p>
+    </div>
+
+    <sb-field label="Пароль" onSurface [error]="passwordError()">
+      <sb-icon fieldLeading name="lock" [size]="18" />
+      <input type="password" autocomplete="current-password" formControlName="password" />
+    </sb-field>
+
+    <sb-field [label]="'Введіть слово ' + word + ' для підтвердження'" onSurface>
+      <input type="text" autocomplete="off" autocapitalize="characters" formControlName="confirmation" />
+    </sb-field>
+  </form>
+
+  <div modalFooter class="form-stack__actions form-stack__footer">
+    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+    <button sbButton variant="danger-solid" type="submit" form="delete-account-form" [disabled]="!canDelete() || sending()">
+      {{ sending() ? 'Видаляємо…' : 'Видалити акаунт' }}
+    </button>
+  </div>
+</sb-modal>
