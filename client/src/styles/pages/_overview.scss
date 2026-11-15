@@ -6,12 +6,12 @@
   gap: 12px;
   margin-bottom: 20px;
 
-  @include tablet {
+  @include content-min(520px) {
     gap: 20px;
   }
 
-  @include desktop {
-    grid-template-columns: 1.25fr 1fr 1fr 1fr;
+  @include content-min(900px) {
+    grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -23,16 +23,17 @@
   min-width: 0;
   padding: 18px;
 
-  @include desktop {
+  @include content-min(700px) {
     gap: 14px;
     padding: 28px;
   }
 
+  // Phones: balance and savings take the full row; from 520 px the four cards form a 2 x 2 grid.
   &--balance,
   &--saved {
     grid-column: span 2;
 
-    @include desktop {
+    @include content-min(520px) {
       grid-column: auto;
     }
   }
@@ -50,7 +51,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    @include tablet {
+    @include content-min(520px) {
       font-size: clamp(16px, 10cqw, 29px);
     }
   }
@@ -58,7 +59,7 @@
   &--big &__value {
     font-size: clamp(17px, 10cqw, 30px);
 
-    @include tablet {
+    @include content-min(520px) {
       font-size: clamp(18px, 11cqw, 37px);
     }
   }
@@ -78,7 +79,7 @@
   margin-bottom: 20px;
   align-items: stretch;
 
-  @include desktop {
+  @include content-min(880px) {
     grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
   }
 }
@@ -90,7 +91,7 @@
   min-width: 0;
   padding: 20px;
 
-  @include desktop {
+  @include content-min(700px) {
     gap: 24px;
     padding: 28px;
   }
