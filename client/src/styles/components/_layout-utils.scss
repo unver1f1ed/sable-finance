@@ -109,6 +109,7 @@
 
 // Horizontal rows that scroll: a fade on the cut edge and snapping, no scrollbar.
 .fade-row {
+  position: relative;
   overflow-x: auto;
   padding-right: 40px;
   scroll-snap-type: x proximity;
