@@ -10,6 +10,31 @@
   }
 }
 
+@mixin wide {
+  @media (min-width: 1280px) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: 1600px) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media (min-width: 1920px) {
+    @content;
+  }
+}
+
+// Container query on the main content area of the cabinet and admin shells (see .shell__content).
+@mixin content-min($width) {
+  @container content (min-width: #{$width}) {
+    @content;
+  }
+}
+
 @mixin truncate {
   overflow: hidden;
   text-overflow: ellipsis;
