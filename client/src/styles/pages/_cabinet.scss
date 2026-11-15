@@ -358,3 +358,20 @@
     right: 0;
   }
 }
+
+// On phones the tab bar already offers "add transaction" and the export button shrinks to its icon.
+.only-tablet {
+  display: none;
+
+  @include tablet {
+    display: inline-flex;
+  }
+}
+
+.export-btn__label {
+  display: none;
+
+  @include tablet {
+    display: inline;
+  }
+}

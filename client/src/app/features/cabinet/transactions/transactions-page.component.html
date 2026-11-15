@@ -37,11 +37,11 @@
   </div>
   @if (store.hasAccounts()) {
     <div class="page-head__actions">
-      <button sbButton variant="ghost" type="button" [disabled]="exporting()" (click)="exportCsv()">
+      <button sbButton variant="ghost" type="button" class="export-btn" aria-label="Експорт CSV" [disabled]="exporting()" (click)="exportCsv()">
         <sb-icon name="download" [size]="16" />
-        {{ exporting() ? 'Експорт…' : 'Експорт CSV' }}
+        <span class="export-btn__label">{{ exporting() ? 'Експорт…' : 'Експорт CSV' }}</span>
       </button>
-      <a sbButton [routerLink]="[]" [queryParams]="{ new: 'transaction' }" queryParamsHandling="merge">
+      <a sbButton class="only-tablet" [routerLink]="[]" [queryParams]="{ new: 'transaction' }" queryParamsHandling="merge">
         <sb-icon name="plus" [size]="16" />
         Транзакція
       </a>
