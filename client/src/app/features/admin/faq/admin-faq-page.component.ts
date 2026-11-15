@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   ViewEncapsulation,
   afterNextRender,
   computed,
@@ -35,7 +36,8 @@ import { FaqEditorComponent } from './faq-editor.component';
 import { TopicModalComponent } from './topic-modal.component';
 
 const SEARCH_DEBOUNCE_MS = 300;
-const WIDE_QUERY = '(min-width: 1024px)';
+// Two panes (list and editor) need about this much room.
+const PANES_MIN_WIDTH = 900;
 const NEW_KEY = 'new';
 
 type Pending = () => void;
@@ -84,6 +86,7 @@ export class AdminFaqPageComponent {
   private readonly content = inject(PublicContentService);
   private readonly toast = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
   private readonly itemsTick = signal(0);
   private readonly topicsTick = signal(0);
@@ -93,6 +96,17 @@ export class AdminFaqPageComponent {
   protected readonly selected = computed(() => {
     const id = this.filters().item;
     return id ? (this.items().find((item) => item.id === id) ?? null) : null;
+  });
+  protected readonly groups = computed(() => {
+    const items = this.items();
+    if (this.filters().topicId !== null) {
+      return [{ name: '', heading: false, items }];
+    }
+    const byTopic = new Map<string, AdminFaqItemDto[]>();
+    for (const item of items) {
+      byTopic.set(item.topicName, [...(byTopic.get(item.topicName) ?? []), item]);
+    }
+    return [...byTopic].map(([name, list]) => ({ name, heading: true, items: list }));
   });
   protected readonly editorOpen = computed(() => this.creating() || this.selected() !== null);
   protected readonly editorItem = computed(() => (this.creating() ? null : this.selected()));
@@ -152,11 +166,10 @@ export class AdminFaqPageComponent {
     });
 
     afterNextRender(() => {
-      const query = window.matchMedia(WIDE_QUERY);
-      const sync = (): void => this.wide.set(query.matches);
-      sync();
-      query.addEventListener('change', sync);
-      this.destroyRef.onDestroy(() => query.removeEventListener('change', sync));
+      const area = this.host.nativeElement.closest('.shell__content') ?? this.host.nativeElement;
+      const observer = new ResizeObserver(([entry]) => this.wide.set(entry.contentRect.width >= PANES_MIN_WIDTH));
+      observer.observe(area);
+      this.destroyRef.onDestroy(() => observer.disconnect());
     });
   }
 

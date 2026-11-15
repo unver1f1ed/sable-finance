@@ -29,7 +29,7 @@
   </div>
 </header>
 
-<div class="faq-admin">
+<div class="faq-admin two-pane two-pane--editor">
   <section class="card admin-panel faq-admin__list" aria-label="Питання довідки">
     <sb-field label="Пошук за питанням або відповіддю" hideLabel>
       <sb-icon fieldLeading name="search" [size]="18" />
@@ -72,25 +72,32 @@
       </sb-empty-state>
     } @else {
       <ul class="faq-admin__items">
-        @for (item of items(); track item.id) {
-          <li>
-            <button class="faq-admin__item" type="button" [class.faq-admin__item--active]="filters().item === item.id && !creating()" [attr.aria-current]="filters().item === item.id && !creating() ? 'true' : null" (click)="openItem(item)">
-              <span class="faq-admin__question text-body text-medium">{{ item.question }}</span>
-              <span class="faq-admin__meta">
-                <span class="text-tiny text-muted">{{ item.topicName }}</span>
-                @if (!item.isPublished) {
-                  <sb-badge tone="grey">Чернетка</sb-badge>
-                }
-              </span>
-            </button>
-          </li>
+        @for (group of groups(); track group.name) {
+          @if (group.heading) {
+            <li class="faq-admin__group text-label">{{ group.name }}</li>
+          }
+          @for (item of group.items; track item.id) {
+            <li>
+              <button class="faq-admin__item" type="button" [class.faq-admin__item--active]="filters().item === item.id && !creating()" [attr.aria-current]="filters().item === item.id && !creating() ? 'true' : null" (click)="openItem(item)">
+                <span class="faq-admin__question text-body text-medium">{{ item.question }}</span>
+                <span class="faq-admin__meta">
+                  @if (!group.heading) {
+                    <span class="text-tiny text-muted">{{ item.topicName }}</span>
+                  }
+                  @if (!item.isPublished) {
+                    <sb-badge tone="grey">Чернетка</sb-badge>
+                  }
+                </span>
+              </button>
+            </li>
+          }
         }
       </ul>
     }
   </section>
 
   @if (wide()) {
-    <section class="card admin-panel faq-admin__editor" aria-label="Редактор питання">
+    <section class="card admin-panel faq-admin__editor two-pane__sticky" aria-label="Редактор питання">
       @if (editorOpen()) {
         <h2 class="text-h4">{{ creating() ? 'Нове питання' : 'Редагування питання' }}</h2>
         <ng-container *ngTemplateOutlet="editor" />
