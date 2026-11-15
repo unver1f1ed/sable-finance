@@ -66,7 +66,7 @@
           <tr class="compare__row compare__row--price">
             <th class="compare__feature" scope="row">Вартість за місяць</th>
             @for (plan of columns(); track plan.code) {
-              <td class="compare__cell">
+              <td class="compare__cell compare__cell--price">
                 <span class="compare__price num">{{ price(plan) }}</span>
                 <span class="compare__per text-tiny text-muted">/міс</span>
               </td>

@@ -33,8 +33,11 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 
-  @include desktop {
+  @include tablet {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include desktop {
     gap: 28px;
   }
 }
@@ -53,7 +56,7 @@
   &--plus {
     order: -1;
 
-    @include desktop {
+    @include tablet {
       order: 0;
     }
   }
