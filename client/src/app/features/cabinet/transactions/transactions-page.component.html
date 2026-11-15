@@ -60,7 +60,7 @@
 } @else if (!store.hasAccounts()) {
   <sb-onboarding-card />
 } @else {
-  <div class="tx-totals">
+  <div class="tx-totals stat-grid stat-grid--3">
     <div class="stat-line card">
       <span class="text-small text-muted">Доходи за період</span>
       <span class="stat-line__value text-h4 num text-accent">{{ money(data()?.totalIncome ?? 0, true) }}</span>

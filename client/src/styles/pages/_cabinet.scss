@@ -50,14 +50,12 @@
 }
 
 .tx-totals {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
   margin-bottom: 20px;
 
-  @include tablet {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+  &__note {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -67,23 +65,20 @@
   gap: 20px;
   padding: 16px;
 
-  @include desktop {
+  @include content-min(700px) {
     padding: 24px;
   }
 }
 
 .tx-filters {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
 
-  @include desktop {
-    flex-wrap: wrap;
-  }
-
   &__search {
-    flex: 1 1 220px;
-    min-width: 0;
+    flex: 1 1 240px;
+    min-width: min(100%, 240px);
   }
 
   &__controls {
@@ -361,14 +356,5 @@
 
   .tx-desc__link::after {
     right: 0;
-  }
-}
-
-.recent__link,
-.donut__row--button {
-  min-height: 44px;
-
-  @media (hover: hover) and (pointer: fine) {
-    min-height: 0;
   }
 }

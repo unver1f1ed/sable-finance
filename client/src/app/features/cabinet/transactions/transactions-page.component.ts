@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   ViewEncapsulation,
   afterNextRender,
   computed,
@@ -62,7 +63,8 @@ interface FilterChip {
 }
 
 const SEARCH_DEBOUNCE_MS = 300;
-const COMPACT_QUERY = '(min-width: 768px)';
+// The table needs about this much room; narrower content areas get the card list.
+const TABLE_MIN_WIDTH = 760;
 
 @Component({
   selector: 'sb-transactions-page',
@@ -131,6 +133,7 @@ export class TransactionsPageComponent {
   private readonly toast = inject(ToastService);
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
   private readonly reloadTick = signal(0);
 
@@ -256,11 +259,10 @@ export class TransactionsPageComponent {
     this.editor.changes$.pipe(takeUntilDestroyed()).subscribe((change) => this.afterChange(change === 'deleted'));
 
     afterNextRender(() => {
-      const query = window.matchMedia(COMPACT_QUERY);
-      const sync = (): void => this.wide.set(query.matches);
-      sync();
-      query.addEventListener('change', sync);
-      this.destroyRef.onDestroy(() => query.removeEventListener('change', sync));
+      const area = this.host.nativeElement.closest('.shell__content') ?? this.host.nativeElement;
+      const observer = new ResizeObserver(([entry]) => this.wide.set(entry.contentRect.width >= TABLE_MIN_WIDTH));
+      observer.observe(area);
+      this.destroyRef.onDestroy(() => observer.disconnect());
     });
   }
 

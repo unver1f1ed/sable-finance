@@ -4,17 +4,11 @@
   display: flex;
   gap: 8px;
   margin: 0 -20px 24px;
-  padding: 0 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
+  padding-left: 20px;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  @include desktop {
+  @include tablet {
     margin: 0 0 24px;
-    padding: 0;
+    padding-left: 0;
   }
 }
 
@@ -25,7 +19,7 @@
   margin-bottom: 20px;
   align-items: stretch;
 
-  @include desktop {
+  @include content-min(900px) {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   }
 }
@@ -38,7 +32,7 @@
   padding: 20px;
   scroll-margin-top: 24px;
 
-  @include desktop {
+  @include content-min(700px) {
     padding: 28px;
   }
 
@@ -128,7 +122,7 @@
       border-top: 0;
     }
 
-    @include tablet {
+    @include content-min(560px) {
       grid-template-columns: auto minmax(0, 1fr) auto auto;
       grid-template-areas: 'icon text amount actions';
     }
@@ -191,7 +185,7 @@
 }
 
 .settings-mobile-only {
-  @include desktop {
+  @include tablet {
     display: none;
   }
 }
@@ -259,4 +253,15 @@
 
 .settings-grid .settings-card > .notice {
   margin-top: auto;
+}
+
+.readonly-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+
+  &__value {
+    padding: 10px 0;
+  }
 }
