@@ -42,6 +42,9 @@
         </div>
       </div>
       <div class="form-stack__actions">
+        @if (!profileChanged()) {
+          <p class="text-small text-muted form-stack__hint">Змін немає</p>
+        }
         <button sbButton variant="ghost" type="button" [disabled]="!profileChanged() || profileSaving()" (click)="resetProfile()">Скасувати</button>
         <button sbButton type="submit" [disabled]="!profileChanged() || profileSaving()">
           {{ profileSaving() ? 'Зберігаємо…' : 'Зберегти зміни' }}

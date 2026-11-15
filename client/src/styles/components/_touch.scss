@@ -5,9 +5,11 @@
 .tx-desc__link,
 .planning-card__name,
 .admin-person__name {
+  min-width: 44px;
   padding-block: 11px;
 
   @include tablet {
+    min-width: 0;
     padding-block: 0;
   }
 }
@@ -16,8 +18,7 @@
 .dash-link,
 .help-popular__link,
 .about-contact__value,
-.public-footer__link,
-.public-footer__social-link,
+.public-footer a,
 .public-header__logo,
 .admin-topbar__logo {
   display: inline-flex;

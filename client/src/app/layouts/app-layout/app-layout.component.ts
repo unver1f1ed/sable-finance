@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
@@ -6,6 +6,7 @@ import { TransactionEditorService } from '../../features/cabinet/transactions/tr
 import { TransactionModalComponent } from '../../features/cabinet/transactions/transaction-modal.component';
 import { AvatarComponent } from '../../shared/ui/avatar/avatar.component';
 import { BadgeComponent } from '../../shared/ui/badge/badge.component';
+import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ButtonDirective } from '../../shared/ui/button/button.directive';
 import { IconButtonDirective } from '../../shared/ui/icon-button/icon-button.directive';
 import { IconComponent } from '../../shared/ui/icon/icon.component';
@@ -27,6 +28,7 @@ interface NavItem {
     AvatarComponent,
     BadgeComponent,
     ButtonDirective,
+    ConfirmDialogComponent,
     IconButtonDirective,
     IconComponent,
   ],
@@ -36,6 +38,7 @@ interface NavItem {
   encapsulation: ViewEncapsulation.None,
 })
 export class AppLayoutComponent {
+  protected readonly logoutOpen = signal(false);
   protected readonly navItems: NavItem[] = [
     { path: '/app', label: 'Огляд', icon: 'grid', exact: true },
     { path: '/app/transactions', label: 'Транзакції', icon: 'swap', exact: false },

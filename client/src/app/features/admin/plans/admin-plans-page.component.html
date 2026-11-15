@@ -27,6 +27,9 @@
             <li>
               <button class="card plans-admin__card" type="button" [class.plans-admin__card--active]="selectedCode() === plan.code" [attr.aria-pressed]="selectedCode() === plan.code" (click)="select(plan)">
                 <span class="plans-admin__head">
+                  @if (selectedCode() === plan.code) {
+                    <sb-icon class="text-accent" name="check" [size]="18" />
+                  }
                   <span class="text-h5">{{ plan.name }}</span>
                   @if (plan.isPopular) {
                     <sb-badge tone="teal">Популярний</sb-badge>
@@ -44,6 +47,8 @@
 
         @if (selected(); as plan) {
           <form class="card admin-panel plans-admin__form form-stack" novalidate [formGroup]="form" (ngSubmit)="save()">
+            <h3 class="text-h5">Редагування: {{ plan.name }}</h3>
+
             <div class="toggle-row">
               <div class="toggle-row__text">
                 <p class="text-body">Опубліковано</p>
