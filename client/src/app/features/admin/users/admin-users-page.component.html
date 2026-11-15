@@ -42,7 +42,7 @@
       <sb-icon fieldLeading name="search" [size]="18" />
       <input type="search" autocomplete="off" placeholder="Пошук за іменем або поштою" [formControl]="searchControl" />
     </sb-field>
-    <div class="filter-bar__filters">
+    <div class="filter-bar__filters filter-bar__filters--selects">
       <sb-select
         label="Роль"
         hideLabel
@@ -70,8 +70,6 @@
         (ngModelChange)="update({ status: $event || null })"
         [ngModelOptions]="{ standalone: true }"
       />
-    </div>
-    <div class="filter-bar__sort">
       <sb-select
         label="Сортування"
         hideLabel
