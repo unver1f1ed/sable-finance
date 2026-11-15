@@ -70,7 +70,7 @@
     color-scheme: dark;
     cursor: pointer;
 
-    @media (hover: hover) and (pointer: fine) {
+    @include tablet {
       height: 32px;
     }
   }
