@@ -8,6 +8,10 @@
   .sidebar__user {
     margin-top: auto;
   }
+
+  .sidebar__nav {
+    flex: 0 0 auto;
+  }
 }
 
 .admin-topbar {
@@ -17,7 +21,7 @@
   height: 72px;
   padding: 0 var(--space-page-mobile);
 
-  @include desktop {
+  @include tablet {
     display: none;
   }
 
@@ -29,20 +33,14 @@
 .admin-tabs {
   padding: 0 0 12px;
 
-  @include desktop {
+  @include tablet {
     display: none;
   }
 
   &__list {
     display: flex;
     gap: 8px;
-    padding: 0 var(--space-page-mobile);
-    overflow-x: auto;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    padding-left: var(--space-page-mobile);
   }
 
   &__link {

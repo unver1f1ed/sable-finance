@@ -1,7 +1,11 @@
 <aside class="sidebar">
-  <a class="sidebar__logo" routerLink="/app">
-    <img src="/images/logo.svg" alt="Sable" width="107" height="26" />
+  <a class="sidebar__logo" routerLink="/app" aria-label="Sable">
+    <img class="sidebar__logo-full" src="/images/logo.svg" alt="" width="107" height="26" />
+    <span class="sidebar__mark" aria-hidden="true">S.</span>
   </a>
+  <button class="sidebar__add" type="button" data-label="Додати транзакцію" aria-label="Додати транзакцію" (click)="editor.openCreate()">
+    <sb-icon name="plus" [size]="22" />
+  </button>
 
   <nav class="sidebar__nav" aria-label="Кабінет">
     <ul class="sidebar__list">
@@ -9,13 +13,14 @@
         <li>
           <a
             class="sidebar__link"
+            [attr.data-label]="item.label"
             [routerLink]="item.path"
             routerLinkActive="sidebar__link--active"
             [routerLinkActiveOptions]="{ exact: item.exact }"
             ariaCurrentWhenActive="page"
           >
             <sb-icon [name]="item.icon" [size]="20" />
-            {{ item.label }}
+            <span class="sidebar__text">{{ item.label }}</span>
           </a>
         </li>
       }
@@ -23,9 +28,9 @@
     @if (auth.isAdmin()) {
       <ul class="sidebar__list sidebar__list--extra">
         <li>
-          <a class="sidebar__link" routerLink="/admin/users">
+          <a class="sidebar__link" routerLink="/admin/users" data-label="Адміністрування">
             <sb-icon name="shield" [size]="20" />
-            Адміністрування
+            <span class="sidebar__text">Адміністрування</span>
           </a>
         </li>
       </ul>
@@ -44,6 +49,10 @@
       <a sbButton size="sm" block routerLink="/app/settings" fragment="plan">Перейти на Плюс</a>
     }
   </section>
+
+  <a class="sidebar__plan-mini" routerLink="/app/settings" fragment="plan" [attr.data-label]="'Тариф ' + planLabel()" [attr.aria-label]="'Тариф ' + planLabel()">
+    <sb-icon name="star" [size]="20" />
+  </a>
 
   <div class="sidebar__user">
     <sb-avatar [name]="fullName()" />
@@ -68,7 +77,9 @@
 </header>
 
 <main class="shell__main">
-  <router-outlet />
+  <div class="shell__content">
+    <router-outlet />
+  </div>
 </main>
 
 <nav class="tab-bar" aria-label="Мобільна навігація">
