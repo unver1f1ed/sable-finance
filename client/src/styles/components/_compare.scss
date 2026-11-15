@@ -158,6 +158,16 @@
     }
   }
 
+  &__cell--price {
+    white-space: nowrap;
+  }
+
+  &__per {
+    margin-left: 4px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
   &__price {
     font-size: 22px;
     line-height: 28px;

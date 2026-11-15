@@ -54,7 +54,7 @@
         <ul class="press__list" [attr.aria-label]="copy === 0 ? 'Про Sable пишуть' : null" [attr.aria-hidden]="copy === 1 ? 'true' : null">
           @for (logo of press; track $index) {
             <li class="press__item">
-              <img class="press__logo" [src]="logo.src" [alt]="copy === 0 ? logo.alt : ''" [attr.width]="logo.width" height="46" loading="lazy" />
+              <img class="press__logo" [src]="logo.src" [alt]="copy === 0 ? logo.alt : ''" [attr.width]="logo.width" height="46" />
             </li>
           }
         </ul>
@@ -118,7 +118,7 @@
           @for (copy of tileCopies; track copy) {
             <ul class="tiles" [attr.aria-hidden]="copy > 0 ? 'true' : null">
               @for (tile of column.items; track $index) {
-                <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="copy === 0 ? tile.alt : ''" width="130" height="130" loading="lazy" /></li>
+                <li class="tiles__item"><img class="tiles__logo" [src]="tile.src" [alt]="copy === 0 ? tile.alt : ''" width="130" height="130" /></li>
               }
             </ul>
           }

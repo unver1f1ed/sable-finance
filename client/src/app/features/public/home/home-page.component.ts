@@ -40,7 +40,7 @@ export class HomePageComponent {
   protected readonly reviews = this.content.reviews();
   protected readonly stars = [1, 2, 3, 4, 5];
   protected readonly pressCopies = [0, 1];
-  protected readonly averageText = computed(() => String(this.reviews().average));
+  protected readonly averageText = computed(() => this.reviews().average.toFixed(1).replace('.', ','));
 
   protected readonly benefits: Benefit[] = [
     {
