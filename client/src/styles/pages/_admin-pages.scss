@@ -1,9 +1,6 @@
 @use '../mixins' as *;
 
 .admin-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: 16px;
   margin-bottom: 20px;
 }
 
@@ -28,20 +25,8 @@
   min-width: 0;
   padding: 16px;
 
-  @include desktop {
+  @include content-min(700px) {
     padding: 24px;
-  }
-}
-
-.admin-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-
-  &__search {
-    flex: 1 1 260px;
-    min-width: 0;
   }
 }
 
@@ -64,6 +49,11 @@
   }
 }
 
+.admin-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+
 .admin-table {
   display: block;
   width: 100%;
@@ -83,15 +73,21 @@
     flex-direction: column;
   }
 
+  // Card view: meta fields in a flowing grid, the row actions in one row at the bottom right.
   tr {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px 16px;
     padding: 16px 0;
     border-top: 1px solid var(--color-border);
+    cursor: pointer;
 
     &:first-child {
       border-top: 0;
+    }
+
+    &:hover {
+      background: var(--color-hover-subtle);
     }
   }
 
@@ -110,23 +106,27 @@
     }
   }
 
-  &__main {
+  td.admin-table__main,
+  td.admin-table__wide {
     grid-column: 1 / -1;
+    align-items: stretch;
+  }
+
+  td.admin-table__actions {
+    flex-direction: row;
+    grid-column: 1 / -1;
+    gap: 4px;
+    justify-content: flex-end;
   }
 
   &__right {
     text-align: left;
   }
 
-  &__actions {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 4px;
-  }
-
-  @include tablet {
+  // Table view: only when the content area has room for every column.
+  @include content-min(900px) {
     display: table;
+    max-width: 1400px;
     border-collapse: collapse;
 
     thead {
@@ -151,7 +151,7 @@
     }
 
     th {
-      padding: 10px 12px;
+      padding: 10px 8px;
       color: var(--color-text-tertiary);
       font-size: 12px;
       font-weight: 500;
@@ -166,7 +166,7 @@
 
     td {
       display: table-cell;
-      padding: 14px 12px;
+      padding: 12px 8px;
       vertical-align: middle;
 
       &[data-label]::before {
@@ -174,20 +174,26 @@
       }
     }
 
-    &__right {
-      text-align: right;
-    }
-
-    &__main {
-      grid-column: auto;
-      width: 100%;
+    td.admin-table__main {
+      width: 26%;
+      min-width: 150px;
       max-width: 0;
     }
 
-    &__actions {
+    td.admin-table__wide {
+      width: 36%;
+      min-width: 220px;
+    }
+
+    td.admin-table__actions {
+      display: table-cell;
       width: 1%;
       text-align: right;
       white-space: nowrap;
+    }
+
+    &__right {
+      text-align: right;
     }
   }
 }
@@ -234,30 +240,26 @@
   line-clamp: 2;
 }
 
-.admin-table__wide {
-  grid-column: 1 / -1;
-}
-
-@include tablet {
-  .admin-table__author {
-    width: 22%;
-    max-width: none;
-  }
-
-  .admin-table__wide {
-    grid-column: auto;
-    width: 40%;
-  }
-}
 
 .faq-admin {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
-  align-items: start;
+  &__list {
+    @include content-min(900px) {
+      max-height: calc(100vh - 48px);
+      max-height: calc(100dvh - 48px);
+      overflow-y: auto;
+    }
+  }
 
-  @include desktop {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  &__editor {
+    @include content-min(900px) {
+      max-height: calc(100vh - 48px);
+      max-height: calc(100dvh - 48px);
+      overflow-y: auto;
+    }
+  }
+
+  &__group {
+    padding: 14px 14px 4px;
   }
 
   &__chips {
@@ -335,21 +337,13 @@
 
 .admin-section {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
 }
 
 .plans-admin {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
-  align-items: start;
-
-  @include desktop {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-  }
-
   &__cards {
     display: flex;
     flex-direction: column;
@@ -397,7 +391,7 @@
 
 .features-admin {
   &__scroll {
-    overflow-x: auto;
+    min-width: 0;
   }
 
   &__table {
