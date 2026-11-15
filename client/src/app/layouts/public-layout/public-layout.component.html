@@ -90,7 +90,9 @@
   </div>
 }
 
-<sb-auth-modals />
+@defer (on idle) {
+  <sb-auth-modals />
+}
 
 <main class="public-layout__main">
   <router-outlet />
