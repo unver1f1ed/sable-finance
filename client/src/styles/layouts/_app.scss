@@ -1,11 +1,21 @@
 @use '../mixins' as *;
 
+@mixin visually-hidden-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .shell {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 
-  @include desktop {
+  @include tablet {
     flex-direction: row;
   }
 
@@ -14,48 +24,131 @@
     min-width: 0;
     padding: 20px var(--space-page-mobile) 110px;
 
-    @include desktop {
+    @include tablet {
+      padding: 28px 28px 48px;
+    }
+
+    @include wide {
       padding: 36px 40px 48px;
     }
   }
 }
 
+// Navigation: hidden on phones (tab bar), an icon rail from 768 px, the full sidebar from 1280 px.
 .sidebar {
   display: none;
 
-  @include desktop {
+  @include tablet {
     position: sticky;
     top: 0;
     display: flex;
     flex-direction: column;
     flex: none;
+    align-items: center;
+    gap: 20px;
+    width: var(--rail-width);
+    height: 100vh;
+    height: 100dvh;
+    padding: 20px 0 16px;
+    border-right: 1px solid var(--color-surface);
+    overflow-y: auto;
+  }
+
+  @media (min-width: 768px) and (min-height: 600px) {
+    overflow: visible;
+  }
+
+  @include wide {
+    align-items: stretch;
     gap: 36px;
     width: var(--sidebar-width);
-    height: 100vh;
     padding: 36px 20px 24px;
-    border-right: 1px solid var(--color-surface);
     overflow-y: auto;
   }
 
   &__brand {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 12px;
+    justify-content: center;
+
+    @include wide {
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+  }
+
+  &__badge {
+    display: none;
+
+    @include wide {
+      display: inline-flex;
+    }
   }
 
   &__logo {
-    display: block;
-    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .sidebar__brand & {
       padding: 0;
+    }
+
+    @include wide {
+      display: block;
+      padding: 0 12px;
+    }
+  }
+
+  &__logo-full {
+    display: none;
+
+    @include wide {
+      display: block;
+    }
+  }
+
+  &__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--color-text);
+
+    @include wide {
+      display: none;
+    }
+  }
+
+  &__add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-field);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+
+    @include wide {
+      display: none;
     }
   }
 
   &__nav {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    @include wide {
+      align-items: stretch;
+      gap: 0;
+    }
   }
 
   &__list {
@@ -65,20 +158,26 @@
   }
 
   &__caption {
-    padding: 16px 16px 8px;
-    font-size: 11px;
-    line-height: 15px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--color-text-tertiary);
+    display: none;
+
+    @include wide {
+      display: block;
+      padding: 16px 16px 8px;
+      font-size: 11px;
+      line-height: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+    }
   }
 
   &__link {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    width: 48px;
     height: 48px;
-    padding: 0 16px;
     border-radius: var(--radius-field);
     font-size: 15px;
     font-weight: 500;
@@ -100,14 +199,78 @@
         color: var(--color-accent);
       }
     }
+
+    @include wide {
+      justify-content: flex-start;
+      gap: 14px;
+      width: auto;
+      padding: 0 16px;
+    }
+  }
+
+  &__text {
+    @include visually-hidden-text;
+
+    @include wide {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip-path: none;
+    }
+  }
+
+  // Tooltip with the label for the icon rail (hover and keyboard focus).
+  &__link[data-label]::after,
+  &__plan-mini[data-label]::after,
+  &__add[data-label]::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 10px);
+    z-index: 60;
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    font-size: 13px;
+    line-height: 16px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: opacity var(--motion-fast) ease;
+  }
+
+  &__link[data-label]:hover::after,
+  &__link[data-label]:focus-visible::after,
+  &__plan-mini[data-label]:hover::after,
+  &__plan-mini[data-label]:focus-visible::after,
+  &__add[data-label]:hover::after,
+  &__add[data-label]:focus-visible::after {
+    opacity: 1;
+  }
+
+  @include wide {
+    &__link[data-label]::after,
+    &__plan-mini[data-label]::after,
+    &__add[data-label]::after {
+      display: none;
+    }
   }
 
   &__plan {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: auto;
-    padding: 20px;
+    display: none;
+
+    @include wide {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: auto;
+      padding: 20px;
+    }
   }
 
   &__plan-head {
@@ -116,16 +279,44 @@
     justify-content: space-between;
   }
 
-  &__user {
+  &__plan-mini {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 0 8px;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-top: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-field);
+    color: var(--color-accent);
+
+    @include wide {
+      display: none;
+    }
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    @include wide {
+      flex-direction: row;
+      gap: 12px;
+      padding: 0 8px;
+    }
   }
 
   &__user-info {
-    flex: 1 1 0;
-    min-width: 0;
+    display: none;
+
+    @include wide {
+      display: block;
+      flex: 1 1 0;
+      min-width: 0;
+    }
   }
 
   &__user-name,
@@ -148,11 +339,11 @@
   align-items: flex-start;
   justify-content: space-between;
   height: 84px;
-  padding: 10px 12px 0;
+  padding: 10px max(12px, calc((100% - 480px) / 2)) 0;
   border-top: 1px solid var(--color-surface);
   background: var(--color-tab-bar);
 
-  @include desktop {
+  @include tablet {
     display: none;
   }
 
@@ -203,7 +394,7 @@
   gap: 12px;
   padding: 12px var(--space-page-mobile) 0;
 
-  @include desktop {
+  @include tablet {
     display: none;
   }
 
@@ -216,3 +407,4 @@
 .sidebar__list--extra {
   margin-top: 4px;
 }
+

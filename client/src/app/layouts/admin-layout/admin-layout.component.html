@@ -9,7 +9,7 @@
 </header>
 
 <nav class="admin-tabs" aria-label="Розділи адміністрування">
-  <ul class="admin-tabs__list">
+  <ul class="admin-tabs__list fade-row">
     @for (item of navItems; track item.path) {
       <li>
         <a class="admin-tabs__link" [routerLink]="item.path" routerLinkActive="admin-tabs__link--active" ariaCurrentWhenActive="page">
@@ -29,10 +29,11 @@
 
 <aside class="sidebar">
   <div class="sidebar__brand">
-    <a class="sidebar__logo" routerLink="/admin/users">
-      <img src="/images/logo.svg" alt="Sable" width="107" height="26" />
+    <a class="sidebar__logo" routerLink="/admin/users" aria-label="Sable">
+      <img class="sidebar__logo-full" src="/images/logo.svg" alt="" width="107" height="26" />
+      <span class="sidebar__mark" aria-hidden="true">S.</span>
     </a>
-    <sb-badge tone="purple">Адмін</sb-badge>
+    <sb-badge class="sidebar__badge" tone="purple">Адмін</sb-badge>
   </div>
 
   <nav class="sidebar__nav" aria-label="Адміністрування">
@@ -40,9 +41,9 @@
     <ul class="sidebar__list" aria-labelledby="admin-manage">
       @for (item of navItems; track item.path) {
         <li>
-          <a class="sidebar__link" [routerLink]="item.path" routerLinkActive="sidebar__link--active" ariaCurrentWhenActive="page">
+          <a class="sidebar__link" [attr.data-label]="item.label" [routerLink]="item.path" routerLinkActive="sidebar__link--active" ariaCurrentWhenActive="page">
             <sb-icon [name]="item.icon" [size]="20" />
-            {{ item.label }}
+            <span class="sidebar__text">{{ item.label }}</span>
           </a>
         </li>
       }
@@ -50,9 +51,9 @@
     <p class="sidebar__caption" id="admin-goto">Перейти</p>
     <ul class="sidebar__list" aria-labelledby="admin-goto">
       <li>
-        <a class="sidebar__link" routerLink="/app">
+        <a class="sidebar__link" routerLink="/app" data-label="Кабінет користувача">
           <sb-icon name="grid" [size]="20" />
-          Кабінет користувача
+          <span class="sidebar__text">Кабінет користувача</span>
         </a>
       </li>
     </ul>
@@ -71,5 +72,7 @@
 </aside>
 
 <main class="shell__main">
-  <router-outlet />
+  <div class="shell__content">
+    <router-outlet />
+  </div>
 </main>
