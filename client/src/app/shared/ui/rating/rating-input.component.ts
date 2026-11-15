@@ -26,7 +26,7 @@ import { nextRating } from './rating-logic';
                 (keydown)="onKey($event)"
                 (blur)="touched()"
               />
-              <sb-icon name="star" [size]="28" />
+              <sb-icon [name]="star <= value() ? 'star-fill' : 'star'" [size]="28" />
             </label>
           }
         </div>

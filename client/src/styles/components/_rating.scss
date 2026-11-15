@@ -8,10 +8,6 @@
 
     &--on {
       color: var(--color-warning);
-
-      svg {
-        fill: currentColor;
-      }
     }
   }
 }
@@ -49,10 +45,6 @@
     &:hover,
     &--on {
       color: var(--color-warning);
-    }
-
-    &--on svg {
-      fill: currentColor;
     }
 
     &:has(:focus-visible) {

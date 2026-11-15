@@ -6,7 +6,7 @@ import { IconComponent } from '../icon/icon.component';
   imports: [IconComponent],
   template: `
     @for (star of stars; track star) {
-      <sb-icon class="rating__star" [class.rating__star--on]="star <= value()" name="star" [size]="size()" />
+      <sb-icon class="rating__star" [class.rating__star--on]="star <= value()" [name]="star <= value() ? 'star-fill' : 'star'" [size]="size()" />
     }
   `,
   host: { class: 'rating', role: 'img', '[attr.aria-label]': 'label()' },
