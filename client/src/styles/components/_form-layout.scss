@@ -5,16 +5,12 @@
   flex-direction: column;
   gap: 18px;
 
+  // Two fields in a row: inputs stay on one baseline whatever the label length; one column when narrow.
   &__pair {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
-
-    @include tablet {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-items: start;
-      gap: 16px;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+    align-items: end;
+    gap: 18px 16px;
   }
 
   &__actions {
