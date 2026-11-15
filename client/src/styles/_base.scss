@@ -287,7 +287,7 @@ strong {
   font-size: 14px;
   font-weight: 500;
 
-  @media (hover: hover) and (pointer: fine) {
+  @include tablet {
     min-height: 0;
   }
 

@@ -1,0 +1,39 @@
+@use '../mixins' as *;
+
+// Touch targets: at least 44 px high below 768 px; from 768 px the compact sizes apply again.
+.recent__link,
+.tx-desc__link,
+.planning-card__name,
+.admin-person__name {
+  padding-block: 11px;
+
+  @include tablet {
+    padding-block: 0;
+  }
+}
+
+.donut__row--button,
+.dash-link,
+.help-popular__link,
+.about-contact__value,
+.public-footer__link,
+.public-footer__social-link,
+.public-header__logo,
+.admin-topbar__logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+
+  @include tablet {
+    min-height: 0;
+  }
+}
+
+.public-footer__social-link {
+  min-width: 44px;
+  justify-content: center;
+
+  @include tablet {
+    min-width: 0;
+  }
+}
