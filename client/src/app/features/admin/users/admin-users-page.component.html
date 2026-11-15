@@ -5,7 +5,7 @@
   </div>
 </header>
 
-<section class="admin-stats" aria-label="Статистика користувачів">
+<section class="admin-stats stat-grid" aria-label="Статистика користувачів">
   @if (stats(); as total) {
     <div class="card admin-stat">
       <p class="text-label">Усього користувачів</p>
@@ -37,47 +37,51 @@
 </section>
 
 <section class="card admin-panel" aria-label="Список користувачів">
-  <div class="admin-toolbar">
-    <sb-field class="admin-toolbar__search" label="Пошук за іменем або поштою" hideLabel>
+  <div class="filter-bar">
+    <sb-field class="filter-bar__search" label="Пошук за іменем або поштою" hideLabel>
       <sb-icon fieldLeading name="search" [size]="18" />
       <input type="search" autocomplete="off" placeholder="Пошук за іменем або поштою" [formControl]="searchControl" />
     </sb-field>
-    <sb-select
-      label="Роль"
-      hideLabel
-      variant="pill"
-      [options]="roleOptions"
-      [ngModel]="filters().role ?? ''"
-      (ngModelChange)="update({ role: $event || null })"
-      [ngModelOptions]="{ standalone: true }"
-    />
-    <sb-select
-      label="Тариф"
-      hideLabel
-      variant="pill"
-      [options]="planFilterOptions()"
-      [ngModel]="filters().planCode ?? ''"
-      (ngModelChange)="update({ planCode: $event || null })"
-      [ngModelOptions]="{ standalone: true }"
-    />
-    <sb-select
-      label="Статус"
-      hideLabel
-      variant="pill"
-      [options]="statusOptions"
-      [ngModel]="filters().status ?? ''"
-      (ngModelChange)="update({ status: $event || null })"
-      [ngModelOptions]="{ standalone: true }"
-    />
-    <sb-select
-      label="Сортування"
-      hideLabel
-      variant="pill"
-      [options]="sortOptions"
-      [ngModel]="filters().sort"
-      (ngModelChange)="update({ sort: $event })"
-      [ngModelOptions]="{ standalone: true }"
-    />
+    <div class="filter-bar__filters">
+      <sb-select
+        label="Роль"
+        hideLabel
+        variant="pill"
+        [options]="roleOptions"
+        [ngModel]="filters().role ?? ''"
+        (ngModelChange)="update({ role: $event || null })"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <sb-select
+        label="Тариф"
+        hideLabel
+        variant="pill"
+        [options]="planFilterOptions()"
+        [ngModel]="filters().planCode ?? ''"
+        (ngModelChange)="update({ planCode: $event || null })"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <sb-select
+        label="Статус"
+        hideLabel
+        variant="pill"
+        [options]="statusOptions"
+        [ngModel]="filters().status ?? ''"
+        (ngModelChange)="update({ status: $event || null })"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
+    <div class="filter-bar__sort">
+      <sb-select
+        label="Сортування"
+        hideLabel
+        variant="pill"
+        [options]="sortOptions"
+        [ngModel]="filters().sort"
+        (ngModelChange)="update({ sort: $event })"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
   </div>
 
   @switch (state()) {
@@ -107,6 +111,7 @@
           </div>
         } @else {
           <div class="admin-list" [class.admin-list--busy]="busy()" [attr.aria-busy]="busy()">
+            <div class="admin-table-wrap">
             <table class="admin-table">
               <caption class="visually-hidden">
                 Користувачі
@@ -125,7 +130,7 @@
               <tbody>
                 @for (user of list.items; track user.id) {
                   @let st = status(user);
-                  <tr>
+                  <tr (click)="editing.set(user)">
                     <td class="admin-table__main">
                       <div class="admin-person">
                         <sb-avatar size="sm" [name]="fullName(user)" />
@@ -140,7 +145,7 @@
                     <td data-label="Транзакцій" class="admin-table__right num text-muted">{{ user.transactionCount }}</td>
                     <td data-label="Реєстрація" class="num text-muted">{{ date(user.createdAt) }}</td>
                     <td data-label="Статус"><sb-badge [tone]="st.tone">{{ st.label }}</sb-badge></td>
-                    <td class="admin-table__actions">
+                    <td class="admin-table__actions" (click)="$event.stopPropagation()">
                       <button sbIconButton size="sm" type="button" [attr.aria-label]="'Редагувати: ' + fullName(user)" title="Редагувати" (click)="editing.set(user)">
                         <sb-icon name="pencil" [size]="16" />
                       </button>
@@ -149,6 +154,7 @@
                 }
               </tbody>
             </table>
+            </div>
             <sb-pagination
               [page]="filters().page"
               [pageSize]="filters().pageSize"

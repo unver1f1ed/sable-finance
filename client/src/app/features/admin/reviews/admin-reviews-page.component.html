@@ -11,7 +11,7 @@
   </div>
 </header>
 
-<section class="admin-stats" aria-label="Статистика відгуків">
+<section class="admin-stats stat-grid stat-grid--3" aria-label="Статистика відгуків">
   @if (stats(); as numbers) {
     <div class="card admin-stat">
       <p class="text-label">Середня оцінка</p>
@@ -33,28 +33,30 @@
 </section>
 
 <section class="card admin-panel" aria-label="Список відгуків">
-  <div class="admin-toolbar">
-    <sb-field class="admin-toolbar__search" label="Пошук за автором або текстом" hideLabel>
+  <div class="filter-bar">
+    <sb-field class="filter-bar__search" label="Пошук за автором або текстом" hideLabel>
       <sb-icon fieldLeading name="search" [size]="18" />
       <input type="search" autocomplete="off" placeholder="Пошук за автором або текстом" [formControl]="searchControl" />
     </sb-field>
-    <sb-segmented
-      [options]="statusOptions"
-      [ngModel]="statusValue()"
-      (ngModelChange)="changeStatus($event)"
-      [ngModelOptions]="{ standalone: true }"
-      ariaLabel="Статус відгуку"
-      onSurface
-    />
-    <sb-select
-      label="Оцінка"
-      hideLabel
-      variant="pill"
-      [options]="ratingOptions"
-      [ngModel]="filters().rating === null ? '' : '' + filters().rating"
-      (ngModelChange)="update({ rating: $event ? +$event : null })"
-      [ngModelOptions]="{ standalone: true }"
-    />
+    <div class="filter-bar__filters">
+      <sb-segmented
+        [options]="statusOptions"
+        [ngModel]="statusValue()"
+        (ngModelChange)="changeStatus($event)"
+        [ngModelOptions]="{ standalone: true }"
+        ariaLabel="Статус відгуку"
+        onSurface
+      />
+      <sb-select
+        label="Оцінка"
+        hideLabel
+        variant="pill"
+        [options]="ratingOptions"
+        [ngModel]="filters().rating === null ? '' : '' + filters().rating"
+        (ngModelChange)="update({ rating: $event ? +$event : null })"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
   </div>
 
   @switch (state()) {
@@ -88,6 +90,7 @@
           }
         } @else {
           <div class="admin-list" [class.admin-list--busy]="busy()" [attr.aria-busy]="busy()">
+            <div class="admin-table-wrap">
             <table class="admin-table">
               <caption class="visually-hidden">
                 Відгуки
@@ -104,7 +107,7 @@
               </thead>
               <tbody>
                 @for (review of list.items; track review.id) {
-                  <tr>
+                  <tr (click)="modal.set({ review })">
                     <td class="admin-table__main admin-table__author">
                       <div class="admin-person">
                         <sb-avatar size="sm" [name]="review.author" />
@@ -117,7 +120,7 @@
                     <td data-label="Статус">
                       <sb-badge [tone]="review.isPublished ? 'teal' : 'grey'">{{ review.isPublished ? 'На сайті' : 'Приховано' }}</sb-badge>
                     </td>
-                    <td class="admin-table__actions">
+                    <td class="admin-table__actions" (click)="$event.stopPropagation()">
                       <button sbIconButton size="sm" type="button" [attr.aria-label]="'Редагувати відгук: ' + review.author" title="Редагувати" (click)="modal.set({ review })">
                         <sb-icon name="pencil" [size]="16" />
                       </button>
@@ -139,6 +142,7 @@
                 }
               </tbody>
             </table>
+            </div>
             <sb-pagination
               [page]="filters().page"
               [pageSize]="filters().pageSize"

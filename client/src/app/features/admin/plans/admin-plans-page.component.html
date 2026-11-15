@@ -21,8 +21,8 @@
   @default {
     <section class="admin-section" aria-labelledby="plans-title">
       <h2 class="text-h4" id="plans-title">Плани</h2>
-      <div class="plans-admin">
-        <ul class="plans-admin__cards">
+      <div class="plans-admin two-pane two-pane--editor">
+        <ul class="plans-admin__cards two-pane__sticky">
           @for (plan of plans(); track plan.id) {
             <li>
               <button class="card plans-admin__card" type="button" [class.plans-admin__card--active]="selectedCode() === plan.code" [attr.aria-pressed]="selectedCode() === plan.code" (click)="select(plan)">
@@ -71,8 +71,8 @@
             </div>
 
             <div class="form-stack__pair">
-              <sb-amount-field label="Ціна за місяць" onSurface formControlName="priceMonthly" [error]="error('priceMonthly')" />
-              <sb-amount-field label="Ціна за місяць при оплаті за рік" onSurface formControlName="priceYearlyPerMonth" [error]="error('priceYearlyPerMonth')" />
+              <sb-amount-field label="Ціна за місяць" hint="при помісячній оплаті" onSurface formControlName="priceMonthly" [error]="error('priceMonthly')" />
+              <sb-amount-field label="Ціна за рік" hint="за місяць при оплаті за рік" onSurface formControlName="priceYearlyPerMonth" [error]="error('priceYearlyPerMonth')" />
             </div>
 
             <sb-field label="Знижка за річну оплату" onSurface>
@@ -108,7 +108,7 @@
         </button>
       </div>
 
-      <div class="features-admin__scroll" role="region" aria-label="Характеристики тарифів" tabindex="0">
+      <div class="features-admin__scroll fade-row" role="region" aria-label="Характеристики тарифів" tabindex="0">
         <table class="features-admin__table">
           <caption class="visually-hidden">
             Характеристики для порівняння тарифів
