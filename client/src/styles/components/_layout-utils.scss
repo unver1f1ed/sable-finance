@@ -102,6 +102,13 @@
     gap: 12px;
   }
 
+  // A group of selects that shares the row with the search and wraps as a grid of equal cells.
+  &__filters--selects {
+    display: grid;
+    flex: 2 1 560px;
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  }
+
   &__sort {
     margin-left: auto;
   }

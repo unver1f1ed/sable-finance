@@ -75,6 +75,7 @@
 
   // Card view: meta fields in a flowing grid, the row actions in one row at the bottom right.
   tr {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px 16px;
@@ -112,9 +113,20 @@
     align-items: stretch;
   }
 
+  // Card view: the row actions sit at the top right, on the line of the avatar and the name.
+  td.admin-table__main {
+    padding-right: 52px;
+  }
+
+  td.admin-table__author {
+    padding-right: 152px;
+  }
+
   td.admin-table__actions {
+    position: absolute;
+    top: 10px;
+    right: 0;
     flex-direction: row;
-    grid-column: 1 / -1;
     gap: 4px;
     justify-content: flex-end;
   }
@@ -185,7 +197,13 @@
       min-width: 220px;
     }
 
+    td.admin-table__main,
+    td.admin-table__author {
+      padding-right: 8px;
+    }
+
     td.admin-table__actions {
+      position: static;
       display: table-cell;
       width: 1%;
       text-align: right;
@@ -344,10 +362,30 @@
 }
 
 .plans-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  // The plan cards are the selector: one row of two, stacked only when the container is narrow.
   &__cards {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
+
+    @include content-min(520px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__toggles {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+
+    @include content-min(900px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   &__card {

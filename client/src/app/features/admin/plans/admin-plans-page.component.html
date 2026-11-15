@@ -21,8 +21,8 @@
   @default {
     <section class="admin-section" aria-labelledby="plans-title">
       <h2 class="text-h4" id="plans-title">Плани</h2>
-      <div class="plans-admin two-pane two-pane--editor">
-        <ul class="plans-admin__cards two-pane__sticky">
+      <div class="plans-admin">
+        <ul class="plans-admin__cards">
           @for (plan of plans(); track plan.id) {
             <li>
               <button class="card plans-admin__card" type="button" [class.plans-admin__card--active]="selectedCode() === plan.code" [attr.aria-pressed]="selectedCode() === plan.code" (click)="select(plan)">
@@ -49,14 +49,24 @@
           <form class="card admin-panel plans-admin__form form-stack" novalidate [formGroup]="form" (ngSubmit)="save()">
             <h3 class="text-h5">Редагування: {{ plan.name }}</h3>
 
-            <div class="toggle-row">
-              <div class="toggle-row__text">
-                <p class="text-body">Опубліковано</p>
-                <p class="text-small text-muted">
-                  {{ isStart() ? 'Тариф Старт завжди опублікований' : 'Тариф, знятий з публікації, зникає із сайту й реєстрації.' }}
-                </p>
+            <div class="plans-admin__toggles">
+              <div class="toggle-row">
+                <div class="toggle-row__text">
+                  <p class="text-body">Опубліковано</p>
+                  <p class="text-small text-muted">
+                    {{ isStart() ? 'Тариф Старт завжди опублікований' : 'Тариф, знятий з публікації, зникає із сайту й реєстрації.' }}
+                  </p>
+                </div>
+                <sb-toggle label="Опубліковано" formControlName="isPublished" />
               </div>
-              <sb-toggle label="Опубліковано" formControlName="isPublished" />
+
+              <div class="toggle-row">
+                <div class="toggle-row__text">
+                  <p class="text-body">Позначка «Популярний»</p>
+                  <p class="text-small text-muted">Показується біля назви тарифу на сторінці тарифів.</p>
+                </div>
+                <sb-toggle label="Позначка «Популярний»" formControlName="isPopular" />
+              </div>
             </div>
 
             <div class="form-stack__pair">
@@ -78,18 +88,9 @@
             <div class="form-stack__pair">
               <sb-amount-field label="Ціна за місяць" hint="при помісячній оплаті" onSurface formControlName="priceMonthly" [error]="error('priceMonthly')" />
               <sb-amount-field label="Ціна за рік" hint="за місяць при оплаті за рік" onSurface formControlName="priceYearlyPerMonth" [error]="error('priceYearlyPerMonth')" />
-            </div>
-
-            <sb-field label="Знижка за річну оплату" onSurface>
-              <input type="text" [value]="discount() + ' %'" disabled />
-            </sb-field>
-
-            <div class="toggle-row">
-              <div class="toggle-row__text">
-                <p class="text-body">Позначка «Популярний»</p>
-                <p class="text-small text-muted">Показується біля назви тарифу на сторінці тарифів.</p>
-              </div>
-              <sb-toggle label="Позначка «Популярний»" formControlName="isPopular" />
+              <sb-field label="Знижка за річну оплату" onSurface>
+                <input type="text" [value]="discount() + ' %'" disabled />
+              </sb-field>
             </div>
 
             <div class="form-stack__actions">
