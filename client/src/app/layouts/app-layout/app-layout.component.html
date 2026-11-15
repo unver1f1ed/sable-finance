@@ -71,7 +71,7 @@
   <div class="app-topbar__text">
     <p class="text-body text-semibold">{{ auth.user()?.firstName }}</p>
   </div>
-  <button sbIconButton type="button" aria-label="Вийти" (click)="auth.logout()">
+  <button sbIconButton type="button" aria-label="Вийти" (click)="logoutOpen.set(true)">
     <sb-icon name="logout" [size]="18" />
   </button>
 </header>
@@ -111,3 +111,11 @@
 </nav>
 
 <sb-transaction-modal />
+<sb-confirm-dialog
+  [open]="logoutOpen()"
+  title="Вийти з акаунта?"
+  message="Щоб повернутись, потрібно буде увійти знову."
+  confirmLabel="Вийти"
+  (confirm)="logoutOpen.set(false); auth.logout()"
+  (cancel)="logoutOpen.set(false)"
+/>
