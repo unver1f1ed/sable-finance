@@ -1,0 +1,104 @@
+@use '../mixins' as *;
+
+// Public pages above 1440 px: the content container grows, headings scale slightly and the
+// decorative compositions stay anchored to the centred container instead of the viewport edges.
+:root {
+  @include xl {
+    --content-width: 1400px;
+  }
+
+  @include xxl {
+    --content-width: 1560px;
+  }
+}
+
+.text-h1 {
+  @include xl {
+    font-size: 66px;
+    line-height: 80px;
+  }
+
+  @include xxl {
+    font-size: 69px;
+    line-height: 84px;
+  }
+}
+
+.text-h2 {
+  @include xl {
+    font-size: 41px;
+    line-height: 52px;
+  }
+
+  @include xxl {
+    font-size: 43px;
+    line-height: 54px;
+  }
+}
+
+.public-header {
+  @include xl {
+    padding-inline: max(50px, calc(50% - var(--content-width) / 2 - 51px));
+  }
+}
+
+.hero {
+  @include xl {
+    height: 840px;
+  }
+
+  @include xxl {
+    height: 880px;
+  }
+
+  &__bg {
+    @include xl {
+      top: -222px;
+      width: 1300px;
+    }
+
+    @include xxl {
+      top: -238px;
+      width: 1380px;
+    }
+  }
+
+  &__note {
+    @include desktop {
+      left: max(24px, calc(50% - var(--content-width) / 2 - 51px));
+    }
+  }
+}
+
+.benefits__stage {
+  @include desktop {
+    height: calc(min(var(--content-width), 100vw - 80px) * 0.5816);
+  }
+}
+
+.panels__text {
+  @include xl {
+    padding-inline: 160px;
+  }
+
+  @include xxl {
+    padding-inline: 240px;
+  }
+}
+
+.panels {
+  @include xl {
+    height: 900px;
+  }
+
+  @include xxl {
+    height: 980px;
+  }
+}
+
+.overview__card,
+.showcase__card {
+  @include desktop {
+    width: min(26.6%, 330px);
+  }
+}
