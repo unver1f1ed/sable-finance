@@ -1,0 +1,125 @@
+@use '../mixins' as *;
+
+// The main content area of the cabinet and admin shells: a size container the layouts inside query.
+.shell__content {
+  container: content / inline-size;
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+// Stat rows: four items go 4 / 2 / 1 columns, three items 3 / 1, never an orphan card.
+.stat-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+
+  @include content-min(520px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include content-min(900px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  &--lead {
+    @include content-min(900px) {
+      grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  &--3 {
+    @include content-min(520px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    @include content-min(720px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    &.stat-grid--lead {
+      @include content-min(720px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  }
+}
+
+// Intrinsic card grid with a sensible minimum column width; items stretch to equal heights per row.
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 16px;
+
+  &--wide {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+  }
+}
+
+// Two panes (list + detail, cards + form) only when the container is wide enough.
+.two-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+
+  @include content-min(900px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  }
+
+  &--editor {
+    @include content-min(900px) {
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+
+  &__sticky {
+    @include content-min(900px) {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+    }
+  }
+}
+
+// Filter bar: the search takes the rest of the row (at least 240 px), filters wrap as a group.
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  &__search {
+    flex: 1 1 240px;
+    min-width: min(100%, 240px);
+  }
+
+  &__filters {
+    display: flex;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__sort {
+    margin-left: auto;
+  }
+}
+
+// Horizontal rows that scroll: a fade on the cut edge and snapping, no scrollbar.
+.fade-row {
+  overflow-x: auto;
+  padding-right: 40px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, black calc(100% - 40px), transparent);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    scroll-snap-align: start;
+  }
+}
