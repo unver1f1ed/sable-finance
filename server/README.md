@@ -67,7 +67,7 @@ API можна запустити в контейнері разом із баз
 docker compose --profile api up -d --build
 ```
 
-Контейнер працює в середовищі Development на `http://localhost:5081`. Шлях до user-secrets у `docker-compose.yml` розрахований на Windows (`%APPDATA%MicrosoftUserSecrets`); на Linux чи macOS замініть його на `~/.microsoft/usersecrets`. Команда `docker compose up -d` без профілю, як і раніше, запускає лише PostgreSQL.
+Контейнер працює в середовищі Development на `http://localhost:5081`. Шлях до user-secrets у `docker-compose.yml` розрахований на Windows (`%APPDATA%\Microsoft\UserSecrets`); на Linux чи macOS замініть його на `~/.microsoft/usersecrets`. Команда `docker compose up -d` без профілю, як і раніше, запускає лише PostgreSQL.
 
 ## Тести
 
