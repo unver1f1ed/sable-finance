@@ -1,0 +1,170 @@
+# Manual requests for the Sable API (JetBrains HTTP Client in Rider).
+# Pick an environment (local, docker, production) in the editor toolbar.
+# Credentials come from http-client.private.env.json, which is not committed;
+# copy http-client.private.env.example.json and fill it in.
+# Run the requests from top to bottom: the login requests store the tokens and ids for the following ones.
+
+### Health
+GET {{baseUrl}}/health
+
+### Public: plans with the comparison table
+GET {{baseUrl}}/api/plans
+
+### Public: published reviews and the average rating
+GET {{baseUrl}}/api/reviews
+
+### Public: FAQ search
+GET {{baseUrl}}/api/faq?search=бюджет
+
+### Error format: no token gives 401 problem+json
+GET {{baseUrl}}/api/me
+
+### Log in as the demo user
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{demoEmail}}",
+  "password": "{{demoPassword}}"
+}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+    client.global.set("refreshToken", response.body.refreshToken);
+%}
+
+### Current user
+GET {{baseUrl}}/api/me
+Authorization: Bearer {{accessToken}}
+
+### Dashboard for the current month
+GET {{baseUrl}}/api/dashboard
+Authorization: Bearer {{accessToken}}
+
+### Accounts (stores the first account id)
+GET {{baseUrl}}/api/accounts
+Authorization: Bearer {{accessToken}}
+
+> {%
+    client.global.set("accountId", response.body[0].id);
+    client.global.set("today", new Date().toISOString().slice(0, 10));
+%}
+
+### Expense categories (stores the first category that is not a goal contribution)
+GET {{baseUrl}}/api/categories?type=Expense
+Authorization: Bearer {{accessToken}}
+
+> {%
+    const category = response.body.find(c => !c.isGoalContribution);
+    client.global.set("categoryId", category.id);
+%}
+
+### Transactions: filters, sorting and paging
+GET {{baseUrl}}/api/transactions?type=Expense&sort=amount_desc&page=1&pageSize=10
+Authorization: Bearer {{accessToken}}
+
+### Create a transaction
+POST {{baseUrl}}/api/transactions
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "type": "Expense",
+  "amount": 125.50,
+  "occurredOn": "{{today}}",
+  "description": "Тестова покупка",
+  "note": null,
+  "accountId": "{{accountId}}",
+  "categoryId": "{{categoryId}}"
+}
+
+> {% client.global.set("transactionId", response.body.id); %}
+
+### Update the transaction
+PUT {{baseUrl}}/api/transactions/{{transactionId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "type": "Expense",
+  "amount": 99.99,
+  "occurredOn": "{{today}}",
+  "description": "Тестова покупка (змінено)",
+  "note": "Змінено з Rider",
+  "accountId": "{{accountId}}",
+  "categoryId": "{{categoryId}}"
+}
+
+### Delete the transaction
+DELETE {{baseUrl}}/api/transactions/{{transactionId}}
+Authorization: Bearer {{accessToken}}
+
+### Validation error: 400 problem+json with field messages
+POST {{baseUrl}}/api/transactions
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "type": "Expense",
+  "amount": 0,
+  "occurredOn": "1999-01-01",
+  "description": "",
+  "accountId": "{{accountId}}",
+  "categoryId": "{{categoryId}}"
+}
+
+### Budgets for the current month
+GET {{baseUrl}}/api/budgets
+Authorization: Bearer {{accessToken}}
+
+### Goals including archived ones
+GET {{baseUrl}}/api/goals?includeArchived=true
+Authorization: Bearer {{accessToken}}
+
+### Access check: a regular user gets 403 on the admin area
+GET {{baseUrl}}/api/admin/users/stats
+Authorization: Bearer {{accessToken}}
+
+### Refresh the token pair (the old refresh token is revoked)
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+    client.global.set("refreshToken", response.body.refreshToken);
+%}
+
+### Log out (revokes the refresh token)
+POST {{baseUrl}}/api/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Log in as the administrator
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
+}
+
+> {% client.global.set("adminToken", response.body.accessToken); %}
+
+### Admin: user statistics
+GET {{baseUrl}}/api/admin/users/stats
+Authorization: Bearer {{adminToken}}
+
+### Admin: users, newest first
+GET {{baseUrl}}/api/admin/users?sort=created_desc&page=1&pageSize=10
+Authorization: Bearer {{adminToken}}
+
+### Admin: reviews including hidden ones
+GET {{baseUrl}}/api/admin/reviews
+Authorization: Bearer {{adminToken}}
