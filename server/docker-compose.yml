@@ -17,6 +17,8 @@ services:
       retries: 20
 
   # Optional: the API in a container. Start with `docker compose --profile api up -d --build`.
+  # Secrets (Jwt:Key, Seed:*) are read from the same dotnet user-secrets as `dotnet run`;
+  # only the connection strings are overridden because the database host is `postgres` here.
   api:
     profiles: ["api"]
     build:
@@ -30,9 +32,9 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Identity: Host=postgres;Port=5432;Username=sable;Password=${POSTGRES_PASSWORD};Database=sable_identity
       ConnectionStrings__Finance: Host=postgres;Port=5432;Username=sable;Password=${POSTGRES_PASSWORD};Database=sable_finance
-      Jwt__Key: ${Jwt__Key:?Set Jwt__Key in server/.env}
-      Seed__AdminPassword: ${Seed__AdminPassword:-}
-      Seed__DemoPassword: ${Seed__DemoPassword:-}
+    volumes:
+      # Windows path of dotnet user-secrets; on Linux or macOS use ~/.microsoft/usersecrets instead.
+      - ${APPDATA:?Run from Windows or adjust the user-secrets path}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
     ports:
       - "5081:8080"
 
