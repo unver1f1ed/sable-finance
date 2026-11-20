@@ -61,13 +61,13 @@ API працює на `http://localhost:5080`. Міграції й початк�
 
 ## Запуск API в Docker
 
-API можна запустити в контейнері разом із базою. У `.env` (див. `.env.example`) мають бути `POSTGRES_PASSWORD`, `Jwt__Key`, `Seed__AdminPassword` і `Seed__DemoPassword`.
+API можна запустити в контейнері разом із базою. Контейнер бере ключ JWT і паролі сідів із тих самих user-secrets, що й `dotnet run` (папка user-secrets монтується лише для читання), тому окремо їх задавати не треба. У `.env` достатньо `POSTGRES_PASSWORD` з кроку «Перший запуск».
 
 ```bash
 docker compose --profile api up -d --build
 ```
 
-Контейнер працює в середовищі Development на `http://localhost:5081`. Команда `docker compose up -d` без профілю, як і раніше, запускає лише PostgreSQL.
+Контейнер працює в середовищі Development на `http://localhost:5081`. Шлях до user-secrets у `docker-compose.yml` розрахований на Windows (`%APPDATA%MicrosoftUserSecrets`); на Linux чи macOS замініть його на `~/.microsoft/usersecrets`. Команда `docker compose up -d` без профілю, як і раніше, запускає лише PostgreSQL.
 
 ## Тести
 
