@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - "server/**"
+      - "client/client.esproj"
       - ".github/workflows/server-ci.yml"
   push:
     branches: [main]
     paths:
       - "server/**"
+      - "client/client.esproj"
       - ".github/workflows/server-ci.yml"
 
 jobs:

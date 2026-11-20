@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/client/">
+    <Project Path="../client/client.esproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Sable.Api/Sable.Api.csproj" />
     <Project Path="src/Sable.Application/Sable.Application.csproj" />
