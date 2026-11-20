@@ -29,3 +29,6 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Local credentials for the JetBrains HTTP client
+http-client.private.env.json

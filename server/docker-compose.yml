@@ -10,6 +10,31 @@ services:
     volumes:
       - sable-pgdata:/var/lib/postgresql/data
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sable"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Optional: the API in a container. Start with `docker compose --profile api up -d --build`.
+  api:
+    profiles: ["api"]
+    build:
+      context: .
+      dockerfile: src/Sable.Api/Dockerfile
+    container_name: sable-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Identity: Host=postgres;Port=5432;Username=sable;Password=${POSTGRES_PASSWORD};Database=sable_identity
+      ConnectionStrings__Finance: Host=postgres;Port=5432;Username=sable;Password=${POSTGRES_PASSWORD};Database=sable_finance
+      Jwt__Key: ${Jwt__Key:?Set Jwt__Key in server/.env}
+      Seed__AdminPassword: ${Seed__AdminPassword:-}
+      Seed__DemoPassword: ${Seed__DemoPassword:-}
+    ports:
+      - "5081:8080"
 
 volumes:
   sable-pgdata:
