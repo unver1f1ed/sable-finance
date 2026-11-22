@@ -57,7 +57,7 @@ export class FieldComponent implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    const control = this.host.nativeElement.querySelector<HTMLElement>('input, select, textarea');
+    const control = this.host.nativeElement.querySelector<HTMLElement>('input, select, textarea, button[aria-haspopup="listbox"]');
     if (!control) {
       return;
     }

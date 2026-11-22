@@ -1,0 +1,97 @@
+@use '../mixins' as *;
+
+.select {
+  display: block;
+  min-width: 0;
+
+  &__trigger {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  &__value {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &--placeholder {
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  &__chevron {
+    transition: transform var(--motion-base) var(--ease-out);
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__panel {
+    position: fixed;
+    z-index: 200;
+    width: max-content;
+    max-width: min(360px, calc(100vw - 24px));
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: var(--color-surface-2);
+    overflow-y: auto;
+    list-style: none;
+    outline: none;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 40px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+
+    &--active {
+      background: var(--color-white-hover);
+      color: var(--color-text);
+    }
+
+    &--selected {
+      color: var(--color-accent);
+    }
+  }
+
+  &__option-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  // Compact variant for toolbars (page size): 32 px high from tablet width.
+  &--compact .field__control {
+    @include tablet {
+      height: 32px;
+      padding: 0 12px;
+    }
+  }
+}

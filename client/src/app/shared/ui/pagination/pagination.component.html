@@ -45,11 +45,17 @@
     </li>
   </ul>
   <div class="pagination__size">
-    <label class="text-small text-muted" [attr.for]="sizeSelectId">Рядків на сторінці</label>
-    <select class="pagination__select" [id]="sizeSelectId" (change)="changeSize($event)">
-      @for (size of sizes; track size) {
-        <option [value]="size" [selected]="size === pageSize()">{{ size }}</option>
-      }
-    </select>
+    <span class="text-small text-muted" aria-hidden="true">Рядків на сторінці</span>
+    <sb-select
+      class="pagination__select"
+      label="Рядків на сторінці"
+      hideLabel
+      compact
+      variant="pill"
+      [options]="sizeOptions"
+      [ngModel]="'' + pageSize()"
+      (ngModelChange)="changeSize($event)"
+      [ngModelOptions]="{ standalone: true }"
+    />
   </div>
 </nav>
