@@ -121,7 +121,7 @@ export function formatPercent(value: number): string {
 
 export function formatPercentDelta(current: number, previous: number): string {
   if (!previous) {
-    return '—';
+    return '–';
   }
   const delta = ((current - previous) / Math.abs(previous)) * 100;
   const rounded = Math.round(delta * 10) / 10;

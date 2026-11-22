@@ -161,11 +161,11 @@ export class TransactionsPageComponent {
     }
     if (filters.accountId) {
       const account = this.store.accounts().find((item) => item.id === filters.accountId);
-      chips.push({ key: 'account', label: `Рахунок: ${account?.name ?? '—'}`, patch: { accountId: null } });
+      chips.push({ key: 'account', label: `Рахунок: ${account?.name ?? '–'}`, patch: { accountId: null } });
     }
     if (filters.categoryId) {
       const category = this.store.category(filters.categoryId);
-      chips.push({ key: 'category', label: `Категорія: ${category?.name ?? '—'}`, patch: { categoryId: null } });
+      chips.push({ key: 'category', label: `Категорія: ${category?.name ?? '–'}`, patch: { categoryId: null } });
     }
     if (filters.type !== 'all') {
       chips.push({ key: 'type', label: filters.type === 'Income' ? 'Тип: доходи' : 'Тип: витрати', patch: { type: 'all' } });

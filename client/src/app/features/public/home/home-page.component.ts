@@ -46,7 +46,7 @@ export class HomePageComponent {
     {
       icon: 'card',
       title: 'Усі рахунки в одному місці за 5 хвилин.',
-      text: 'Картки, готівка й заощадження — без прив’язки банку та зайвих анкет.',
+      text: 'Картки, готівка й заощадження без прив’язки банку та зайвих анкет.',
     },
     {
       icon: 'star',
@@ -69,7 +69,7 @@ export class HomePageComponent {
     { src: '/images/brands/yahoo.svg', alt: 'Логотип Yahoo', width: 124 },
     { src: '/images/brands/bloomberg.svg', alt: 'Логотип Bloomberg', width: 243 },
     { src: '/images/brands/insider.svg', alt: 'Логотип Insider', width: 147 },
-    { src: '/images/brands/forbes.svg', alt: 'Логотип Forbes', width: 118 },
+    { src: '/images/brands/forbes.svg', alt: 'Логотип Forbes', width: 170 },
     { src: '/images/brands/yahoo.svg', alt: 'Логотип Yahoo', width: 124 },
   ];
 
@@ -83,8 +83,8 @@ export class HomePageComponent {
   protected readonly tilesSecond: Brand[] = [
     { src: '/images/brands/netflix.svg', alt: 'Логотип Netflix' },
     { src: '/images/brands/ubereats.svg', alt: 'Логотип Uber Eats' },
-    { src: '/images/brands/uber.svg', alt: 'Логотип Uber' },
-    { src: '/images/brands/spotify.svg', alt: 'Логотип Spotify' },
+    { src: '/images/brands/airbnb.svg', alt: 'Логотип Airbnb' },
+    { src: '/images/brands/starbucks.svg', alt: 'Логотип Starbucks' },
   ];
 
   protected readonly tileCopies = [0, 1, 2];
@@ -96,7 +96,7 @@ export class HomePageComponent {
   protected readonly steps: Step[] = [
     {
       title: 'Тримайте витрати під контролем',
-      text: 'Встановіть місячні ліміти за категоріями — Sable підкаже, коли ви наближаєтесь до межі, і покаже, скільки можна витрачати щодня.',
+      text: 'Встановіть місячні ліміти за категоріями, і Sable підкаже, коли ви наближаєтесь до межі, і покаже, скільки можна витрачати щодня.',
     },
     {
       title: 'Відкладайте на важливе',
