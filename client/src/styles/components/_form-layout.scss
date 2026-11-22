@@ -8,7 +8,8 @@
   // Fields in a row line up at the top; hints and errors only grow downward. One column when narrow.
   &__pair {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+    // 190 px keeps two columns in a 520 px modal even when its own scrollbar appears.
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
     align-items: start;
     gap: 18px 16px;
   }
@@ -28,6 +29,19 @@
       @include tablet {
         margin-right: auto;
       }
+    }
+  }
+
+  // Cancel and the primary action stay together; when the row is too narrow the whole pair wraps.
+  &__group {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+
+    @include tablet {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      margin-left: auto;
     }
   }
 }
