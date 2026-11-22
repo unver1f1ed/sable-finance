@@ -14,9 +14,11 @@
     @if (editing()) {
       <button sbButton variant="danger" type="button" [disabled]="sending()" (click)="requestDelete()">Видалити</button>
     }
-    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
-    <button sbButton type="submit" form="category-form" [disabled]="sending()">
-      {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати категорію' }}
-    </button>
+    <div class="form-stack__group">
+      <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+      <button sbButton type="submit" form="category-form" [disabled]="sending()">
+        {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати категорію' }}
+      </button>
+    </div>
   </div>
 </sb-modal>

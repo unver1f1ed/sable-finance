@@ -28,7 +28,9 @@
     @if (item()) {
       <button sbButton variant="danger" type="button" [disabled]="sending()" (click)="requestDelete()">Видалити</button>
     }
-    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="cancelled.emit()">Скасувати</button>
-    <button sbButton type="submit" [disabled]="sending()">{{ sending() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+    <div class="form-stack__group">
+      <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="cancelled.emit()">Скасувати</button>
+      <button sbButton type="submit" [disabled]="sending()">{{ sending() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+    </div>
   </div>
 </form>

@@ -42,7 +42,9 @@
 
   <div modalFooter class="form-stack__actions form-stack__footer">
     <button sbButton variant="danger" type="button" [disabled]="sending() || isSelf()" (click)="requestDelete()">Видалити акаунт</button>
-    <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
-    <button sbButton type="submit" form="admin-user-form" [disabled]="sending()">{{ sending() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+    <div class="form-stack__group">
+      <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="closed.emit()">Скасувати</button>
+      <button sbButton type="submit" form="admin-user-form" [disabled]="sending()">{{ sending() ? 'Зберігаємо…' : 'Зберегти' }}</button>
+    </div>
   </div>
 </sb-modal>
