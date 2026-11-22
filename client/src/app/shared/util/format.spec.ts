@@ -95,7 +95,7 @@ describe('formatPercent', () => {
 
 describe('formatPercentDelta', () => {
   it('shows a dash when the previous value is zero', () => {
-    expect(formatPercentDelta(100, 0)).toBe('—');
+    expect(formatPercentDelta(100, 0)).toBe('–');
   });
 
   it('formats positive and negative changes', () => {
