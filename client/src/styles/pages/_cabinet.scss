@@ -22,6 +22,26 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
+
+    // Two buttons share the row on phones instead of stacking at different widths.
+    &--pair {
+      flex: 1 1 100%;
+
+      > .btn {
+        flex: 1 1 140px;
+        min-width: 0;
+        padding-inline: 12px;
+      }
+
+      @include tablet {
+        flex: 0 1 auto;
+
+        > .btn {
+          flex: 0 0 auto;
+          padding-inline: 24px;
+        }
+      }
+    }
   }
 }
 

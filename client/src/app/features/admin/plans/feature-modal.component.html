@@ -6,7 +6,7 @@
 
     @for (plan of plans(); track plan.code) {
       <fieldset class="feature-plan">
-        <legend class="text-small text-semibold">{{ plan.name }}</legend>
+        <legend class="field__label">{{ plan.name }}</legend>
         <sb-segmented
           [options]="kindOptions"
           [ngModel]="kinds()[plan.code]"

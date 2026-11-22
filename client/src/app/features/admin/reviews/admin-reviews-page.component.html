@@ -132,7 +132,7 @@
                         [title]="review.isPublished ? 'Приховати' : 'Опублікувати'"
                         (click)="togglePublished(review)"
                       >
-                        <sb-icon [name]="review.isPublished ? 'eye' : 'check'" [size]="16" />
+                        <sb-icon [name]="review.isPublished ? 'eye-off' : 'eye'" [size]="16" />
                       </button>
                       <button sbIconButton size="sm" type="button" [attr.aria-label]="'Видалити відгук: ' + review.author" title="Видалити" (click)="deleting.set(review)">
                         <sb-icon name="trash" [size]="16" />
