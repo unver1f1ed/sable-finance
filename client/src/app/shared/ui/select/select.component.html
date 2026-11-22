@@ -6,13 +6,56 @@
   [hideLabel]="hideLabel()"
   [variant]="variant()"
 >
-  <select [disabled]="disabled()" (change)="change($event)" (blur)="touch()">
-    @if (placeholder() !== undefined) {
-      <option value="" [selected]="value() === ''">{{ placeholder() }}</option>
-    }
-    @for (option of options(); track option.value) {
-      <option [value]="option.value" [selected]="option.value === value()">{{ option.label }}</option>
-    }
-  </select>
-  <sb-icon fieldTrailing name="chev-down" [size]="16" />
+  <button
+    #trigger
+    class="select__trigger"
+    type="button"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="open() ? listId : null"
+    [disabled]="disabled()"
+    (click)="toggle()"
+    (keydown)="onTriggerKeydown($event)"
+    (blur)="onTriggerBlur()"
+  >
+    <span class="select__value" [class.select__value--placeholder]="selectedLabel() === null">{{ selectedLabel() ?? placeholder() ?? '' }}</span>
+  </button>
+  <sb-icon fieldTrailing class="select__chevron" [class.select__chevron--open]="open()" name="chev-down" [size]="16" />
 </sb-field>
+@if (open()) {
+  <ul
+    #panel
+    class="select__panel"
+    role="listbox"
+    tabindex="-1"
+    [id]="listId"
+    [attr.aria-label]="label()"
+    [attr.aria-activedescendant]="optionId(active())"
+    [style.top.px]="position().top"
+    [style.bottom.px]="position().bottom"
+    [style.left.px]="position().left"
+    [style.min-width.px]="position().width"
+    [style.max-height.px]="position().maxHeight"
+    (keydown)="onListKeydown($event)"
+  >
+    @for (option of items(); track option.value) {
+      <!-- Keyboard handling lives on the listbox (aria-activedescendant), so the options are not focusable themselves. -->
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+      <li
+        class="select__option"
+        role="option"
+        [id]="optionId($index)"
+        [class.select__option--active]="$index === active()"
+        [class.select__option--selected]="option.value === value()"
+        [attr.aria-selected]="option.value === value()"
+        (mouseenter)="active.set($index)"
+        (click)="choose(option)"
+      >
+        <span class="select__option-label">{{ option.label }}</span>
+        @if (option.value === value()) {
+          <sb-icon name="check" [size]="16" />
+        }
+      </li>
+    }
+  </ul>
+}

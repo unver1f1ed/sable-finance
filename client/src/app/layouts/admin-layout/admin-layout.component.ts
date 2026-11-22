@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, ViewEncapsulation, computed, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { AvatarComponent } from '../../shared/ui/avatar/avatar.component';
 import { BadgeComponent } from '../../shared/ui/badge/badge.component';
@@ -33,4 +36,20 @@ export class AdminLayoutComponent {
     const user = this.auth.user();
     return user ? `${user.firstName} ${user.lastName}`.trim() : '';
   });
+
+  private readonly document = inject(DOCUMENT);
+
+  constructor() {
+    inject(Router)
+      .events.pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(inject(DestroyRef)),
+      )
+      .subscribe(() => this.revealActiveTab());
+  }
+
+  // The tab strip scrolls sideways on phones: bring the current section into view after the active class is applied.
+  private revealActiveTab(): void {
+    setTimeout(() => this.document.querySelector('.admin-tabs__link--active')?.scrollIntoView({ inline: 'nearest', block: 'nearest' }));
+  }
 }

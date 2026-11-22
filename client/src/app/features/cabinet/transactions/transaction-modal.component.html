@@ -37,14 +37,13 @@
     <button modalFooter sbButton type="button" (click)="close()">Зрозуміло</button>
   }
   @if (store.hasAccounts()) {
-    <div modalFooter class="form-stack__actions form-stack__actions--split form-stack__footer">
+    <div modalFooter class="form-stack__actions form-stack__footer">
       @if (editing()) {
         <button sbButton variant="danger" type="button" [disabled]="sending()" (click)="confirmOpen.set(true)">
           <sb-icon name="trash" [size]="16" />
           Видалити
         </button>
       }
-      <span class="form-stack__spacer"></span>
       <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="close()">Скасувати</button>
       <button sbButton type="submit" form="transaction-form" [disabled]="sending()">
         {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати транзакцію' }}
