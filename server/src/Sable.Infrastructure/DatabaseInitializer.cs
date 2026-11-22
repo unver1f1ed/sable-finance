@@ -164,7 +164,7 @@ public class DatabaseInitializer(
                     Author = review.Author,
                     Text = review.Text,
                     Rating = review.Rating,
-                    IsPublished = true,
+                    IsPublished = review.IsPublished,
                     CreatedAt = now.AddDays(-i)
                 });
             }
@@ -215,6 +215,8 @@ public class DatabaseInitializer(
             return;
         }
 
+        await SeedDemoUsersAsync(password);
+
         var user = await users.FindByEmailAsync(DemoData.Email);
         if (user is null)
         {
@@ -249,6 +251,48 @@ public class DatabaseInitializer(
 
         var now = timeProvider.GetUtcNow();
         var data = DemoData.Generate(user.Id, DateOnly.FromDateTime(now.UtcDateTime), now, categories);
+        await SaveDemoDataAsync(data);
+    }
+
+    /// <summary>Creates the extra demo accounts for the admin area; each one is skipped once its email exists.</summary>
+    private async Task SeedDemoUsersAsync(string password)
+    {
+        var categories = await financeDb.Categories
+            .Where(c => c.UserId == null && DemoUsers.RequiredCategories.Contains(c.Name))
+            .ToDictionaryAsync(c => c.Name, c => c.Id);
+        var now = timeProvider.GetUtcNow();
+        var today = DateOnly.FromDateTime(now.UtcDateTime);
+
+        foreach (var profile in DemoUsers.All)
+        {
+            if (await users.FindByEmailAsync(profile.Email) is not null)
+            {
+                continue;
+            }
+
+            var user = new AppUser
+            {
+                Id = Guid.CreateVersion7(),
+                UserName = profile.Email,
+                Email = profile.Email,
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                PlanCode = profile.PlanCode,
+                CreatedAt = now.AddDays(-profile.RegisteredDaysAgo)
+            };
+            EnsureSucceeded(await users.CreateAsync(user, password), $"create the demo user {profile.Email}");
+            EnsureSucceeded(await users.AddToRoleAsync(user, Roles.User), $"assign the role to {profile.Email}");
+            if (profile.IsBlocked)
+            {
+                EnsureSucceeded(await users.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue), $"block {profile.Email}");
+            }
+
+            await SaveDemoDataAsync(DemoUsers.Generate(profile, user.Id, today, categories));
+        }
+    }
+
+    private async Task SaveDemoDataAsync(DemoDataSet data)
+    {
         financeDb.Accounts.AddRange(data.Accounts);
         financeDb.Goals.AddRange(data.Goals);
         financeDb.Budgets.AddRange(data.Budgets);
