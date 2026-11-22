@@ -103,7 +103,7 @@ export class AdminReviewsPageComponent {
   protected readonly statusValue = computed(() => this.filters().status ?? 'all');
   protected readonly averageText = computed(() => {
     const stats = this.stats();
-    return stats && stats.average > 0 ? stats.average.toFixed(1).replace('.', ',') : '—';
+    return stats && stats.average > 0 ? stats.average.toFixed(1).replace('.', ',') : '–';
   });
 
   constructor() {
