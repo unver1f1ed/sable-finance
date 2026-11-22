@@ -5,11 +5,11 @@
   flex-direction: column;
   gap: 18px;
 
-  // Two fields in a row: inputs stay on one baseline whatever the label length; one column when narrow.
+  // Fields in a row line up at the top; hints and errors only grow downward. One column when narrow.
   &__pair {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
-    align-items: end;
+    align-items: start;
     gap: 18px 16px;
   }
 
@@ -19,21 +19,15 @@
     gap: 12px;
 
     @include tablet {
-      flex-direction: row;
+      flex-flow: row wrap;
       align-items: center;
       justify-content: flex-end;
     }
 
-    &--split {
+    > .btn--danger {
       @include tablet {
-        justify-content: space-between;
+        margin-right: auto;
       }
-    }
-  }
-
-  &__spacer {
-    @include tablet {
-      flex: 1 1 auto;
     }
   }
 }

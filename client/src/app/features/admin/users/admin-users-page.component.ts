@@ -68,7 +68,7 @@ export class AdminUsersPageComponent {
   ];
   protected readonly statusOptions: SelectOption[] = [
     { value: '', label: 'Усі статуси' },
-    { value: 'active', label: 'Активні' },
+    { value: 'active', label: 'Не заблоковані' },
     { value: 'blocked', label: 'Заблоковані' },
   ];
   protected readonly sortOptions: SelectOption[] = [

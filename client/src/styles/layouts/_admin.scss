@@ -41,6 +41,7 @@
     display: flex;
     gap: 8px;
     padding-left: var(--space-page-mobile);
+    scroll-padding-inline: var(--space-page-mobile);
   }
 
   &__link {
@@ -63,4 +64,9 @@
       color: var(--color-accent);
     }
   }
+}
+
+// The tab strip needs no snapping: it would pull the active tab back out of view after it is scrolled in.
+.admin-tabs .admin-tabs__list {
+  scroll-snap-type: none;
 }

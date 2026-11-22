@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { describe, expect, it } from 'vitest';
+import { ButtonDirective } from '../button/button.directive';
 import { FieldComponent } from '../field/field.component';
 import { ModalComponent } from './modal.component';
 
@@ -20,6 +21,20 @@ class HostComponent {
   readonly open = signal(true);
   readonly control = new FormControl('', { nonNullable: true, validators: [Validators.required] });
 }
+
+@Component({
+  imports: [ModalComponent, ButtonDirective],
+  template: `
+    <sb-modal [open]="true" title="Користувач">
+      <div modalFooter class="form-stack__actions form-stack__footer">
+        <button sbButton variant="danger" type="button">Видалити акаунт</button>
+        <button sbButton variant="ghost" type="button">Скасувати</button>
+        <button sbButton type="button">Зберегти</button>
+      </div>
+    </sb-modal>
+  `,
+})
+class FooterHostComponent {}
 
 describe('ModalComponent', () => {
   function setup(): { host: HostComponent; root: HTMLElement; detect: () => void } {
@@ -50,6 +65,17 @@ describe('ModalComponent', () => {
     expect(press.defaultPrevented).toBe(true);
     cancel.click();
     expect(host.open()).toBe(false);
+  });
+
+  it('renders a wrapping footer row with the danger action first, then Cancel and Save', () => {
+    const fixture = TestBed.createComponent(FooterHostComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const footer = root.querySelector('.modal__footer > .form-stack__actions') as HTMLElement;
+    const buttons = [...footer.children] as HTMLElement[];
+    expect(buttons.map((button) => button.textContent?.trim())).toEqual(['Видалити акаунт', 'Скасувати', 'Зберегти']);
+    expect(buttons[0].classList.contains('btn--danger')).toBe(true);
+    expect(footer.classList.contains('form-stack__footer')).toBe(true);
   });
 
   it('still lets the mouse press reach text inside the body', () => {

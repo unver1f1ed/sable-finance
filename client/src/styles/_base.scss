@@ -58,6 +58,9 @@
 
 html {
   color-scheme: dark;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-handle) transparent;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -75,6 +78,26 @@ body {
 
 body.is-scroll-locked {
   overflow: hidden;
+}
+
+@supports not (scrollbar-color: auto) {
+  * {
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: var(--radius-pill);
+      background: var(--color-handle);
+      background-clip: padding-box;
+    }
+  }
 }
 
 img,
