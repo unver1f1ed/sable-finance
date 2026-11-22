@@ -44,10 +44,12 @@
           Видалити
         </button>
       }
-      <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="close()">Скасувати</button>
-      <button sbButton type="submit" form="transaction-form" [disabled]="sending()">
-        {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати транзакцію' }}
-      </button>
+      <div class="form-stack__group">
+        <button sbButton variant="ghost" type="button" [disabled]="sending()" (click)="close()">Скасувати</button>
+        <button sbButton type="submit" form="transaction-form" [disabled]="sending()">
+          {{ sending() ? 'Зберігаємо…' : editing() ? 'Зберегти зміни' : 'Додати транзакцію' }}
+        </button>
+      </div>
     </div>
   }
 </sb-modal>
