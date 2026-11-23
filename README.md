@@ -2,8 +2,8 @@
 
 Курсовий проєкт: сайт сервісу персонального фінансового планування.
 
-- `server/` — REST API (ASP.NET Core, PostgreSQL)
-- `client/` — клієнтська частина (Angular)
+- `server/`: REST API (ASP.NET Core, PostgreSQL)
+- `client/`: клієнтська частина (Angular)
 
 Автор: Богдан Паславський, група ПІ-23-01.
 
