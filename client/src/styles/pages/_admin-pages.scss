@@ -50,6 +50,7 @@
 }
 
 .admin-table-wrap {
+  position: relative;
   min-width: 0;
   overflow-x: auto;
 }
@@ -436,7 +437,9 @@
 }
 
 .features-admin {
+  // position: relative keeps visually hidden headers inside the scroll box, so they do not widen the page.
   &__scroll {
+    position: relative;
     min-width: 0;
     overflow-x: auto;
   }
