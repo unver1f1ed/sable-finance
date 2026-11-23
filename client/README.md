@@ -1,67 +1,42 @@
-# Sable — клієнтська частина
+# Sable: клієнтська частина
 
-Sable — навчальний проєкт: сайт сервісу персонального фінансового планування. Користувач веде
-рахунки, доходи й витрати, ставить місячні бюджети за категоріями та фінансові цілі.
-Адміністратор керує користувачами, тарифами, відгуками та довідкою.
+Сайт сервісу персонального фінансового планування на Angular.
 
-Клієнт — Angular-застосунок. Публічні сторінки (`/`, `/plans`, `/help`, `/about`, `/404`)
-пререндеряться в статичні файли, кабінет (`/app`) і адміністративна частина (`/admin`)
-працюють на клієнті. Інтерфейс українською мовою.
+- **Публічні сторінки:** головна, тарифи, довідка, про сервіс, сторінка 404.
+- **Кабінет користувача:** рахунки, доходи й витрати, бюджети, фінансові цілі, налаштування.
+- **Адміністративна частина:** користувачі, тарифи, відгуки, довідка.
 
-## Адреси
+Опублікована версія: https://red-smoke-06a408310.5.azurestaticapps.net
 
-- Клієнт: https://red-smoke-06a408310.5.azurestaticapps.net
-- API: https://sable-api-qejdm.azurewebsites.net
+## Технології
 
-## Тестові облікові записи
+Angular, TypeScript, SCSS (Flexbox, Grid, Mobile First), Vitest, ESLint. Публічні сторінки заздалегідь рендеряться в HTML, кабінет і адмінка працюють у браузері. Усі дані приходять із REST API.
 
-| Роль | Пошта |
-|---|---|
-| Адміністратор | admin@sable.ua |
-| Звичайний користувач (демо) | demo@sable.ua |
+## Запуск
 
-Дані для входу надаються окремо.
-
-## Запуск локально
-
-Потрібні Node.js 20.19+ або 22+, npm 10+, .NET SDK та Docker (для бази PostgreSQL).
-
-Сервер (з папки `server/`): запустити базу командою `docker compose up -d`, потім API
-командою `dotnet run --project src/Sable.Api`. Рядок підключення, ключ JWT та паролі
-початкових користувачів задаються через `dotnet user-secrets`, у репозиторії їх немає.
-API слухає `http://localhost:5080`.
-
-Клієнт (з папки `client/`):
+Потрібен Node.js 22. Для роботи з даними має бути запущений сервер (див. [server/README.md](../server/README.md)).
 
 ```bash
-npm install     # встановити залежності
-npm start       # dev-сервер на http://localhost:4200
-npm test        # модульні тести (Vitest)
-npm run lint    # перевірка ESLint
-npm run build   # production-збірка в dist/client/browser
+npm ci          # встановити залежності
+npm start       # http://localhost:4200
+npm test        # тести
+npm run lint    # перевірка коду
+npm run build   # збірка в dist/client/browser
 ```
 
-Адреса API задається в `src/environments/environment.ts` (розробка) і
-`src/environments/environment.production.ts` (production-збірка).
+Адреса API: `src/environments/environment.ts` (локально) і `src/environments/environment.production.ts` (опублікована версія).
 
 ## Структура
 
 ```
-public/                 статичні файли: іконки (sprite.svg), зображення, favicon, robots.txt,
-                        sitemap.xml, конфігурація хостингу
-src/
-  app/
-    core/               API-сервіси, моделі, авторизація, SEO
-    features/           сторінки за розділами: public, cabinet, admin, auth
-    layouts/            публічний макет, макет кабінету, макет адміністратора
-    shared/             перевикористовувані UI-компоненти, директиви та утиліти
-  environments/         налаштування середовищ
-  styles/               глобальні стилі SCSS (токени, база, компоненти, макети, сторінки)
+public/            зображення, іконки, шрифти, favicon
+src/app/core/      робота з API, вхід, моделі
+src/app/features/  сторінки: публічні, кабінет, адмінка
+src/app/layouts/   макети сторінок
+src/app/shared/    спільні компоненти
+src/styles/        стилі
 ```
 
-## Стилі
+## Тестові облікові записи
 
-Усі стилі зібрані в `src/styles/` і підключаються через `styles.scss`. Компоненти не мають
-власних стилів (`ViewEncapsulation.None`), класи названо за методологією BEM. Кольори
-задано лише в `_tokens.scss`. Верстка Mobile First: базові стилі для телефонів, `min-width`
-медіазапити для 768 px і 1024 px. Анімації вимикаються при `prefers-reduced-motion`.
+Адміністратор `admin@sable.ua`, користувач `demo@sable.ua`. Паролі надаються окремо.
